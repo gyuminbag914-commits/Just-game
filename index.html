@@ -2,3261 +2,2594 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="theme-color" content="#ffffff">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>숫자 탭 게임</title>
+<title>World Nation</title>
 
 <style>
-
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-tap-highlight-color: transparent;
-}
-
-:root {
-  --bg: #ffffff;
-  --bg2: #f5f5f3;
-  --bg3: #e8e8e5;
-
-  --text: #1a1a1a;
-  --text2: #666660;
-
-  --border: rgba(0,0,0,0.13);
-  --border2: rgba(0,0,0,0.22);
-
-  --active-bg: #eef4ff;
-  --active-border: #185fa5;
-  --active-text: #185fa5;
-
-  --done-bg: #eaf3de;
-  --done-border: rgba(59,109,17,0.3);
-  --done-text: #27500a;
-
-  --danger: #e24b4a;
-  --info: #185fa5;
-
-  --gold: #ba7517;
-
-  --radius: 12px;
-  --radius-sm: 8px;
-}
-
-@media (prefers-color-scheme: dark) {
-
-  :root {
-    --bg: #1c1c1e;
-    --bg2: #2c2c2e;
-    --bg3: #3a3a3c;
-
-    --text: #f2f2f7;
-    --text2: #8e8e93;
-
-    --border: rgba(255,255,255,0.1);
-    --border2: rgba(255,255,255,0.2);
-
-    --active-bg: #0c2a4a;
-    --active-border: #64a8f0;
-    --active-text: #64a8f0;
-
-    --done-bg: #173404;
-    --done-border: rgba(150,210,80,0.25);
-    --done-text: #c0dd97;
-
-    --danger: #ff6b6b;
-    --info: #64a8f0;
-    --gold: #f0a500;
-  }
-}
-
-
-/* ══════════════════════════════
-   기본
-══════════════════════════════ */
-
-body {
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    sans-serif;
-
-  background: var(--bg);
-  color: var(--text);
-
-  min-height: 100vh;
-
-  overscroll-behavior: none;
-}
-
-#app {
-  max-width: 420px;
-  margin: 0 auto;
-  padding: 1.5rem 1rem 3rem;
-}
-
-
-/* ══════════════════════════════
-   버튼
-══════════════════════════════ */
-
-.btn-primary {
-  display: block;
-  width: 100%;
-
-  padding: 14px;
-
-  font-size: 16px;
-  font-weight: 600;
-
-  border-radius: var(--radius-sm);
-  border: none;
-
-  background: var(--text);
-  color: var(--bg);
-
-  cursor: pointer;
-
-  touch-action: manipulation;
-}
-
-.btn-primary:active {
-  opacity: 0.75;
-  transform: scale(0.98);
-}
-
-.btn-secondary {
-  display: block;
-  width: 100%;
-
-  padding: 13px;
-
-  font-size: 15px;
-  font-weight: 500;
-
-  border-radius: var(--radius-sm);
-
-  border: 0.5px solid var(--border2);
-
-  background: var(--bg);
-  color: var(--text);
-
-  cursor: pointer;
-
-  touch-action: manipulation;
-}
-
-.btn-secondary:active {
-  background: var(--bg3);
-}
-
-
-/* ══════════════════════════════
-   화면 1: 닉네임
-══════════════════════════════ */
-
-#screen-nick {
-  display: flex;
-
-  flex-direction: column;
-  align-items: center;
-
-  padding-top: 3.5rem;
-}
-
-.game-title {
-  font-size: 28px;
-  font-weight: 700;
-
-  margin-bottom: 6px;
-
-  text-align: center;
-}
-
-.game-sub {
-  font-size: 14px;
-  color: var(--text2);
-
-  margin-bottom: 2.5rem;
-
-  text-align: center;
-
-  line-height: 1.6;
-}
-
-#nick-input {
-  width: 100%;
-  max-width: 300px;
-
-  font-size: 17px;
-
-  padding: 12px 14px;
-
-  margin-bottom: 14px;
-
-  border-radius: var(--radius-sm);
-
-  border: 0.5px solid var(--border2);
-
-  background: var(--bg);
-  color: var(--text);
-
-  outline: none;
-
-  -webkit-appearance: none;
-}
-
-#nick-input:focus {
-  border-color: var(--info);
-
-  box-shadow:
-    0 0 0 3px rgba(24,95,165,0.12);
-}
-
-#nick-ok {
-  max-width: 300px;
-}
-
-
-/* ══════════════════════════════
-   화면 2: 게임
-══════════════════════════════ */
-
-#screen-game {
-  display: none;
-}
-
-#header {
-  display: flex;
-
-  align-items: center;
-
-  gap: 10px;
-
-  margin-bottom: 1rem;
-}
-
-#nick-badge {
-  flex: 1;
-
-  font-size: 14px;
-
-  color: var(--text2);
-
-  font-weight: 500;
-
-  white-space: nowrap;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-}
-
-#timer-wrap {
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: flex-end;
-
-  flex-shrink: 0;
-
-  position: relative;
-}
-
-#timer {
-  font-size: 32px;
-
-  font-weight: 700;
-
-  font-variant-numeric: tabular-nums;
-
-  line-height: 1;
-
-  color: var(--text);
-}
-
-#timer.urgent {
-  color: var(--danger);
-}
-
-#timer-label {
-  font-size: 11px;
-
-  color: var(--text2);
-
-  margin-top: 1px;
-}
-
-
-/* ══════════════════════════════
-   +1초 표시
-══════════════════════════════ */
-
-#time-bonus {
-  position: absolute;
-
-  right: 0;
-
-  top: 34px;
-
-  color: #f2b01e;
-
-  font-size: 20px;
-
-  font-weight: 900;
-
-  line-height: 1;
-
-  opacity: 0;
-
-  pointer-events: none;
-
-  transform: translateY(0) scale(0.7);
-
-  text-shadow:
-    0 0 5px rgba(255,190,0,0.35);
-
-  z-index: 20;
-}
-
-#time-bonus.show {
-  animation:
-    timeBonusPop
-    0.75s
-    ease-out
-    forwards;
-}
-
-@keyframes timeBonusPop {
-
-  0% {
-    opacity: 0;
-    transform:
-      translateY(8px)
-      scale(0.65);
-  }
-
-  25% {
-    opacity: 1;
-    transform:
-      translateY(0)
-      scale(1.25);
-  }
-
-  55% {
-    opacity: 1;
-    transform:
-      translateY(-2px)
-      scale(1);
-  }
-
-  100% {
-    opacity: 0;
-    transform:
-      translateY(-20px)
-      scale(0.9);
-  }
-}
-
-
-/* ══════════════════════════════
-   점수
-══════════════════════════════ */
-
-#score-wrap {
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  background: var(--bg2);
-
-  border-radius: var(--radius-sm);
-
-  padding: 10px 16px;
-
-  margin-bottom: 1rem;
-}
-
-#score-wrap .s-label {
-  font-size: 13px;
-  color: var(--text2);
-}
-
-
-/* 점수와 연속 정답 */
-
-.score-line {
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 10px;
-
-  margin-top: 2px;
-}
-
-#score-wrap .s-val {
-  font-size: 22px;
-
-  font-weight: 700;
-
-  font-variant-numeric: tabular-nums;
-}
-
-
-/* ══════════════════════════════
-   연속 정답
-══════════════════════════════ */
-
-#streak-box {
-
-  display: none;
-
-  position: relative;
-
-  align-items: center;
-
-  justify-content: center;
-
-  gap: 3px;
-
-  min-width: 82px;
-
-  height: 34px;
-
-  padding: 0 9px;
-
-  border-radius: 10px;
-
-  color: #ff7a00;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,244,214,0.95),
-      rgba(255,226,170,0.95)
-    );
-
-  border: 2px solid #ff9d00;
-
-  box-shadow:
-    0 0 5px rgba(255,126,0,0.55),
-    0 0 12px rgba(255,170,0,0.35),
-    inset 0 0 8px rgba(255,190,0,0.18);
-
-  overflow: hidden;
-}
-
-#streak-box.hot {
-
-  display: flex;
-
-  animation:
-    flameBorder
-    0.8s
-    ease-in-out
-    infinite alternate;
-}
-
-#streak-box::before {
-
-  content: '';
-
-  position: absolute;
-
-  inset: -3px;
-
-  border-radius: 12px;
-
-  background:
-    conic-gradient(
-      from 0deg,
-      #ff3b30,
-      #ff9500,
-      #ffcc00,
-      #ff5e00,
-      #ff3b30
-    );
-
-  z-index: 0;
-
-  opacity: 0.9;
-
-  animation:
-    fireRotate
-    1.2s
-    linear
-    infinite;
-}
-
-#streak-box::after {
-
-  content: '';
-
-  position: absolute;
-
-  inset: 2px;
-
-  border-radius: 8px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #fff7df,
-      #ffe8b0
-    );
-
-  z-index: 1;
-}
-
-#streak-fire,
-#streak-disp,
-#streak-label {
-
-  position: relative;
-
-  z-index: 2;
-}
-
-#streak-fire {
-
-  font-size: 17px;
-
-  line-height: 1;
-}
-
-#streak-disp {
-
-  font-size: 18px;
-
-  font-weight: 900;
-
-  font-variant-numeric: tabular-nums;
-
-  color: #e85d04;
-}
-
-#streak-label {
-
-  font-size: 11px;
-
-  font-weight: 800;
-
-  color: #d94801;
-}
-
-@keyframes flameBorder {
-
-  0% {
-
-    transform: scale(1);
-
-    box-shadow:
-      0 0 5px rgba(255,126,0,0.5),
-      0 0 12px rgba(255,170,0,0.3),
-      inset 0 0 8px rgba(255,190,0,0.18);
-  }
-
-  100% {
-
-    transform: scale(1.04);
-
-    box-shadow:
-      0 0 8px rgba(255,70,0,0.8),
-      0 0 20px rgba(255,150,0,0.55),
-      0 0 30px rgba(255,210,0,0.25),
-      inset 0 0 10px rgba(255,120,0,0.25);
-  }
-}
-
-@keyframes fireRotate {
-
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-
-/* 다음 숫자 */
-
-#next-hint {
-  font-size: 13px;
-
-  color: var(--text2);
-}
-
-#next-hint span {
-  color: var(--active-text);
-
-  font-weight: 700;
-
-  font-size: 16px;
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
 }
-
-
-/* 시작 버튼 */
-
-#start-btn {
-  display: block;
-
-  width: 100%;
-
-  padding: 14px;
-
-  font-size: 16px;
-
-  font-weight: 600;
 
-  border-radius: var(--radius-sm);
-
-  border: none;
-
-  background: var(--text);
-
-  color: var(--bg);
-
-  cursor: pointer;
-
-  touch-action: manipulation;
-
-  margin-bottom: 1rem;
+body{
+    margin:0;
+    background:#111827;
+    color:#f3f4f6;
+    font-family:Arial,"Noto Sans KR",sans-serif;
 }
 
-#start-btn:active {
-  opacity: 0.75;
+button,input,select{
+    font:inherit;
 }
 
-#start-btn:disabled {
-  opacity: 0.35;
+button{
+    cursor:pointer;
 }
-
 
-/* 카운트다운 */
-
-#countdown {
-  height: 72px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  font-size: 58px;
-
-  font-weight: 700;
+#startScreen{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
 }
-
-
-/* ══════════════════════════════
-   숫자 그리드
-══════════════════════════════ */
 
-#grid {
-  display: grid;
-
-  grid-template-columns:
-    repeat(3, 1fr);
-
-  gap: 10px;
-
-  margin-bottom: 10px;
+.startBox{
+    width:min(500px,100%);
+    background:#1f2937;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 15px 50px #0008;
 }
-
-.card {
-  position: relative;
-
-  aspect-ratio: 1;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  font-size: 28px;
-
-  font-weight: 700;
-
-  border-radius: var(--radius);
-
-  border: 0.5px solid var(--border2);
-
-  background: var(--bg);
-
-  color: var(--text);
-
-  user-select: none;
 
-  -webkit-user-select: none;
-
-  touch-action: manipulation;
-
-  cursor: default;
-
-  transition:
-    transform 0.08s,
-    background 0.08s,
-    border-color 0.08s;
-
-  overflow: visible;
+.startBox h1{
+    text-align:center;
+    margin-top:0;
 }
-
-
-/* 활성 숫자 */
-
-.card.active {
-  background: var(--bg);
 
-  border: 0.5px solid var(--border2);
-
-  color: var(--text);
-
-  cursor: pointer;
+.startBox input{
+    width:100%;
+    padding:14px;
+    border:0;
+    border-radius:10px;
+    margin:10px 0;
+    background:#374151;
+    color:white;
 }
 
-.card.active:active {
-  transform: scale(0.91);
+.startBox button{
+    width:100%;
+    padding:14px;
+    border:0;
+    border-radius:10px;
+    background:#2563eb;
+    color:white;
+    font-weight:bold;
 }
-
-
-/* 완료 숫자 */
 
-.card.done {
-  background: var(--done-bg);
-
-  border-color: var(--done-border);
-
-  color: var(--done-text);
-
-  font-size: 24px;
+#game{
+    display:none;
 }
-
 
-/* ══════════════════════════════
-   오답 흔들림
-══════════════════════════════ */
-
-.card.wrong {
-  animation: shake 0.35s;
-
-  border-color: #ef4444;
+header{
+    position:sticky;
+    top:0;
+    z-index:10;
+    background:#0f172a;
+    border-bottom:1px solid #374151;
+    padding:10px;
 }
-
-@keyframes shake {
-
-  0%, 100% {
-    transform: translateX(0);
-  }
-
-  20% {
-    transform: translateX(-8px);
-  }
-
-  40% {
-    transform: translateX(8px);
-  }
-
-  60% {
-    transform: translateX(-5px);
-  }
 
-  80% {
-    transform: translateX(5px);
-  }
+.headerTop{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
 }
-
-
-/* ══════════════════════════════
-   오답 빨간 X
-══════════════════════════════ */
-
-.wrong-mark {
-
-  position: absolute;
-
-  inset: 0;
-
-  display: flex;
-
-  align-items: center;
 
-  justify-content: center;
-
-  color: #ef4444;
-
-  font-size: 58px;
-
-  font-weight: 900;
-
-  line-height: 1;
-
-  pointer-events: none;
-
-  z-index: 10;
-
-  text-shadow:
-    0 2px 5px rgba(0,0,0,0.18);
-
-  animation:
-    wrongX
-    0.45s
-    ease-out
-    forwards;
+#nationTitle{
+    font-size:20px;
+    font-weight:bold;
 }
-
-@keyframes wrongX {
-
-  0% {
-    transform:
-      scale(0.2)
-      rotate(-20deg);
-
-    opacity: 0;
-  }
-
-  40% {
-    transform:
-      scale(1.25)
-      rotate(8deg);
-
-    opacity: 1;
-  }
-
-  70% {
-    transform:
-      scale(0.95)
-      rotate(-3deg);
-
-    opacity: 1;
-  }
 
-  100% {
-    transform:
-      scale(1)
-      rotate(0deg);
-
-    opacity: 1;
-  }
+.speed button{
+    padding:6px 9px;
+    border:0;
+    border-radius:7px;
+    background:#374151;
+    color:white;
 }
-
-
-/* ══════════════════════════════
-   정답 카드 임팩트
-══════════════════════════════ */
 
-.card.correct-hit {
-
-  animation:
-    correctHit
-    0.22s
-    ease-out;
+.speed button.active{
+    background:#2563eb;
 }
-
-@keyframes correctHit {
-
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.14);
-  }
 
-  100% {
-    transform: scale(1);
-  }
+nav{
+    display:flex;
+    overflow-x:auto;
+    gap:6px;
+    padding-top:10px;
 }
-
-
-/* ══════════════════════════════
-   폭죽 전체 레이어
-══════════════════════════════ */
-
-.firework-container {
-
-  position: fixed;
-
-  left: 0;
-  top: 0;
-
-  width: 100vw;
-  height: 100vh;
-
-  pointer-events: none;
-
-  z-index: 9999;
 
-  overflow: hidden;
+nav button{
+    white-space:nowrap;
+    border:0;
+    border-radius:8px;
+    padding:8px 12px;
+    background:#374151;
+    color:white;
 }
 
-
-/* 폭죽 중심 */
-
-.firework-burst {
-
-  position: absolute;
-
-  width: 20px;
-  height: 20px;
-
-  border-radius: 50%;
-
-  border:
-    3px solid
-    rgba(255,255,255,0.95);
-
-  transform:
-    translate(-50%, -50%)
-    scale(0);
-
-  animation:
-    burstFlash
-    0.35s
-    ease-out
-    forwards;
-
-  pointer-events: none;
-
-  box-shadow:
-    0 0 12px
-    rgba(255,255,255,0.9);
+nav button.active{
+    background:#2563eb;
 }
-
-@keyframes burstFlash {
-
-  0% {
-
-    transform:
-      translate(-50%, -50%)
-      scale(0);
-
-    opacity: 1;
-  }
-
-  50% {
 
-    transform:
-      translate(-50%, -50%)
-      scale(3);
-
-    opacity: 0.8;
-  }
-
-  100% {
-
-    transform:
-      translate(-50%, -50%)
-      scale(5);
-
-    opacity: 0;
-  }
+main{
+    max-width:1200px;
+    margin:auto;
+    padding:12px;
 }
-
-
-/* ══════════════════════════════
-   폭죽 파편
-══════════════════════════════ */
-
-.firework-particle {
 
-  position: absolute;
-
-  width: 7px;
-  height: 7px;
-
-  border-radius: 50%;
-
-  pointer-events: none;
-
-  animation:
-    fireworkParticle
-    650ms
-    cubic-bezier(.15,.75,.35,1)
-    forwards;
-
-  box-shadow:
-    0 0 4px
-    currentColor;
+.panel{
+    background:#1f2937;
+    border-radius:14px;
+    padding:15px;
+    margin-bottom:12px;
 }
-
-@keyframes fireworkParticle {
-
-  0% {
 
-    transform:
-      translate(-50%, -50%)
-      translate(0, 0)
-      scale(1);
-
-    opacity: 1;
-  }
-
-  35% {
-
-    opacity: 1;
-  }
-
-  100% {
-
-    transform:
-      translate(-50%, -50%)
-      translate(var(--dx), var(--dy))
-      scale(0);
-
-    opacity: 0;
-  }
+.panel h2,
+.panel h3{
+    margin-top:0;
 }
-
-
-/* ══════════════════════════════
-   화면 3: 결과 팝업
-══════════════════════════════ */
-
-#screen-result {
-
-  display: none;
-
-  position: fixed;
-
-  inset: 0;
-
-  background:
-    rgba(0,0,0,0.6);
-
-  z-index: 200;
-
-  align-items: flex-end;
 
-  justify-content: center;
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:10px;
 }
 
-#screen-result.show {
-  display: flex;
+.card{
+    background:#111827;
+    border-radius:10px;
+    padding:12px;
 }
 
-#result-sheet {
-
-  background: var(--bg);
-
-  width: 100%;
-
-  max-width: 480px;
-
-  border-radius:
-    20px 20px 0 0;
-
-  padding:
-    1.5rem 1.25rem 2.5rem;
-
-  max-height: 92vh;
-
-  overflow-y: auto;
-
-  -webkit-overflow-scrolling: touch;
-
-  animation:
-    slideUp
-    0.25s
-    ease;
+.card strong{
+    display:block;
+    font-size:18px;
+    margin-top:4px;
 }
-
-@keyframes slideUp {
-
-  from {
-
-    transform:
-      translateY(60px);
-
-    opacity: 0;
-  }
-
-  to {
-
-    transform:
-      translateY(0);
 
-    opacity: 1;
-  }
+.resource{
+    display:flex;
+    justify-content:space-between;
+    gap:5px;
+    padding:7px 0;
+    border-bottom:1px solid #374151;
 }
 
-
-/* 결과 */
-
-.result-my {
-
-  text-align: center;
-
-  padding-bottom: 1.25rem;
-
-  border-bottom:
-    0.5px solid
-    var(--border);
-
-  margin-bottom: 1.25rem;
+.resource:last-child{
+    border-bottom:0;
 }
-
-.result-my .r-lbl {
 
-  font-size: 12px;
-
-  color: var(--text2);
-
-  margin-bottom: 4px;
+.buildGrid,
+.factoryGrid,
+.tradeGrid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:10px;
 }
-
-.result-my .r-name {
-
-  font-size: 16px;
 
-  font-weight: 600;
-
-  margin-bottom: 6px;
+.buildCard{
+    background:#111827;
+    border-radius:12px;
+    padding:13px;
 }
-
-.result-my .r-score {
-
-  font-size: 52px;
-
-  font-weight: 700;
 
-  line-height: 1;
-
-  margin-bottom: 4px;
+.buildCard button{
+    width:100%;
+    margin-top:8px;
+    padding:9px;
+    border:0;
+    border-radius:8px;
+    background:#2563eb;
+    color:white;
 }
-
-.result-my .r-score-label {
-
-  font-size: 13px;
 
-  color: var(--text2);
-
-  margin-bottom: 8px;
+.buildCard button:disabled{
+    background:#4b5563;
+    cursor:not-allowed;
 }
-
-.result-my .r-rank {
 
-  font-size: 14px;
-
-  color: var(--text2);
+.badge{
+    display:inline-block;
+    padding:3px 7px;
+    border-radius:6px;
+    background:#374151;
+    font-size:12px;
 }
-
-.result-my .r-rank strong {
 
-  color: var(--info);
-
-  font-size: 20px;
+.good{
+    color:#86efac;
 }
-
-
-/* 랭킹 */
-
-.lb-header {
-
-  font-size: 13px;
-
-  font-weight: 600;
-
-  color: var(--text2);
 
-  text-align: center;
-
-  margin-bottom: 0.75rem;
+.bad{
+    color:#fca5a5;
 }
-
-.lb-row {
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 10px;
-
-  padding: 8px 4px;
-
-  border-bottom:
-    0.5px solid
-    var(--border);
 
-  font-size: 15px;
+.warning{
+    color:#fde68a;
 }
 
-.lb-row:last-child {
-  border-bottom: none;
+.log{
+    max-height:250px;
+    overflow-y:auto;
+    background:#111827;
+    padding:10px;
+    border-radius:10px;
 }
 
-.lb-rank {
-
-  width: 28px;
-
-  text-align: center;
-
-  font-weight: 700;
-
-  color: var(--text2);
-
-  flex-shrink: 0;
-
-  font-size: 14px;
+.log div{
+    padding:5px;
+    border-bottom:1px solid #374151;
+    font-size:13px;
 }
 
-.lb-rank.gold,
-.lb-rank.silver,
-.lb-rank.bronze {
-
-  font-size: 20px;
+table{
+    width:100%;
+    border-collapse:collapse;
 }
-
-.lb-name {
 
-  flex: 1;
-
-  color: var(--text);
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-
-  white-space: nowrap;
+th,td{
+    padding:8px;
+    border-bottom:1px solid #374151;
+    text-align:left;
 }
-
-.lb-score {
-
-  font-weight: 700;
-
-  color: var(--text);
 
-  min-width: 48px;
-
-  text-align: right;
+select,
+.tradeGrid input{
+    width:100%;
+    padding:8px;
+    border:0;
+    border-radius:7px;
+    background:#374151;
+    color:white;
 }
-
-.lb-row.me {
-
-  background:
-    rgba(24,95,165,0.07);
-
-  border-radius: 8px;
 
-  margin: 2px -4px;
-
-  padding: 8px 8px;
+.tradeGrid button{
+    width:100%;
+    padding:9px;
+    border:0;
+    border-radius:8px;
+    background:#2563eb;
+    color:white;
+    margin-top:5px;
 }
-
-.lb-row.me .lb-name,
-.lb-row.me .lb-score {
 
-  color: var(--info);
+.progress{
+    height:10px;
+    background:#374151;
+    border-radius:10px;
+    overflow:hidden;
 }
 
-.lb-row.me .lb-rank {
-
-  color: var(--info);
+.progress div{
+    height:100%;
+    background:#3b82f6;
 }
-
 
-#lb-loading {
-
-  text-align: center;
-
-  padding: 1.5rem 0;
-
-  font-size: 14px;
-
-  color: var(--text2);
+.hidden{
+    display:none;
 }
-
-.result-actions {
-
-  display: flex;
-
-  flex-direction: column;
 
-  gap: 10px;
-
-  margin-top: 1.5rem;
+.small{
+    font-size:13px;
+    color:#9ca3af;
 }
-
-
-/* 제작자 */
-
-#credit {
 
-  position: fixed;
+@media(max-width:600px){
+    .headerTop{
+        align-items:flex-start;
+    }
 
-  bottom: 14px;
+    #nationTitle{
+        font-size:17px;
+    }
 
-  right: 16px;
+    main{
+        padding:8px;
+    }
 
-  font-size: 11px;
+    .panel{
+        padding:12px;
+    }
 
-  color: var(--text2);
-
-  opacity: 0.6;
-
-  pointer-events: none;
-
-  z-index: 10;
+    th,td{
+        font-size:12px;
+        padding:6px;
+    }
 }
-
 </style>
 </head>
 
-
 <body>
 
-<div id="app">
+<div id="startScreen">
+    <div class="startBox">
+        <h1>🌍 WORLD NATION</h1>
+        <p>나만의 국가를 만들고 세계 경제를 발전시켜라.</p>
 
+        <input id="nationNameInput" placeholder="국가 이름">
 
-  <!-- ══════════════════════
-       화면 1: 닉네임
-  ══════════════════════ -->
+        <p class="small">
+            시작 환경은 5가지 환경 중 무작위로 결정됩니다.
+        </p>
 
-  <div id="screen-nick">
-
-    <div class="game-title">
-      숫자 탭 게임
+        <button onclick="startGame()">국가 건설 시작</button>
     </div>
-
-    <div class="game-sub">
-      15초 안에 최대한 많은 숫자를<br>
-      순서대로 눌러보세요
-    </div>
-
-    <input
-      id="nick-input"
-      type="text"
-      maxlength="12"
-      placeholder="닉네임 입력 (최대 12자)"
-      autocomplete="off"
-      autocorrect="off"
-      spellcheck="false"
-    />
-
-    <button
-      id="nick-ok"
-      class="btn-primary">
-      시작하기
-    </button>
-
-  </div>
-
-
-  <!-- ══════════════════════
-       화면 2: 게임
-  ══════════════════════ -->
-
-  <div id="screen-game">
-
-    <div id="header">
-
-      <span id="nick-badge"></span>
-
-      <div id="timer-wrap">
-
-        <div id="timer">
-          15
-        </div>
-
-        <!-- +1초 표시 -->
-        <div id="time-bonus">
-          +1
-        </div>
-
-        <div id="timer-label">
-          남은 시간
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <div id="score-wrap">
-
-      <div>
-
-        <div class="s-label">
-          현재 점수
-        </div>
-
-        <div class="score-line">
-
-          <div
-            class="s-val"
-            id="score-disp">
-            0
-          </div>
-
-          <!-- 연속 정답 -->
-          <div id="streak-box">
-
-            <span id="streak-fire">
-              🔥
-            </span>
-
-            <span id="streak-disp">
-              0
-            </span>
-
-            <span id="streak-label">
-              연속
-            </span>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div id="next-hint">
-
-        다음 숫자
-        <span id="next-num">
-          1
-        </span>
-
-      </div>
-
-    </div>
-
-
-    <button
-      id="start-btn">
-      시작
-    </button>
-
-
-    <div id="countdown"></div>
-
-
-    <div id="grid"></div>
-
-  </div>
-
 </div>
 
+<div id="game">
 
-<!-- ══════════════════════
-     화면 3: 결과 팝업
-══════════════════════ -->
+<header>
+    <div class="headerTop">
+        <div>
+            <div id="nationTitle"></div>
+            <div class="small" id="dateText"></div>
+        </div>
 
-<div id="screen-result">
-
-  <div id="result-sheet">
-
-    <div class="result-my">
-
-      <div class="r-lbl">
-        최종 점수
-      </div>
-
-      <div
-        class="r-name"
-        id="r-name">
-      </div>
-
-      <div
-        class="r-score"
-        id="r-score">
-        0
-      </div>
-
-      <div class="r-score-label">
-        개
-      </div>
-
-      <div
-        class="r-rank"
-        id="r-rank">
-      </div>
-
+        <div class="speed">
+            <button onclick="setSpeed(1)" id="speed1">×1</button>
+            <button onclick="setSpeed(2)" id="speed2">×2</button>
+            <button onclick="setSpeed(3)" id="speed3">×3</button>
+            <button onclick="setSpeed(4)" id="speed4">×4</button>
+        </div>
     </div>
 
+    <nav>
+        <button onclick="showTab('overview')" class="active">국가</button>
+        <button onclick="showTab('resources')">자원</button>
+        <button onclick="showTab('build')">건설</button>
+        <button onclick="showTab('factory')">공장</button>
+        <button onclick="showTab('trade')">무역</button>
+        <button onclick="showTab('market')">시장</button>
+        <button onclick="showTab('world')">세계</button>
+        <button onclick="showTab('logTab')">로그</button>
+    </nav>
+</header>
 
-    <div class="lb-header">
-      랭킹 TOP 10
+<main>
+
+<!-- 국가 -->
+<section id="overview" class="tab">
+
+<div class="panel">
+    <h2>🏛️ 국가 정보</h2>
+
+    <div class="grid">
+        <div class="card">
+            국가
+            <strong id="countryName"></strong>
+        </div>
+
+        <div class="card">
+            환경
+            <strong id="environment"></strong>
+        </div>
+
+        <div class="card">
+            발전 단계
+            <strong id="level"></strong>
+        </div>
+
+        <div class="card">
+            인구
+            <strong id="population"></strong>
+        </div>
+
+        <div class="card">
+            국고
+            <strong id="money"></strong>
+        </div>
+
+        <div class="card">
+            전력
+            <strong id="power"></strong>
+        </div>
     </div>
-
-
-    <div id="lb-loading">
-      불러오는 중...
-    </div>
-
-
-    <div id="lb-rows"></div>
-
-
-    <div class="result-actions">
-
-      <button
-        id="btn-again"
-        class="btn-primary">
-        같은 닉네임으로 다시 도전
-      </button>
-
-      <button
-        id="btn-new"
-        class="btn-secondary">
-        닉네임 변경 후 다시 시작
-      </button>
-
-    </div>
-
-  </div>
-
 </div>
 
+<div class="panel">
+    <h2>📈 다음 발전 단계</h2>
 
-<!-- ══════════════════════
-     Firebase
-══════════════════════ -->
+    <div id="levelRequirement"></div>
 
-<script type="module">
+    <div class="progress">
+        <div id="levelProgress"></div>
+    </div>
+</div>
 
-import {
-  initializeApp
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+<div class="panel">
+    <h2>👷 노동력</h2>
+    <div id="workers"></div>
+</div>
 
+<div class="panel">
+    <h2>🏗️ 건물 현황</h2>
+    <div id="buildingSummary" class="grid"></div>
+</div>
 
-import {
-  getDatabase,
-  ref,
-  push,
-  get
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-
-const firebaseConfig = {
-
-  apiKey:
-    "AIzaSyDVrf8vbtBHJYD93EhXosITNmgym80GOMw",
-
-  authDomain:
-    "numberupgame.firebaseapp.com",
-
-  databaseURL:
-    "https://numberupgame-default-rtdb.asia-southeast1.firebasedatabase.app",
-
-  projectId:
-    "numberupgame",
-
-  storageBucket:
-    "numberupgame.firebasestorage.app",
-
-  messagingSenderId:
-    "209419310847",
-
-  appId:
-    "1:209419310847:web:916c8f6fc0a730b8191eca"
-};
+</section>
 
 
-const app =
-  initializeApp(firebaseConfig);
+<!-- 자원 -->
+<section id="resources" class="tab hidden">
 
-const db =
-  getDatabase(app);
+<div class="panel">
+    <h2>📦 국가 자원</h2>
+    <div id="resourceList"></div>
+</div>
 
+<div class="panel">
+    <h2>📊 하루 생산 / 소비</h2>
+    <div id="dailyBalance"></div>
+</div>
 
-/* 점수 저장 */
-
-window.fbSave =
-async (name, score) => {
-
-  await push(
-    ref(db, 'scores'),
-    {
-      name,
-      score,
-      t: Date.now()
-    }
-  );
-
-};
+</section>
 
 
-/* TOP 10 */
+<!-- 건설 -->
+<section id="build" class="tab hidden">
 
-window.fbLoadTop10 =
-async () => {
+<div class="panel">
+    <h2>🏗️ 건물 건설</h2>
+    <p class="small">
+        건물은 건설비용을 지불한 뒤 국가의 생산능력을 증가시킵니다.
+    </p>
 
-  const snap =
-    await get(
-      ref(db, 'scores')
-    );
+    <div id="buildingList" class="buildGrid"></div>
+</div>
 
-
-  if (!snap.exists()) {
-    return [];
-  }
-
-
-  const rows =
-    Object.values(
-      snap.val()
-    );
+</section>
 
 
-  /* 닉네임당 최고 기록 */
+<!-- 공장 -->
+<section id="factory" class="tab hidden">
 
-  const best = {};
+<div class="panel">
+    <h2>🏭 공장 생산</h2>
+    <div id="factoryList" class="factoryGrid"></div>
+</div>
 
-
-  rows.forEach(r => {
-
-    if (
-      !best[r.name] ||
-      r.score > best[r.name].score
-    ) {
-
-      best[r.name] = r;
-
-    }
-
-  });
+</section>
 
 
-  return Object.values(best)
+<!-- 무역 -->
+<section id="trade" class="tab hidden">
 
-    .sort(
-      (a,b) =>
-        b.score - a.score
-    )
+<div class="panel">
+    <h2>🚢 국가 간 무역</h2>
 
-    .slice(0,10);
+    <div id="tradeList"></div>
+</div>
 
-};
+</section>
 
-</script>
+
+<!-- 시장 -->
+<section id="market" class="tab hidden">
+
+<div class="panel">
+    <h2>🌐 세계시장</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>자원</th>
+                <th>가격</th>
+                <th>시장상태</th>
+            </tr>
+        </thead>
+
+        <tbody id="marketTable"></tbody>
+    </table>
+</div>
+
+</section>
+
+
+<!-- 세계 -->
+<section id="world" class="tab hidden">
+
+<div class="panel">
+    <h2>🌎 세계 국가</h2>
+
+    <div id="worldList"></div>
+</div>
+
+</section>
+
+
+<!-- 로그 -->
+<section id="logTab" class="tab hidden">
+
+<div class="panel">
+    <h2>📜 국가 기록</h2>
+    <div id="log" class="log"></div>
+</div>
+
+</section>
+
+</main>
+</div>
 
 
 <script>
 
+/* =====================================================
+   기본 데이터
+===================================================== */
 
-/* ══════════════════════════════
-   기본 변수
-══════════════════════════════ */
+const environments = {
 
-const $ =
-  id => document.getElementById(id);
+    "초원":{
+        emoji:"🌾",
+        food:1.50,
+        water:1.20,
+        wood:0.80,
+        stone:0.90,
+        iron:0.80,
+        copper:0.70,
+        coal:0.60,
+        oil:0.70,
+        gas:0.70,
+        rare:0.60
+    },
 
+    "정글":{
+        emoji:"🌴",
+        food:1.10,
+        water:1.40,
+        wood:1.60,
+        stone:0.70,
+        iron:0.70,
+        copper:0.80,
+        coal:0.50,
+        oil:0.50,
+        gas:0.50,
+        rare:0.80
+    },
 
-let nickname = '';
+    "사막":{
+        emoji:"🏜️",
+        food:0.20,
+        water:0.30,
+        wood:0.20,
+        stone:1.50,
+        iron:1.20,
+        copper:1.20,
+        coal:0.90,
+        oil:1.50,
+        gas:1.50,
+        rare:1.30
+    },
 
-let cells = [];
+    "설원":{
+        emoji:"❄️",
+        food:0.40,
+        water:0.90,
+        wood:0.70,
+        stone:1.00,
+        iron:1.20,
+        copper:1.10,
+        coal:1.50,
+        oil:1.20,
+        gas:1.20,
+        rare:1.10
+    },
 
-let nextExp = 1;
-
-let score = 0;
-
-let timeLeft = 15;
-
-let timerInt = null;
-
-let gameActive = false;
-
-
-/* ══════════════════════════════
-   🔥 연속 정답 변수
-══════════════════════════════ */
-
-let streak = 0;
-
-
-/* ══════════════════════════════
-   유틸
-══════════════════════════════ */
-
-function delay(ms) {
-
-  return new Promise(
-    r => setTimeout(r, ms)
-  );
-
-}
-
-
-/* ══════════════════════════════
-   화면 전환
-══════════════════════════════ */
-
-function showNick() {
-
-  $('screen-nick').style.display =
-    'flex';
-
-  $('screen-game').style.display =
-    'none';
-
-  $('screen-result')
-    .classList
-    .remove('show');
-
-  $('nick-input').value = '';
-
-  setTimeout(
-    () =>
-      $('nick-input').focus(),
-    100
-  );
-
-}
-
-
-function showGame() {
-
-  $('screen-nick').style.display =
-    'none';
-
-  $('screen-game').style.display =
-    'block';
-
-  $('screen-result')
-    .classList
-    .remove('show');
-
-}
-
-
-function showResult() {
-
-  $('screen-result')
-    .classList
-    .add('show');
-
-}
-
-
-/* ══════════════════════════════
-   닉네임
-══════════════════════════════ */
-
-$('nick-ok')
-  .addEventListener(
-    'click',
-    () => {
-
-      const v =
-        $('nick-input')
-        .value
-        .trim();
-
-
-      if (!v) {
-
-        $('nick-input').focus();
-
-        return;
-
-      }
-
-
-      nickname = v;
-
-      $('nick-badge')
-        .textContent =
-        nickname;
-
-
-      showGame();
-
-      resetGame();
-
+    "산악숲":{
+        emoji:"⛰️",
+        food:0.70,
+        water:1.10,
+        wood:1.50,
+        stone:1.40,
+        iron:1.60,
+        copper:1.50,
+        coal:1.30,
+        oil:0.60,
+        gas:0.60,
+        rare:1.40
     }
-  );
+
+};
 
 
-$('nick-input')
-  .addEventListener(
-    'keydown',
-    e => {
+const resourceInfo = {
 
-      if (e.key === 'Enter') {
+    food:{name:"식량",emoji:"🌾",unit:"개",price:10},
+    water:{name:"물",emoji:"💧",unit:"L",price:5},
+    wood:{name:"목재",emoji:"🌲",unit:"개",price:8},
+    stone:{name:"석재",emoji:"🪨",unit:"개",price:6},
 
-        $('nick-ok').click();
+    ironOre:{name:"철광석",emoji:"⛏️",unit:"개",price:15},
+    copperOre:{name:"구리광석",emoji:"⚙️",unit:"개",price:25},
+    coal:{name:"석탄",emoji:"🔥",unit:"개",price:12},
 
-      }
+    oil:{name:"석유",emoji:"🛢️",unit:"L",price:30},
+    gas:{name:"천연가스",emoji:"🔥",unit:"L",price:25},
 
+    rare:{name:"희귀광물",emoji:"💎",unit:"개",price:100},
+
+    fiber:{name:"식물섬유",emoji:"🌿",unit:"개",price:12},
+
+    iron:{name:"철",emoji:"🔩",unit:"개",price:25},
+    copper:{name:"구리",emoji:"🟠",unit:"개",price:40},
+    processedWood:{name:"가공목재",emoji:"🪵",unit:"개",price:20},
+
+    fuel:{name:"연료",emoji:"⛽",unit:"개",price:45},
+    chemical:{name:"화학제품",emoji:"🧪",unit:"개",price:50},
+
+    foodProduct:{name:"음식",emoji:"🍱",unit:"개",price:18},
+    clothes:{name:"옷",emoji:"👕",unit:"개",price:35},
+    furniture:{name:"가구",emoji:"🪑",unit:"개",price:60},
+    tools:{name:"생활도구",emoji:"🔧",unit:"개",price:70},
+    valuables:{name:"귀중품",emoji:"💍",unit:"개",price:200}
+
+};
+
+
+const buildingData = {
+
+    farm:{
+        name:"농장",
+        icon:"🌾",
+        cost:{money:500,wood:50},
+        workers:20,
+        production:{food:100},
+        description:"식량을 생산합니다."
+    },
+
+    well:{
+        name:"우물",
+        icon:"💧",
+        cost:{money:400,stone:50},
+        workers:10,
+        production:{water:100},
+        description:"물을 생산합니다."
+    },
+
+    lumber:{
+        name:"벌목장",
+        icon:"🌲",
+        cost:{money:600,wood:30},
+        workers:20,
+        production:{wood:80},
+        description:"목재를 생산합니다."
+    },
+
+    quarry:{
+        name:"채석장",
+        icon:"🪨",
+        cost:{money:700,wood:50},
+        workers:25,
+        production:{stone:70},
+        description:"석재를 생산합니다."
+    },
+
+    ironMine:{
+        name:"철광산",
+        icon:"⛏️",
+        cost:{money:900,wood:80},
+        workers:30,
+        production:{ironOre:50},
+        description:"철광석을 생산합니다."
+    },
+
+    copperMine:{
+        name:"구리광산",
+        icon:"⚙️",
+        cost:{money:1000,wood:80},
+        workers:30,
+        production:{copperOre:30},
+        description:"구리광석을 생산합니다."
+    },
+
+    coalMine:{
+        name:"탄광",
+        icon:"🔥",
+        cost:{money:900,wood:70},
+        workers:30,
+        production:{coal:60},
+        description:"석탄을 생산합니다."
+    },
+
+    oilField:{
+        name:"유전",
+        icon:"🛢️",
+        cost:{money:1500,iron:20},
+        workers:35,
+        production:{oil:50},
+        description:"석유를 생산합니다."
+    },
+
+    gasField:{
+        name:"가스전",
+        icon:"🔥",
+        cost:{money:1500,iron:20},
+        workers:35,
+        production:{gas:40},
+        description:"천연가스를 생산합니다."
+    },
+
+    fiberFarm:{
+        name:"섬유농장",
+        icon:"🌿",
+        cost:{money:700,wood:50},
+        workers:20,
+        production:{fiber:40},
+        description:"식물섬유를 생산합니다."
+    },
+
+    steelMill:{
+        name:"제철소",
+        icon:"🏭",
+        cost:{money:3000,stone:100,ironOre:100},
+        workers:50,
+        recipe:{input:{ironOre:2,coal:1},output:{iron:2}},
+        description:"철광석과 석탄으로 철을 생산합니다."
+    },
+
+    copperFactory:{
+        name:"구리 가공공장",
+        icon:"🏭",
+        cost:{money:2500,stone:80},
+        workers:45,
+        recipe:{input:{copperOre:2},output:{copper:2}},
+        description:"구리광석을 가공합니다."
+    },
+
+    woodFactory:{
+        name:"목재가공공장",
+        icon:"🏭",
+        cost:{money:2200,stone:80},
+        workers:40,
+        recipe:{input:{wood:2},output:{processedWood:2}},
+        description:"목재를 가공합니다."
+    },
+
+    refinery:{
+        name:"정유공장",
+        icon:"🏭",
+        cost:{money:3500,iron:50,stone:100},
+        workers:60,
+        recipe:{input:{oil:2},output:{fuel:2}},
+        description:"석유로 연료를 생산합니다."
+    },
+
+    chemicalFactory:{
+        name:"화학공장",
+        icon:"🧪",
+        cost:{money:4000,iron:50,stone:100},
+        workers:60,
+        recipe:{input:{gas:2,oil:1},output:{chemical:2}},
+        description:"천연가스와 석유로 화학제품을 생산합니다."
+    },
+
+    foodFactory:{
+        name:"식품공장",
+        icon:"🍱",
+        cost:{money:2000,iron:30,stone:50},
+        workers:50,
+        recipe:{input:{food:3},output:{foodProduct:3}},
+        description:"식량을 가공해 음식을 생산합니다."
+    },
+
+    textileFactory:{
+        name:"섬유공장",
+        icon:"👕",
+        cost:{money:2500,iron:40,stone:60},
+        workers:50,
+        recipe:{input:{fiber:2},output:{clothes:2}},
+        description:"식물섬유로 옷을 생산합니다."
+    },
+
+    furnitureFactory:{
+        name:"가구공장",
+        icon:"🪑",
+        cost:{money:2500,iron:30,processedWood:50},
+        workers:50,
+        recipe:{input:{processedWood:2},output:{furniture:2}},
+        description:"가공목재로 가구를 생산합니다."
+    },
+
+    metalFactory:{
+        name:"금속가공공장",
+        icon:"🔧",
+        cost:{money:3000,iron:40,copper:30},
+        workers:60,
+        recipe:{input:{iron:2,copper:1},output:{tools:2}},
+        description:"철과 구리로 생활도구를 생산합니다."
+    },
+
+    valuableWorkshop:{
+        name:"귀중품 공방",
+        icon:"💍",
+        cost:{money:5000,iron:50,rare:30},
+        workers:30,
+        recipe:{input:{iron:1,rare:1},output:{valuables:1}},
+        description:"철과 희귀광물로 귀중품을 생산합니다."
     }
-  );
+
+};
 
 
-/* ══════════════════════════════
-   그리드 생성
-══════════════════════════════ */
+/* =====================================================
+   게임 상태
+===================================================== */
 
-function buildGrid() {
+let game = null;
+let timer = null;
 
-  const grid =
-    $('grid');
+let speed = 1;
+
+let gameMinutes = 0;
+
+const MAX_STORAGE = 10000;
 
 
-  grid.innerHTML = '';
+/* =====================================================
+   국가 생성
+===================================================== */
 
-  cells = [];
+function startGame(){
+
+    let name =
+        document.getElementById("nationNameInput").value.trim();
+
+    if(!name){
+        name = "신생국";
+    }
+
+    const envNames =
+        Object.keys(environments);
+
+    const environment =
+        envNames[Math.floor(Math.random()*envNames.length)];
+
+    const initial = {
+
+        food:2500,
+        water:3000,
+        wood:700,
+        stone:1000,
+
+        ironOre:400,
+        copperOre:150,
+        coal:200,
+
+        oil:100,
+        gas:100,
+
+        rare:50,
+        fiber:100,
+
+        iron:0,
+        copper:0,
+        processedWood:0,
+
+        fuel:0,
+        chemical:0,
+
+        foodProduct:0,
+        clothes:0,
+        furniture:0,
+        tools:0,
+        valuables:0
+    };
+
+    const env = environments[environment];
+
+    /*
+       환경별 초기 재고
+    */
+
+    const starting = {
+
+        "초원":{
+            food:2500,water:3000,wood:700,stone:1000,
+            ironOre:400,copperOre:150,coal:200,
+            oil:100,gas:100,rare:50
+        },
+
+        "정글":{
+            food:1200,water:4000,wood:3500,stone:800,
+            ironOre:500,copperOre:300,coal:300,
+            oil:200,gas:200,rare:150
+        },
+
+        "사막":{
+            food:400,water:500,wood:150,stone:2000,
+            ironOre:1200,copperOre:800,coal:500,
+            oil:2500,gas:1500,rare:500
+        },
+
+        "설원":{
+            food:300,water:2000,wood:400,stone:1500,
+            ironOre:1500,copperOre:700,coal:1800,
+            oil:1500,gas:1200,rare:400
+        },
+
+        "산악숲":{
+            food:800,water:2500,wood:3000,stone:2500,
+            ironOre:3000,copperOre:1500,coal:1500,
+            oil:300,gas:200,rare:800
+        }
+
+    }[environment];
+
+    Object.assign(initial,starting);
+
+    game = {
+
+        name,
+        environment,
+
+        money:10000,
+
+        population:100,
+
+        level:1,
+
+        resources:initial,
+
+        buildings:{},
+
+        countries:[],
+
+        market:{},
+
+        logs:[],
+
+        technology:1,
+
+        tradeHistory:[]
+
+    };
+
+    /*
+       건물 초기화
+    */
+
+    Object.keys(buildingData).forEach(k=>{
+        game.buildings[k]=0;
+    });
 
 
-  const nums =
-    shuffle(
-      [1,2,3,4,5,6,7,8,9]
+    /*
+       AI 국가
+    */
+
+    createAI();
+
+
+    /*
+       시장
+    */
+
+    Object.keys(resourceInfo).forEach(k=>{
+        game.market[k]=resourceInfo[k].price;
+    });
+
+
+    document.getElementById("startScreen").style.display="none";
+    document.getElementById("game").style.display="block";
+
+    addLog(
+        `국가 ${name}이(가) ${environment}에서 시작했습니다.`
     );
 
+    addLog(
+        "세계에는 4개의 AI 국가가 존재합니다."
+    );
 
-  nums.forEach(
-    (n, idx) => {
+    setSpeed(1);
 
-      const d =
-        document.createElement(
-          'div'
-        );
+    updateUI();
 
+    if(timer) clearInterval(timer);
 
-      d.className =
-        'card';
-
-
-      d.textContent =
-        n;
-
-
-      /*
-       * pointerdown 하나만 사용.
-       * 모바일 터치와 마우스를
-       * 하나의 입력 방식으로 처리.
-       */
-
-      const tap =
-        e => {
-
-          e.preventDefault();
-
-          onCard(idx);
-
-        };
-
-
-      d.addEventListener(
-        'pointerdown',
-        tap
-      );
-
-
-      grid.appendChild(d);
-
-
-      cells.push({
-
-        el: d,
-
-        num: n
-
-      });
-
-    }
-  );
-
-
-  updateActiveCard();
-
+    timer=setInterval(gameTick,1000);
 }
 
 
-/* ══════════════════════════════
-   배열 섞기
-══════════════════════════════ */
+/* =====================================================
+   AI 국가
+===================================================== */
 
-function shuffle(a) {
+function createAI(){
 
-  const arr =
-    [...a];
-
-
-  for (
-    let i = arr.length - 1;
-    i > 0;
-    i--
-  ) {
-
-    const j =
-      Math.floor(
-        Math.random() *
-        (i + 1)
-      );
-
-
-    [
-      arr[i],
-      arr[j]
-    ] =
-    [
-      arr[j],
-      arr[i]
+    const names=[
+        "알테라",
+        "노바",
+        "벨로스",
+        "아르카디아"
     ];
 
-  }
+    const envs=Object.keys(environments);
 
+    names.forEach((name,i)=>{
 
-  return arr;
+        let env=envs[i % envs.length];
 
+        let r={};
+
+        Object.keys(resourceInfo).forEach(k=>{
+            r[k]=Math.floor(Math.random()*500)+100;
+        });
+
+        game.countries.push({
+
+            name,
+            environment:env,
+
+            money:8000+Math.floor(Math.random()*5000),
+
+            population:
+                200+
+                Math.floor(Math.random()*800),
+
+            level:1,
+
+            resources:r,
+
+            buildings:{
+
+                farm:Math.floor(Math.random()*3)+1,
+                well:1,
+                lumber:1,
+                quarry:1,
+                ironMine:Math.floor(Math.random()*2),
+                coalMine:Math.floor(Math.random()*2)
+
+            }
+
+        });
+
+    });
 }
 
 
-/* ══════════════════════════════
-   활성 카드 표시
-══════════════════════════════ */
+/* =====================================================
+   시간
+===================================================== */
 
-function updateActiveCard() {
+function gameTick(){
 
-  cells.forEach(
-    c => {
+    for(let i=0;i<speed;i++){
 
-      c.el.classList.remove(
-        'active',
-        'done'
-      );
+        gameMinutes++;
 
+        productionTick();
 
-      if (
-        c.num < nextExp
-      ) {
+        factoryTick();
 
-        c.el.classList.add(
-          'done'
-        );
+        consumptionTick();
 
-      }
+        populationTick();
 
+        aiTick();
 
-      if (
-        c.num === nextExp
-      ) {
+        marketTick();
 
-        c.el.classList.add(
-          'active'
-        );
+        levelCheck();
 
-      }
-
-    }
-  );
-
-
-  $('next-num')
-    .textContent =
-    nextExp;
-
-}
-
-
-/* ══════════════════════════════
-   🔥 연속 정답 UI
-══════════════════════════════ */
-
-function updateStreakUI() {
-
-  const box =
-    $('streak-box');
-
-  const disp =
-    $('streak-disp');
-
-
-  disp.textContent =
-    streak;
-
-
-  /*
-   * 3연속 이상부터 표시
-   */
-
-  if (
-    streak >= 3
-  ) {
-
-    box.classList.add(
-      'hot'
-    );
-
-  } else {
-
-    box.classList.remove(
-      'hot'
-    );
-
-  }
-
-}
-
-
-/* ══════════════════════════════
-   🔥 연속 정답 초기화
-══════════════════════════════ */
-
-function resetStreak() {
-
-  streak = 0;
-
-  updateStreakUI();
-
-}
-
-
-/* ══════════════════════════════
-   ⏱️ +1초 표시
-══════════════════════════════ */
-
-function showTimeBonus() {
-
-  const bonus =
-    $('time-bonus');
-
-
-  bonus.classList.remove(
-    'show'
-  );
-
-
-  /*
-   * 같은 애니메이션을
-   * 연속으로 다시 실행하기 위한 처리
-   */
-
-  void bonus.offsetWidth;
-
-
-  bonus.classList.add(
-    'show'
-  );
-
-
-  setTimeout(
-    () => {
-
-      bonus.classList.remove(
-        'show'
-      );
-
-    },
-
-    800
-
-  );
-
-}
-
-
-/* ══════════════════════════════
-   ⏱️ 시간 +1초
-══════════════════════════════ */
-
-function addBonusSecond() {
-
-  /*
-   * 최대 시간 제한은 두지 않음.
-   * 연속 정답 3회 단위마다
-   * 실제 남은 시간이 1초 증가.
-   */
-
-  timeLeft++;
-
-
-  $('timer')
-    .textContent =
-    timeLeft;
-
-
-  /*
-   * 5초 이하일 때 빨간색,
-   * +1초로 6초 이상이 되면
-   * 긴급 표시 제거.
-   */
-
-  if (
-    timeLeft > 5
-  ) {
-
-    $('timer')
-      .classList
-      .remove('urgent');
-
-  }
-
-
-  showTimeBonus();
-
-}
-
-
-/* ══════════════════════════════
-   🎆 폭죽
-══════════════════════════════ */
-
-function createFirework(
-  x,
-  y
-) {
-
-  const container =
-    document.createElement(
-      'div'
-    );
-
-
-  container.className =
-    'firework-container';
-
-
-  document.body.appendChild(
-    container
-  );
-
-
-  /* 중심 폭발 */
-
-  const burst =
-    document.createElement(
-      'div'
-    );
-
-
-  burst.className =
-    'firework-burst';
-
-
-  burst.style.left =
-    x + 'px';
-
-  burst.style.top =
-    y + 'px';
-
-
-  container.appendChild(
-    burst
-  );
-
-
-  const colors = [
-
-    '#ff3b30',
-
-    '#ff9500',
-
-    '#ffcc00',
-
-    '#34c759',
-
-    '#00c7be',
-
-    '#007aff',
-
-    '#5856d6',
-
-    '#ff2d55',
-
-    '#af52de'
-
-  ];
-
-
-  /*
-   * 큰 폭죽
-   */
-
-  const particleCount = 28;
-
-
-  for (
-    let i = 0;
-    i < particleCount;
-    i++
-  ) {
-
-    const particle =
-      document.createElement(
-        'div'
-      );
-
-
-    particle.className =
-      'firework-particle';
-
-
-    const angle =
-      (Math.PI * 2 * i)
-      / particleCount;
-
-
-    const distance =
-      55 +
-      Math.random() * 85;
-
-
-    const dx =
-      Math.cos(angle)
-      * distance;
-
-
-    const dy =
-      Math.sin(angle)
-      * distance;
-
-
-    particle.style.left =
-      x + 'px';
-
-    particle.style.top =
-      y + 'px';
-
-
-    particle.style.setProperty(
-      '--dx',
-      dx + 'px'
-    );
-
-
-    particle.style.setProperty(
-      '--dy',
-      dy + 'px'
-    );
-
-
-    const color =
-      colors[
-        Math.floor(
-          Math.random()
-          * colors.length
-        )
-      ];
-
-
-    particle.style.background =
-      color;
-
-
-    particle.style.color =
-      color;
-
-
-    const size =
-      4 +
-      Math.random() * 5;
-
-
-    particle.style.width =
-      size + 'px';
-
-    particle.style.height =
-      size + 'px';
-
-
-    particle.style.animationDelay =
-      Math.random() * 70 +
-      'ms';
-
-
-    container.appendChild(
-      particle
-    );
-
-  }
-
-
-  /*
-   * 작은 폭죽 하나 추가
-   */
-
-  setTimeout(
-    () => {
-
-      createSmallFirework(
-
-        x +
-          (
-            Math.random() * 70
-            - 35
-          ),
-
-        y +
-          (
-            Math.random() * 70
-            - 35
-          ),
-
-        container
-
-      );
-
-    },
-
-    80
-
-  );
-
-
-  /*
-   * 메모리 정리
-   */
-
-  setTimeout(
-    () => {
-
-      if (
-        container.parentNode
-      ) {
-
-        container.remove();
-
-      }
-
-    },
-
-    1000
-
-  );
-
-}
-
-
-/* ══════════════════════════════
-   작은 폭죽
-══════════════════════════════ */
-
-function createSmallFirework(
-  x,
-  y,
-  container
-) {
-
-  const colors = [
-
-    '#ff3b30',
-
-    '#ff9500',
-
-    '#ffcc00',
-
-    '#34c759',
-
-    '#007aff',
-
-    '#ff2d55',
-
-    '#af52de'
-
-  ];
-
-
-  for (
-    let i = 0;
-    i < 14;
-    i++
-  ) {
-
-    const particle =
-      document.createElement(
-        'div'
-      );
-
-
-    particle.className =
-      'firework-particle';
-
-
-    const angle =
-      (Math.PI * 2 * i)
-      / 14;
-
-
-    const distance =
-      30 +
-      Math.random() * 55;
-
-
-    particle.style.left =
-      x + 'px';
-
-    particle.style.top =
-      y + 'px';
-
-
-    particle.style.setProperty(
-      '--dx',
-      Math.cos(angle)
-      * distance
-      + 'px'
-    );
-
-
-    particle.style.setProperty(
-      '--dy',
-      Math.sin(angle)
-      * distance
-      + 'px'
-    );
-
-
-    const color =
-      colors[
-        Math.floor(
-          Math.random()
-          * colors.length
-        )
-      ];
-
-
-    particle.style.background =
-      color;
-
-    particle.style.color =
-      color;
-
-
-    const size =
-      3 +
-      Math.random() * 4;
-
-
-    particle.style.width =
-      size + 'px';
-
-    particle.style.height =
-      size + 'px';
-
-
-    container.appendChild(
-      particle
-    );
-
-  }
-
-}
-
-
-/* ══════════════════════════════
-   숫자 카드 클릭
-══════════════════════════════ */
-
-function onCard(idx) {
-
-  if (!gameActive) {
-    return;
-  }
-
-
-  const cell =
-    cells[idx];
-
-
-  /* ═══════════════
-     ❌ 오답
-  ═══════════════ */
-
-  if (
-    cell.num !== nextExp
-  ) {
-
-
-    /*
-     * 🔥 연속 정답 초기화
-     */
-
-    resetStreak();
-
-
-    /*
-     * 이전 X 제거
-     */
-
-    const oldMark =
-      cell.el.querySelector(
-        '.wrong-mark'
-      );
-
-
-    if (oldMark) {
-      oldMark.remove();
+        if(gameMinutes % 60 === 0){
+            randomEvent();
+        }
     }
 
-
-    /*
-     * 빨간 X 생성
-     */
-
-    const xMark =
-      document.createElement(
-        'div'
-      );
+    updateUI();
+}
 
 
-    xMark.className =
-      'wrong-mark';
+/* =====================================================
+   생산
+===================================================== */
+
+function productionTick(){
+
+    const env=environments[game.environment];
+
+    let usedWorkers=0;
+
+    Object.entries(game.buildings).forEach(([key,count])=>{
+
+        if(!count) return;
+
+        const b=buildingData[key];
+
+        if(!b.production) return;
+
+        usedWorkers += b.workers * count;
+
+        Object.entries(b.production).forEach(([resource,base])=>{
+
+            let amount =
+                base *
+                count *
+                envFactor(resource,env);
+
+            amount *=
+                Math.min(
+                    1,
+                    availableWorkers() /
+                    Math.max(1,usedWorkers)
+                );
+
+            addResource(resource,amount);
+
+        });
+
+    });
+
+}
 
 
-    xMark.textContent =
-      '✕';
+/* =====================================================
+   환경 생산 보정
+===================================================== */
+
+function envFactor(resource,env){
+
+    const map={
+
+        food:"food",
+        water:"water",
+        wood:"wood",
+        stone:"stone",
+
+        ironOre:"iron",
+        copperOre:"copperOre",
+
+        coal:"coal",
+
+        oil:"oil",
+        gas:"gas",
+
+        rare:"rare",
+
+        fiber:"food"
+
+    };
+
+    return environments[game.environment][
+        map[resource] || resource
+    ] || 1;
+
+}
 
 
-    cell.el.appendChild(
-      xMark
-    );
+/* =====================================================
+   공장
+===================================================== */
 
+function factoryTick(){
 
-    /*
-     * 흔들림 재생
-     */
+    Object.entries(game.buildings).forEach(([key,count])=>{
 
-    cell.el.classList.remove(
-      'wrong'
-    );
+        if(!count) return;
 
+        const b=buildingData[key];
 
-    void cell.el.offsetWidth;
+        if(!b.recipe) return;
 
+        const workers =
+            b.workers * count;
 
-    cell.el.classList.add(
-      'wrong'
-    );
-
-
-    /*
-     * 0.5초 뒤 X 제거
-     */
-
-    setTimeout(
-      () => {
-
-        if (
-          xMark.parentNode
-        ) {
-
-          xMark.remove();
-
+        if(availableWorkers() < workers){
+            return;
         }
 
-      },
+        let possible=count;
 
-      500
+        Object.entries(b.recipe.input).forEach(([r,cost])=>{
 
-    );
+            possible=Math.min(
+                possible,
+                Math.floor(
+                    (game.resources[r]||0) / cost
+                )
+            );
 
+        });
+
+        if(possible<=0) return;
+
+        Object.entries(b.recipe.input).forEach(([r,cost])=>{
+            game.resources[r]-=cost*possible;
+        });
+
+        Object.entries(b.recipe.output).forEach(([r,amount])=>{
+            addResource(r,amount*possible);
+        });
+
+    });
+
+}
+
+
+/* =====================================================
+   소비
+===================================================== */
+
+function consumptionTick(){
+
+    const pop=game.population;
 
     /*
-     * 흔들림 제거
-     */
+       식량 소비
+       0.08개 / 인 / 일
+       1분 = 1일
+    */
 
-    setTimeout(
-      () => {
+    game.resources.food -= pop * 0.08;
 
-        cell.el.classList.remove(
-          'wrong'
-        );
+    /*
+       물
+    */
 
-      },
+    game.resources.water -= pop * 0.15;
 
-      350
+    /*
+       제품 소비
+    */
 
-    );
+    game.resources.foodProduct -=
+        pop * 0.03;
 
+    game.resources.clothes -=
+        pop * 0.005;
 
-    return;
+    /*
+       전력은 별도 계산
+    */
 
-  }
+    if(game.resources.food < 0){
 
+        game.resources.food=0;
 
-  /* ═══════════════
-     🎯 정답
-  ═══════════════ */
+        game.population -=
+            Math.max(0.1,pop*0.01);
 
-  score++;
-
-
-  /*
-   * 🔥 연속 정답 증가
-   */
-
-  streak++;
-
-
-  /*
-   * 점수 표시
-   */
-
-  $('score-disp')
-    .textContent =
-    score;
-
-
-  /*
-   * 연속 정답 표시
-   */
-
-  updateStreakUI();
-
-
-  /*
-   * 🎁 3연속마다 +1초
-   *
-   * 3, 6, 9, 12...
-   */
-
-  if (
-    streak >= 3 &&
-    streak % 3 === 0
-  ) {
-
-    addBonusSecond();
-
-  }
-
-
-  /*
-   * 클릭한 카드의
-   * 정확한 화면 좌표 계산
-   */
-
-  const rect =
-    cell.el.getBoundingClientRect();
-
-
-  const centerX =
-    rect.left +
-    rect.width / 2;
-
-
-  const centerY =
-    rect.top +
-    rect.height / 2;
-
-
-  /*
-   * 카드 임팩트
-   */
-
-  cell.el.classList.remove(
-    'correct-hit'
-  );
-
-
-  void cell.el.offsetWidth;
-
-
-  cell.el.classList.add(
-    'correct-hit'
-  );
-
-
-  /*
-   * 🎆 폭죽
-   */
-
-  createFirework(
-    centerX,
-    centerY
-  );
-
-
-  /*
-   * 현재 숫자를
-   * 다음 숫자 + 9로 교체
-   */
-
-  const newNum =
-    nextExp + 9;
-
-
-  cell.num =
-    newNum;
-
-
-  cell.el.textContent =
-    newNum;
-
-
-  nextExp++;
-
-
-  /*
-   * 완료되지 않은 카드들의
-   * 숫자를 무작위로 섞기
-   */
-
-  const activeIndices =
-    cells
-
-      .map(
-        (c, i) => ({
-          c,
-          i
-        })
-      )
-
-      .filter(
-        ({ c }) =>
-          c.num >= nextExp
-      );
-
-
-  const shuffledNums =
-    shuffle(
-      activeIndices.map(
-        ({ c }) =>
-          c.num
-      )
-    );
-
-
-  activeIndices.forEach(
-    ({ i }, j) => {
-
-      cells[i].num =
-        shuffledNums[j];
-
-
-      cells[i].el.textContent =
-        shuffledNums[j];
+        addLog("⚠️ 식량 부족으로 인구가 감소했습니다.");
 
     }
-  );
 
+    if(game.resources.water < 0){
 
-  updateActiveCard();
+        game.resources.water=0;
+
+        game.population -=
+            Math.max(0.1,pop*0.01);
+
+        addLog("⚠️ 물 부족으로 인구가 감소했습니다.");
+
+    }
+
+    if(game.population<10){
+        game.population=10;
+    }
 
 }
 
 
-/* ══════════════════════════════
-   타이머
-══════════════════════════════ */
+/* =====================================================
+   인구
+===================================================== */
 
-function startTimer() {
+function populationTick(){
 
-  timeLeft = 15;
+    let food=game.resources.food;
 
+    if(food > game.population * 2){
 
-  $('timer')
-    .textContent =
-    timeLeft;
+        game.population +=
+            game.population * 0.0008;
 
+    }
 
-  $('timer')
-    .classList
-    .remove('urgent');
-
-
-  timerInt =
-    setInterval(
-      () => {
-
-        timeLeft--;
+}
 
 
-        $('timer')
-          .textContent =
-          timeLeft;
+/* =====================================================
+   노동력
+===================================================== */
+
+function availableWorkers(){
+
+    return game.population * 0.60;
+}
 
 
-        if (
-          timeLeft <= 5
-        ) {
+/* =====================================================
+   자원 추가
+===================================================== */
 
-          $('timer')
-            .classList
-            .add('urgent');
+function addResource(resource,amount){
+
+    if(!game.resources[resource]){
+        game.resources[resource]=0;
+    }
+
+    game.resources[resource]+=amount;
+
+    if(game.resources[resource]>MAX_STORAGE){
+
+        game.resources[resource]=MAX_STORAGE;
+
+    }
+
+    if(game.resources[resource]<0){
+        game.resources[resource]=0;
+    }
+
+}
+
+
+/* =====================================================
+   건설
+===================================================== */
+
+function build(key){
+
+    const b=buildingData[key];
+
+    if(!b) return;
+
+    if(game.level < requiredLevel(key)){
+
+        addLog(
+            `🔒 ${b.name}은(는) 발전 단계가 부족합니다.`
+        );
+
+        return;
+    }
+
+    if(!payCost(b.cost)){
+
+        addLog(
+            `❌ ${b.name} 건설 자원이 부족합니다.`
+        );
+
+        return;
+    }
+
+    game.buildings[key]++;
+
+    addLog(
+        `🏗️ ${b.name}을(를) 건설했습니다.`
+    );
+
+    updateUI();
+
+}
+
+
+/* =====================================================
+   건설 비용
+===================================================== */
+
+function payCost(cost){
+
+    for(const [r,v] of Object.entries(cost)){
+
+        if(r==="money"){
+
+            if(game.money<v)
+                return false;
+
+        }else{
+
+            if((game.resources[r]||0)<v)
+                return false;
 
         }
 
+    }
 
-        if (
-          timeLeft <= 0
-        ) {
+    for(const [r,v] of Object.entries(cost)){
 
-          endGame();
+        if(r==="money")
+            game.money-=v;
+
+        else
+            game.resources[r]-=v;
+
+    }
+
+    return true;
+}
+
+
+/* =====================================================
+   발전 조건
+===================================================== */
+
+function requiredLevel(key){
+
+    const groups={
+
+        farm:1,
+        well:1,
+        lumber:1,
+        quarry:1,
+        fiberFarm:2,
+
+        ironMine:2,
+        copperMine:2,
+        coalMine:2,
+
+        oilField:3,
+        gasField:3,
+
+        steelMill:3,
+        copperFactory:3,
+        woodFactory:3,
+
+        foodFactory:4,
+        textileFactory:4,
+        furnitureFactory:4,
+
+        refinery:5,
+        chemicalFactory:5,
+        metalFactory:5,
+
+        valuableWorkshop:6
+
+    };
+
+    return groups[key]||1;
+}
+
+
+/* =====================================================
+   발전 단계
+===================================================== */
+
+const levels=[
+
+    {
+        name:"정착사회",
+        population:100
+    },
+
+    {
+        name:"농업사회",
+        population:500
+    },
+
+    {
+        name:"초기 금속사회",
+        population:2000
+    },
+
+    {
+        name:"산업혁명",
+        population:10000
+    },
+
+    {
+        name:"전기·중공업",
+        population:50000
+    },
+
+    {
+        name:"석유·현대 산업",
+        population:250000
+    },
+
+    {
+        name:"현대 첨단산업",
+        population:1000000
+    }
+
+];
+
+
+function levelCheck(){
+
+    let next=game.level;
+
+    for(let i=0;i<levels.length;i++){
+
+        if(
+            game.population >= levels[i].population &&
+            i+1>next
+        ){
+            next=i+1;
+        }
+
+    }
+
+    if(next>game.level){
+
+        game.level=next;
+
+        addLog(
+            `🎉 국가가 ${levels[next-1].name} 단계로 발전했습니다!`
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   AI
+===================================================== */
+
+function aiTick(){
+
+    game.countries.forEach(c=>{
+
+        const env=environments[c.environment];
+
+        /*
+           간단한 AI 생산
+        */
+
+        c.resources.food =
+            Math.min(
+                10000,
+                c.resources.food +
+                (c.buildings.farm||0) *
+                100 *
+                env.food
+            );
+
+        c.resources.water =
+            Math.min(
+                10000,
+                c.resources.water +
+                (c.buildings.well||0) *
+                100 *
+                env.water
+            );
+
+        c.resources.wood =
+            Math.min(
+                10000,
+                c.resources.wood +
+                (c.buildings.lumber||0) *
+                80 *
+                env.wood
+            );
+
+        /*
+           소비
+        */
+
+        c.resources.food -=
+            c.population*0.08;
+
+        c.resources.water -=
+            c.population*0.15;
+
+        if(c.resources.food<100){
+
+            c.money-=100;
 
         }
 
-      },
+        if(c.resources.water<100){
 
-      1000
-
-    );
-
-}
-
-
-function stopTimer() {
-
-  clearInterval(
-    timerInt
-  );
-
-  timerInt = null;
-
-}
-
-
-/* ══════════════════════════════
-   게임 리셋
-══════════════════════════════ */
-
-function resetGame() {
-
-  stopTimer();
-
-
-  nextExp = 1;
-
-  score = 0;
-
-  /*
-   * 🔥 연속 정답 초기화
-   */
-
-  streak = 0;
-
-  gameActive = false;
-
-
-  timeLeft = 15;
-
-
-  $('timer')
-    .textContent =
-    '15';
-
-
-  $('timer')
-    .classList
-    .remove('urgent');
-
-
-  $('score-disp')
-    .textContent =
-    '0';
-
-
-  $('streak-disp')
-    .textContent =
-    '0';
-
-
-  $('streak-box')
-    .classList
-    .remove('hot');
-
-
-  $('time-bonus')
-    .classList
-    .remove('show');
-
-
-  $('next-num')
-    .textContent =
-    '1';
-
-
-  $('countdown')
-    .textContent =
-    '';
-
-
-  $('start-btn')
-    .style
-    .display =
-    'block';
-
-
-  $('start-btn')
-    .disabled =
-    false;
-
-
-  buildGrid();
-
-}
-
-
-/* ══════════════════════════════
-   게임 시작
-══════════════════════════════ */
-
-async function startGame() {
-
-  $('start-btn')
-    .disabled =
-    true;
-
-
-  $('start-btn')
-    .style
-    .display =
-    'none';
-
-
-  nextExp = 1;
-
-  score = 0;
-
-  /*
-   * 🔥 연속 정답 초기화
-   */
-
-  streak = 0;
-
-
-  $('score-disp')
-    .textContent =
-    '0';
-
-
-  updateStreakUI();
-
-
-  $('time-bonus')
-    .classList
-    .remove('show');
-
-
-  buildGrid();
-
-
-  const cd =
-    $('countdown');
-
-
-  for (
-    const s
-    of ['3','2','1','시작!']
-  ) {
-
-    cd.textContent =
-      s;
-
-
-    await delay(
-      s === '시작!'
-        ? 700
-        : 820
-    );
-
-  }
-
-
-  cd.textContent =
-    '';
-
-
-  gameActive = true;
-
-
-  startTimer();
-
-}
-
-
-/* ══════════════════════════════
-   게임 종료
-══════════════════════════════ */
-
-async function endGame() {
-
-  stopTimer();
-
-
-  gameActive = false;
-
-
-  const finalScore =
-    score;
-
-
-  $('r-name')
-    .textContent =
-    nickname;
-
-
-  $('r-score')
-    .textContent =
-    finalScore;
-
-
-  $('r-rank')
-    .textContent =
-    '';
-
-
-  $('lb-rows')
-    .innerHTML =
-    '';
-
-
-  $('lb-loading')
-    .style
-    .display =
-    'block';
-
-
-  $('lb-loading')
-    .textContent =
-    '기록 저장 중...';
-
-
-  showResult();
-
-
-  try {
-
-    await window.fbSave(
-      nickname,
-      finalScore
-    );
-
-
-    $('lb-loading')
-      .textContent =
-      '랭킹 불러오는 중...';
-
-
-    const top10 =
-      await window.fbLoadTop10();
-
-
-    $('lb-loading')
-      .style
-      .display =
-      'none';
-
-
-    renderRanking(
-      top10,
-      nickname,
-      finalScore
-    );
-
-
-  } catch(e) {
-
-    console.error(e);
-
-
-    $('lb-loading')
-      .textContent =
-      '네트워크 오류 — 랭킹을 불러올 수 없습니다';
-
-  }
-
-}
-
-
-/* ══════════════════════════════
-   랭킹
-══════════════════════════════ */
-
-function renderRanking(
-  rows,
-  myName,
-  myScore
-) {
-
-  if (
-    !rows ||
-    rows.length === 0
-  ) {
-
-    $('lb-rows')
-      .innerHTML =
-      `
-      <div
-        style="
-          text-align:center;
-          padding:1rem;
-          color:var(--text2);
-          font-size:14px;
-        "
-      >
-        아직 기록이 없습니다
-      </div>
-      `;
-
-    return;
-
-  }
-
-
-  const medals = [
-    '🥇',
-    '🥈',
-    '🥉'
-  ];
-
-
-  const rankClasses = [
-    'gold',
-    'silver',
-    'bronze'
-  ];
-
-
-  let myRank = -1;
-
-
-  const html =
-    rows.map(
-      (r, i) => {
-
-        const isMe =
-          r.name === myName &&
-          r.score === myScore;
-
-
-        if (
-          isMe &&
-          myRank < 0
-        ) {
-
-          myRank =
-            i + 1;
+            c.money-=100;
 
         }
 
+        /*
+           AI 인구 성장
+        */
 
-        const rankLabel =
-          i < 3
-            ? medals[i]
-            : i + 1;
+        if(
+            c.resources.food>c.population &&
+            c.resources.water>c.population
+        ){
+
+            c.population +=
+                c.population*0.0005;
+
+        }
+
+        /*
+           AI 국가 무역
+        */
+
+        aiTrade(c);
+
+    });
+
+}
 
 
-        const rankCls =
-          i < 3
-            ? rankClasses[i]
-            : '';
+/* =====================================================
+   AI 무역
+===================================================== */
+
+function aiTrade(c){
+
+    if(c.money<500) return;
+
+    if(c.resources.food<200){
+
+        c.money-=200;
+
+        c.resources.food+=20;
+
+        addLog(
+            `🤝 ${c.name}이(가) 세계시장에서 식량을 구매했습니다.`
+        );
+
+    }
+
+    if(c.resources.water<200){
+
+        c.money-=100;
+
+        c.resources.water+=20;
+
+    }
+
+}
 
 
-        return `
+/* =====================================================
+   시장
+===================================================== */
 
-          <div
-            class="lb-row${isMe ? ' me' : ''}"
-          >
+function marketTick(){
 
-            <span
-              class="lb-rank ${rankCls}"
-            >
-              ${rankLabel}
+    Object.keys(resourceInfo).forEach(resource=>{
+
+        let change =
+            (Math.random()-0.5)*0.08;
+
+        game.market[resource] *=
+            1+change;
+
+        const base=resourceInfo[resource].price;
+
+        game.market[resource]=Math.max(
+            base*0.5,
+            Math.min(base*2,game.market[resource])
+        );
+
+    });
+
+}
+
+
+/* =====================================================
+   랜덤 이벤트
+===================================================== */
+
+function randomEvent(){
+
+    const events=[
+
+        ()=>{
+            game.money+=500;
+
+            addLog(
+                "📈 경제 호황! 세금 수입이 증가했습니다. +500"
+            );
+        },
+
+        ()=>{
+            game.money-=300;
+
+            addLog(
+                "📉 경기 침체가 발생했습니다. -300"
+            );
+        },
+
+        ()=>{
+            game.resources.food+=300;
+
+            addLog(
+                "🌾 풍년! 식량 생산이 증가했습니다."
+            );
+        },
+
+        ()=>{
+            game.resources.food=
+                Math.max(0,game.resources.food-200);
+
+            addLog(
+                "🌪️ 자연재해로 식량 일부가 손실되었습니다."
+            );
+        },
+
+        ()=>{
+            game.population+=10;
+
+            addLog(
+                "👶 출산 증가로 인구가 증가했습니다. +10"
+            );
+        }
+
+    ];
+
+    events[
+        Math.floor(Math.random()*events.length)
+    ]();
+
+}
+
+
+/* =====================================================
+   무역
+===================================================== */
+
+function trade(countryIndex,type){
+
+    const country=
+        game.countries[countryIndex];
+
+    const resource=
+        document.getElementById(
+            `tradeResource${countryIndex}`
+        ).value;
+
+    const amount=
+        Number(
+            document.getElementById(
+                `tradeAmount${countryIndex}`
+            ).value
+        );
+
+    const transport=
+        document.getElementById(
+            `transport${countryIndex}`
+        ).value;
+
+    if(!amount || amount<=0){
+
+        addLog("❌ 거래 수량을 입력하세요.");
+
+        return;
+    }
+
+    const price=
+        game.market[resource] || resourceInfo[resource].price;
+
+    const transportRate={
+
+        land:1.15,
+        sea:1.05,
+        air:1.50
+
+    }[transport];
+
+    const total=
+        amount*price*transportRate;
+
+    if(type==="buy"){
+
+        if(game.money<total){
+
+            addLog("❌ 국고가 부족합니다.");
+
+            return;
+        }
+
+        if(
+            country.resources[resource]===undefined ||
+            country.resources[resource]<amount
+        ){
+
+            addLog("❌ 상대 국가의 재고가 부족합니다.");
+
+            return;
+        }
+
+        game.money-=total;
+
+        country.money+=total;
+
+        country.resources[resource]-=amount;
+
+        addResource(resource,amount);
+
+        addLog(
+            `🚚 ${country.name}에서 ${resourceInfo[resource].name} ${format(amount)}${resourceInfo[resource].unit} 구매`
+        );
+
+    }
+
+    else{
+
+        if(
+            (game.resources[resource]||0)<amount
+        ){
+
+            addLog("❌ 판매할 자원이 부족합니다.");
+
+            return;
+        }
+
+        if(
+            !country.resources[resource] &&
+            country.resources[resource]!==0
+        ){
+
+            country.resources[resource]=0;
+
+        }
+
+        if(country.money<total){
+
+            addLog("❌ 상대 국가의 국고가 부족합니다.");
+
+            return;
+        }
+
+        game.resources[resource]-=amount;
+
+        country.resources[resource]+=amount;
+
+        game.money+=total;
+
+        country.money-=total;
+
+        addLog(
+            `💰 ${country.name}에 ${resourceInfo[resource].name} ${format(amount)}${resourceInfo[resource].unit} 판매`
+        );
+
+    }
+
+    game.tradeHistory.push({
+
+        country:country.name,
+
+        resource,
+
+        amount,
+
+        type,
+
+        transport,
+
+        money:total
+
+    });
+
+    updateUI();
+
+}
+
+
+/* =====================================================
+   운송 해금
+===================================================== */
+
+function transportUnlocked(type){
+
+    if(type==="land")
+        return game.level>=1;
+
+    if(type==="sea")
+        return game.level>=3;
+
+    if(type==="air")
+        return game.level>=5;
+
+    return false;
+}
+
+
+/* =====================================================
+   UI
+===================================================== */
+
+function updateUI(){
+
+    if(!game) return;
+
+    document.getElementById("nationTitle").textContent=
+        `${game.name} ${environments[game.environment].emoji}`;
+
+    document.getElementById("dateText").textContent=
+        `게임 경과 ${Math.floor(gameMinutes/60)}일 ${gameMinutes%60}시간`;
+
+    document.getElementById("countryName").textContent=
+        game.name;
+
+    document.getElementById("environment").textContent=
+        `${environments[game.environment].emoji} ${game.environment}`;
+
+    document.getElementById("level").textContent=
+        `Lv.${game.level} ${levels[game.level-1].name}`;
+
+    document.getElementById("population").textContent=
+        format(game.population)+"명";
+
+    document.getElementById("money").textContent=
+        "$"+format(game.money);
+
+    const power=
+        calculatePower();
+
+    document.getElementById("power").textContent=
+        format(power)+" ⚡";
+
+    document.getElementById("workers").innerHTML=
+        `총 인구: <b>${format(game.population)}</b>명<br>
+         노동 가능 인구: <b>${format(availableWorkers())}</b>명`;
+
+    updateLevelUI();
+
+    updateResources();
+
+    updateBuildings();
+
+    updateBuildingList();
+
+    updateFactories();
+
+    updateTrade();
+
+    updateMarket();
+
+    updateWorld();
+
+}
+
+
+/* =====================================================
+   전력
+===================================================== */
+
+function calculatePower(){
+
+    let p=0;
+
+    Object.entries(game.buildings).forEach(([key,count])=>{
+
+        if(
+            key.includes("Factory") ||
+            key==="steelMill" ||
+            key==="refinery" ||
+            key==="chemicalFactory" ||
+            key==="metalFactory" ||
+            key==="valuableWorkshop"
+        ){
+
+            p+=count*20;
+
+        }
+
+    });
+
+    return p;
+}
+
+
+/* =====================================================
+   발전 UI
+===================================================== */
+
+function updateLevelUI(){
+
+    const next=
+        levels[game.level];
+
+    if(!next){
+
+        document.getElementById("levelRequirement").innerHTML=
+            "<b>최고 발전 단계입니다.</b>";
+
+        document.getElementById("levelProgress").style.width="100%";
+
+        return;
+    }
+
+    const current=levels[game.level-1].population;
+
+    const target=next.population;
+
+    const ratio=
+        Math.max(
+            0,
+            Math.min(
+                100,
+                ((game.population-current)/
+                (target-current))*100
+            )
+        );
+
+    document.getElementById("levelRequirement").innerHTML=
+        `다음 단계: <b>Lv.${game.level+1} ${next.name}</b>
+        <br>
+        필요 인구: ${format(target)}명
+        <br>
+        현재: ${format(game.population)}명`;
+
+    document.getElementById("levelProgress").style.width=
+        ratio+"%";
+
+}
+
+
+/* =====================================================
+   자원 UI
+===================================================== */
+
+function updateResources(){
+
+    let html="";
+
+    Object.keys(resourceInfo).forEach(r=>{
+
+        const info=resourceInfo[r];
+
+        const amount=
+            game.resources[r]||0;
+
+        html+=`
+
+        <div class="resource">
+
+            <span>
+                ${info.emoji}
+                ${info.name}
             </span>
 
-            <span
-              class="lb-name"
-            >
-              ${r.name}
+            <span>
+                ${format(amount)}
+                ${info.unit}
+                /
+                ${MAX_STORAGE.toLocaleString()}
             </span>
 
-            <span
-              class="lb-score"
-            >
-              ${r.score}개
-            </span>
-
-          </div>
+        </div>
 
         `;
 
-      }
-    )
-    .join('');
+    });
+
+    document.getElementById("resourceList").innerHTML=html;
 
 
-  $('lb-rows')
-    .innerHTML =
-    html;
+    /*
+       하루 생산/소비 표시
+    */
 
+    const env=environments[game.environment];
 
-  if (
-    myRank > 0
-  ) {
+    document.getElementById("dailyBalance").innerHTML=`
 
-    $('r-rank')
-      .innerHTML =
-      `
-      <strong>
-        ${myRank}위
-      </strong>
-      /
-      ${rows.length}명
-      `;
+        🌾 식량 소비:
+        ${format(game.population*0.08)} /일
 
-  } else {
+        <br>
 
-    $('r-rank')
-      .innerHTML =
-      '10위권 밖';
+        💧 물 소비:
+        ${format(game.population*0.15)} L/일
 
-  }
+        <br>
+
+        ⚡ 전력 생산능력:
+        ${format(calculatePower())}
+
+    `;
 
 }
 
 
-/* ══════════════════════════════
-   버튼 이벤트
-══════════════════════════════ */
+/* =====================================================
+   건물 현황
+===================================================== */
 
-$('start-btn')
-  .addEventListener(
-    'click',
-    startGame
-  );
+function updateBuildings(){
+
+    let html="";
+
+    Object.entries(game.buildings).forEach(([key,count])=>{
+
+        if(count>0){
+
+            html+=`
+
+            <div class="card">
+
+                ${buildingData[key].icon}
+                ${buildingData[key].name}
+
+                <strong>${count}개</strong>
+
+            </div>
+
+            `;
+
+        }
+
+    });
+
+    document.getElementById("buildingSummary").innerHTML=
+        html || "건물이 없습니다.";
+
+}
 
 
-$('btn-again')
-  .addEventListener(
-    'click',
-    () => {
+/* =====================================================
+   건설 목록
+===================================================== */
 
-      $('screen-result')
-        .classList
-        .remove('show');
+function updateBuildingList(){
+
+    let html="";
+
+    Object.entries(buildingData).forEach(([key,b])=>{
+
+        const required=
+            requiredLevel(key);
+
+        const unlocked=
+            game.level>=required;
+
+        let cost="";
+
+        Object.entries(b.cost).forEach(([r,v])=>{
+
+            if(r==="money")
+                cost+=`💰${format(v)} `;
+
+            else
+                cost+=`${resourceInfo[r]?.emoji||""}${format(v)} `;
+
+        });
+
+        html+=`
+
+        <div class="buildCard">
+
+            <h3>
+                ${b.icon} ${b.name}
+            </h3>
+
+            <p class="small">
+                ${b.description}
+            </p>
+
+            <p>
+                👷 ${b.workers}명
+            </p>
+
+            <p>
+                비용: ${cost}
+            </p>
+
+            <span class="badge">
+                Lv.${required}
+            </span>
+
+            <button
+                onclick="build('${key}')"
+                ${unlocked?"":"disabled"}
+            >
+
+                ${unlocked?"건설":"🔒 잠김"}
+
+            </button>
+
+        </div>
+
+        `;
+
+    });
+
+    document.getElementById("buildingList").innerHTML=html;
+
+}
 
 
-      showGame();
+/* =====================================================
+   공장
+===================================================== */
 
-      resetGame();
+function updateFactories(){
+
+    let html="";
+
+    Object.entries(buildingData).forEach(([key,b])=>{
+
+        if(!b.recipe) return;
+
+        const count=
+            game.buildings[key]||0;
+
+        html+=`
+
+        <div class="buildCard">
+
+            <h3>
+                ${b.icon} ${b.name}
+            </h3>
+
+            <p>
+                보유: <b>${count}</b>개
+            </p>
+
+            <p class="small">
+                입력:
+                ${recipeText(b.recipe.input)}
+            </p>
+
+            <p class="small">
+                출력:
+                ${recipeText(b.recipe.output)}
+            </p>
+
+        </div>
+
+        `;
+
+    });
+
+    document.getElementById("factoryList").innerHTML=html;
+
+}
+
+
+function recipeText(recipe){
+
+    return Object.entries(recipe)
+        .map(([r,n])=>
+            `${resourceInfo[r]?.emoji||""}${resourceInfo[r]?.name||r} × ${n}`
+        )
+        .join(" + ");
+
+}
+
+
+/* =====================================================
+   무역 UI
+===================================================== */
+
+function updateTrade(){
+
+    let html="";
+
+    game.countries.forEach((c,i)=>{
+
+        let options="";
+
+        Object.keys(resourceInfo).forEach(r=>{
+
+            options+=`
+
+            <option value="${r}">
+                ${resourceInfo[r].emoji}
+                ${resourceInfo[r].name}
+            </option>
+
+            `;
+
+        });
+
+        let transports="";
+
+        ["land","sea","air"].forEach(t=>{
+
+            const names={
+                land:"🚚 육상",
+                sea:"🚢 해상",
+                air:"✈️ 항공"
+            };
+
+            if(transportUnlocked(t)){
+
+                transports+=`
+                    <option value="${t}">
+                        ${names[t]}
+                    </option>
+                `;
+
+            }
+
+        });
+
+        html+=`
+
+        <div class="panel">
+
+            <h3>
+                🌎 ${c.name}
+            </h3>
+
+            <p>
+                환경:
+                ${environments[c.environment].emoji}
+                ${c.environment}
+            </p>
+
+            <p>
+                인구:
+                ${format(c.population)}
+            </p>
+
+            <p>
+                국고:
+                $${format(c.money)}
+            </p>
+
+            <label>자원</label>
+
+            <select id="tradeResource${i}">
+                ${options}
+            </select>
+
+            <br><br>
+
+            <label>수량</label>
+
+            <input
+                id="tradeAmount${i}"
+                type="number"
+                min="1"
+                value="10"
+            >
+
+            <br><br>
+
+            <label>운송수단</label>
+
+            <select id="transport${i}">
+                ${transports}
+            </select>
+
+            <div class="grid">
+
+                <button
+                    onclick="trade(${i},'buy')"
+                >
+                    구매
+                </button>
+
+                <button
+                    onclick="trade(${i},'sell')"
+                >
+                    판매
+                </button>
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
+
+    document.getElementById("tradeList").innerHTML=html;
+
+}
+
+
+/* =====================================================
+   시장 UI
+===================================================== */
+
+function updateMarket(){
+
+    let html="";
+
+    Object.keys(resourceInfo).forEach(r=>{
+
+        const price=
+            game.market[r]||
+            resourceInfo[r].price;
+
+        const base=
+            resourceInfo[r].price;
+
+        let state="균형";
+
+        if(price>base*1.2)
+            state="🔴 부족";
+
+        else if(price<base*0.8)
+            state="🔵 공급과잉";
+
+        html+=`
+
+        <tr>
+
+            <td>
+                ${resourceInfo[r].emoji}
+                ${resourceInfo[r].name}
+            </td>
+
+            <td>
+                $${price.toFixed(2)}
+            </td>
+
+            <td>
+                ${state}
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+    document.getElementById("marketTable").innerHTML=html;
+
+}
+
+
+/* =====================================================
+   세계 UI
+===================================================== */
+
+function updateWorld(){
+
+    let html="";
+
+    game.countries.forEach(c=>{
+
+        html+=`
+
+        <div class="card">
+
+            <h3>
+                ${environments[c.environment].emoji}
+                ${c.name}
+            </h3>
+
+            <p>
+                환경: ${c.environment}
+            </p>
+
+            <p>
+                인구:
+                ${format(c.population)}
+            </p>
+
+            <p>
+                국고:
+                $${format(c.money)}
+            </p>
+
+        </div>
+
+        `;
+
+    });
+
+    document.getElementById("worldList").innerHTML=
+        `<div class="grid">${html}</div>`;
+
+}
+
+
+/* =====================================================
+   로그
+===================================================== */
+
+function addLog(text){
+
+    if(!game) return;
+
+    const time=
+        `Day ${Math.floor(gameMinutes/60)}`;
+
+    game.logs.unshift(
+        `[${time}] ${text}`
+    );
+
+    if(game.logs.length>100)
+        game.logs.pop();
+
+    const log=
+        document.getElementById("log");
+
+    if(log){
+
+        log.innerHTML=
+            game.logs
+                .map(x=>`<div>${x}</div>`)
+                .join("");
 
     }
-  );
+
+}
 
 
-$('btn-new')
-  .addEventListener(
-    'click',
-    () => {
+/* =====================================================
+   탭
+===================================================== */
 
-      showNick();
+function showTab(id){
 
-    }
-  );
+    document.querySelectorAll(".tab")
+        .forEach(x=>x.classList.add("hidden"));
+
+    document.getElementById(id)
+        .classList.remove("hidden");
+
+    document.querySelectorAll("nav button")
+        .forEach(x=>x.classList.remove("active"));
+
+    const buttons=
+        document.querySelectorAll("nav button");
+
+    const names=[
+        "overview",
+        "resources",
+        "build",
+        "factory",
+        "trade",
+        "market",
+        "world",
+        "logTab"
+    ];
+
+    const index=names.indexOf(id);
+
+    if(index>=0)
+        buttons[index].classList.add("active");
+
+}
+
+
+/* =====================================================
+   배속
+===================================================== */
+
+function setSpeed(value){
+
+    speed=value;
+
+    [1,2,3,4].forEach(v=>{
+
+        document
+            .getElementById("speed"+v)
+            .classList.toggle(
+                "active",
+                v===value
+            );
+
+    });
+
+}
+
+
+/* =====================================================
+   숫자
+===================================================== */
+
+function format(n){
+
+    if(!isFinite(n))
+        return "0";
+
+    return Math.floor(n)
+        .toLocaleString("ko-KR");
+
+}
+
+
+/* =====================================================
+   시작 시 초기 버튼
+===================================================== */
+
+setSpeed(1);
 
 </script>
-
-
-<div id="credit">
-  제작: 2026KISHYONGT
-</div>
 
 </body>
 </html>
