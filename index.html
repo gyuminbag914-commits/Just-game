@@ -264,6 +264,8 @@ body {
   align-items: flex-end;
 
   flex-shrink: 0;
+
+  position: relative;
 }
 
 #timer {
@@ -291,7 +293,80 @@ body {
 }
 
 
-/* 점수 */
+/* ══════════════════════════════
+   +1초 표시
+══════════════════════════════ */
+
+#time-bonus {
+  position: absolute;
+
+  right: 0;
+
+  top: 34px;
+
+  color: #f2b01e;
+
+  font-size: 20px;
+
+  font-weight: 900;
+
+  line-height: 1;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  transform: translateY(0) scale(0.7);
+
+  text-shadow:
+    0 0 5px rgba(255,190,0,0.35);
+
+  z-index: 20;
+}
+
+#time-bonus.show {
+  animation:
+    timeBonusPop
+    0.75s
+    ease-out
+    forwards;
+}
+
+@keyframes timeBonusPop {
+
+  0% {
+    opacity: 0;
+    transform:
+      translateY(8px)
+      scale(0.65);
+  }
+
+  25% {
+    opacity: 1;
+    transform:
+      translateY(0)
+      scale(1.25);
+  }
+
+  55% {
+    opacity: 1;
+    transform:
+      translateY(-2px)
+      scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translateY(-20px)
+      scale(0.9);
+  }
+}
+
+
+/* ══════════════════════════════
+   점수
+══════════════════════════════ */
 
 #score-wrap {
   display: flex;
@@ -314,6 +389,20 @@ body {
   color: var(--text2);
 }
 
+
+/* 점수와 연속 정답 */
+
+.score-line {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-top: 2px;
+}
+
 #score-wrap .s-val {
   font-size: 22px;
 
@@ -321,6 +410,186 @@ body {
 
   font-variant-numeric: tabular-nums;
 }
+
+
+/* ══════════════════════════════
+   연속 정답
+══════════════════════════════ */
+
+#streak-box {
+
+  display: none;
+
+  position: relative;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 3px;
+
+  min-width: 82px;
+
+  height: 34px;
+
+  padding: 0 9px;
+
+  border-radius: 10px;
+
+  color: #ff7a00;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,244,214,0.95),
+      rgba(255,226,170,0.95)
+    );
+
+  border: 2px solid #ff9d00;
+
+  box-shadow:
+    0 0 5px rgba(255,126,0,0.55),
+    0 0 12px rgba(255,170,0,0.35),
+    inset 0 0 8px rgba(255,190,0,0.18);
+
+  overflow: hidden;
+}
+
+#streak-box.hot {
+
+  display: flex;
+
+  animation:
+    flameBorder
+    0.8s
+    ease-in-out
+    infinite alternate;
+}
+
+#streak-box::before {
+
+  content: '';
+
+  position: absolute;
+
+  inset: -3px;
+
+  border-radius: 12px;
+
+  background:
+    conic-gradient(
+      from 0deg,
+      #ff3b30,
+      #ff9500,
+      #ffcc00,
+      #ff5e00,
+      #ff3b30
+    );
+
+  z-index: 0;
+
+  opacity: 0.9;
+
+  animation:
+    fireRotate
+    1.2s
+    linear
+    infinite;
+}
+
+#streak-box::after {
+
+  content: '';
+
+  position: absolute;
+
+  inset: 2px;
+
+  border-radius: 8px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fff7df,
+      #ffe8b0
+    );
+
+  z-index: 1;
+}
+
+#streak-fire,
+#streak-disp,
+#streak-label {
+
+  position: relative;
+
+  z-index: 2;
+}
+
+#streak-fire {
+
+  font-size: 17px;
+
+  line-height: 1;
+}
+
+#streak-disp {
+
+  font-size: 18px;
+
+  font-weight: 900;
+
+  font-variant-numeric: tabular-nums;
+
+  color: #e85d04;
+}
+
+#streak-label {
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  color: #d94801;
+}
+
+@keyframes flameBorder {
+
+  0% {
+
+    transform: scale(1);
+
+    box-shadow:
+      0 0 5px rgba(255,126,0,0.5),
+      0 0 12px rgba(255,170,0,0.3),
+      inset 0 0 8px rgba(255,190,0,0.18);
+  }
+
+  100% {
+
+    transform: scale(1.04);
+
+    box-shadow:
+      0 0 8px rgba(255,70,0,0.8),
+      0 0 20px rgba(255,150,0,0.55),
+      0 0 30px rgba(255,210,0,0.25),
+      inset 0 0 10px rgba(255,120,0,0.25);
+  }
+}
+
+@keyframes fireRotate {
+
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* 다음 숫자 */
 
 #next-hint {
   font-size: 13px;
@@ -1101,6 +1370,11 @@ body {
           15
         </div>
 
+        <!-- +1초 표시 -->
+        <div id="time-bonus">
+          +1
+        </div>
+
         <div id="timer-label">
           남은 시간
         </div>
@@ -1118,10 +1392,31 @@ body {
           현재 점수
         </div>
 
-        <div
-          class="s-val"
-          id="score-disp">
-          0
+        <div class="score-line">
+
+          <div
+            class="s-val"
+            id="score-disp">
+            0
+          </div>
+
+          <!-- 연속 정답 -->
+          <div id="streak-box">
+
+            <span id="streak-fire">
+              🔥
+            </span>
+
+            <span id="streak-disp">
+              0
+            </span>
+
+            <span id="streak-label">
+              연속
+            </span>
+
+          </div>
+
         </div>
 
       </div>
@@ -1377,6 +1672,13 @@ let timeLeft = 15;
 let timerInt = null;
 
 let gameActive = false;
+
+
+/* ══════════════════════════════
+   🔥 연속 정답 변수
+══════════════════════════════ */
+
+let streak = 0;
 
 
 /* ══════════════════════════════
@@ -1660,6 +1962,145 @@ function updateActiveCard() {
   $('next-num')
     .textContent =
     nextExp;
+
+}
+
+
+/* ══════════════════════════════
+   🔥 연속 정답 UI
+══════════════════════════════ */
+
+function updateStreakUI() {
+
+  const box =
+    $('streak-box');
+
+  const disp =
+    $('streak-disp');
+
+
+  disp.textContent =
+    streak;
+
+
+  /*
+   * 3연속 이상부터 표시
+   */
+
+  if (
+    streak >= 3
+  ) {
+
+    box.classList.add(
+      'hot'
+    );
+
+  } else {
+
+    box.classList.remove(
+      'hot'
+    );
+
+  }
+
+}
+
+
+/* ══════════════════════════════
+   🔥 연속 정답 초기화
+══════════════════════════════ */
+
+function resetStreak() {
+
+  streak = 0;
+
+  updateStreakUI();
+
+}
+
+
+/* ══════════════════════════════
+   ⏱️ +1초 표시
+══════════════════════════════ */
+
+function showTimeBonus() {
+
+  const bonus =
+    $('time-bonus');
+
+
+  bonus.classList.remove(
+    'show'
+  );
+
+
+  /*
+   * 같은 애니메이션을
+   * 연속으로 다시 실행하기 위한 처리
+   */
+
+  void bonus.offsetWidth;
+
+
+  bonus.classList.add(
+    'show'
+  );
+
+
+  setTimeout(
+    () => {
+
+      bonus.classList.remove(
+        'show'
+      );
+
+    },
+
+    800
+
+  );
+
+}
+
+
+/* ══════════════════════════════
+   ⏱️ 시간 +1초
+══════════════════════════════ */
+
+function addBonusSecond() {
+
+  /*
+   * 최대 시간 제한은 두지 않음.
+   * 연속 정답 3회 단위마다
+   * 실제 남은 시간이 1초 증가.
+   */
+
+  timeLeft++;
+
+
+  $('timer')
+    .textContent =
+    timeLeft;
+
+
+  /*
+   * 5초 이하일 때 빨간색,
+   * +1초로 6초 이상이 되면
+   * 긴급 표시 제거.
+   */
+
+  if (
+    timeLeft > 5
+  ) {
+
+    $('timer')
+      .classList
+      .remove('urgent');
+
+  }
+
+
+  showTimeBonus();
 
 }
 
@@ -2034,6 +2475,13 @@ function onCard(idx) {
 
 
     /*
+     * 🔥 연속 정답 초기화
+     */
+
+    resetStreak();
+
+
+    /*
      * 이전 X 제거
      */
 
@@ -2140,9 +2588,43 @@ function onCard(idx) {
   score++;
 
 
+  /*
+   * 🔥 연속 정답 증가
+   */
+
+  streak++;
+
+
+  /*
+   * 점수 표시
+   */
+
   $('score-disp')
     .textContent =
     score;
+
+
+  /*
+   * 연속 정답 표시
+   */
+
+  updateStreakUI();
+
+
+  /*
+   * 🎁 3연속마다 +1초
+   *
+   * 3, 6, 9, 12...
+   */
+
+  if (
+    streak >= 3 &&
+    streak % 3 === 0
+  ) {
+
+    addBonusSecond();
+
+  }
 
 
   /*
@@ -2343,6 +2825,12 @@ function resetGame() {
 
   score = 0;
 
+  /*
+   * 🔥 연속 정답 초기화
+   */
+
+  streak = 0;
+
   gameActive = false;
 
 
@@ -2362,6 +2850,21 @@ function resetGame() {
   $('score-disp')
     .textContent =
     '0';
+
+
+  $('streak-disp')
+    .textContent =
+    '0';
+
+
+  $('streak-box')
+    .classList
+    .remove('hot');
+
+
+  $('time-bonus')
+    .classList
+    .remove('show');
 
 
   $('next-num')
@@ -2411,10 +2914,24 @@ async function startGame() {
 
   score = 0;
 
+  /*
+   * 🔥 연속 정답 초기화
+   */
+
+  streak = 0;
+
 
   $('score-disp')
     .textContent =
     '0';
+
+
+  updateStreakUI();
+
+
+  $('time-bonus')
+    .classList
+    .remove('show');
 
 
   buildGrid();
