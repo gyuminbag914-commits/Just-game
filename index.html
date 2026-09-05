@@ -6,11 +6,3257 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#ffffff">
+
 <title>숫자 탭 게임</title>
+
 <style>
+
 *, *::before, *::after {
-  box-sizing: border-box; margin: 0; padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
   -webkit-tap-highlight-color: transparent;
 }
+
 :root {
-  --bg: #ffffff; -
+  --bg: #ffffff;
+  --bg2: #f5f5f3;
+  --bg3: #e8e8e5;
+
+  --text: #1a1a1a;
+  --text2: #666660;
+
+  --border: rgba(0,0,0,0.13);
+  --border2: rgba(0,0,0,0.22);
+
+  --active-bg: #eef4ff;
+  --active-border: #185fa5;
+  --active-text: #185fa5;
+
+  --done-bg: #eaf3de;
+  --done-border: rgba(59,109,17,0.3);
+  --done-text: #27500a;
+
+  --danger: #e24b4a;
+  --info: #185fa5;
+
+  --gold: #ba7517;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+
+  :root {
+    --bg: #1c1c1e;
+    --bg2: #2c2c2e;
+    --bg3: #3a3a3c;
+
+    --text: #f2f2f7;
+    --text2: #8e8e93;
+
+    --border: rgba(255,255,255,0.1);
+    --border2: rgba(255,255,255,0.2);
+
+    --active-bg: #0c2a4a;
+    --active-border: #64a8f0;
+    --active-text: #64a8f0;
+
+    --done-bg: #173404;
+    --done-border: rgba(150,210,80,0.25);
+    --done-text: #c0dd97;
+
+    --danger: #ff6b6b;
+    --info: #64a8f0;
+    --gold: #f0a500;
+  }
+}
+
+
+/* ══════════════════════════════
+   기본
+══════════════════════════════ */
+
+body {
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+
+  background: var(--bg);
+  color: var(--text);
+
+  min-height: 100vh;
+
+  overscroll-behavior: none;
+}
+
+#app {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+
+/* ══════════════════════════════
+   버튼
+══════════════════════════════ */
+
+.btn-primary {
+  display: block;
+  width: 100%;
+
+  padding: 14px;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  border-radius: var(--radius-sm);
+  border: none;
+
+  background: var(--text);
+  color: var(--bg);
+
+  cursor: pointer;
+
+  touch-action: manipulation;
+}
+
+.btn-primary:active {
+  opacity: 0.75;
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  display: block;
+  width: 100%;
+
+  padding: 13px;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  border-radius: var(--radius-sm);
+
+  border: 0.5px solid var(--border2);
+
+  background: var(--bg);
+  color: var(--text);
+
+  cursor: pointer;
+
+  touch-action: manipulation;
+}
+
+.btn-secondary:active {
+  background: var(--bg3);
+}
+
+
+/* ══════════════════════════════
+   화면 1: 닉네임
+══════════════════════════════ */
+
+#screen-nick {
+  display: flex;
+
+  flex-direction: column;
+  align-items: center;
+
+  padding-top: 3.5rem;
+}
+
+.game-title {
+  font-size: 28px;
+  font-weight: 700;
+
+  margin-bottom: 6px;
+
+  text-align: center;
+}
+
+.game-sub {
+  font-size: 14px;
+  color: var(--text2);
+
+  margin-bottom: 2.5rem;
+
+  text-align: center;
+
+  line-height: 1.6;
+}
+
+#nick-input {
+  width: 100%;
+  max-width: 300px;
+
+  font-size: 17px;
+
+  padding: 12px 14px;
+
+  margin-bottom: 14px;
+
+  border-radius: var(--radius-sm);
+
+  border: 0.5px solid var(--border2);
+
+  background: var(--bg);
+  color: var(--text);
+
+  outline: none;
+
+  -webkit-appearance: none;
+}
+
+#nick-input:focus {
+  border-color: var(--info);
+
+  box-shadow:
+    0 0 0 3px rgba(24,95,165,0.12);
+}
+
+#nick-ok {
+  max-width: 300px;
+}
+
+
+/* ══════════════════════════════
+   화면 2: 게임
+══════════════════════════════ */
+
+#screen-game {
+  display: none;
+}
+
+#header {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 1rem;
+}
+
+#nick-badge {
+  flex: 1;
+
+  font-size: 14px;
+
+  color: var(--text2);
+
+  font-weight: 500;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+#timer-wrap {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-end;
+
+  flex-shrink: 0;
+
+  position: relative;
+}
+
+#timer {
+  font-size: 32px;
+
+  font-weight: 700;
+
+  font-variant-numeric: tabular-nums;
+
+  line-height: 1;
+
+  color: var(--text);
+}
+
+#timer.urgent {
+  color: var(--danger);
+}
+
+#timer-label {
+  font-size: 11px;
+
+  color: var(--text2);
+
+  margin-top: 1px;
+}
+
+
+/* ══════════════════════════════
+   +1초 표시
+══════════════════════════════ */
+
+#time-bonus {
+  position: absolute;
+
+  right: 0;
+
+  top: 34px;
+
+  color: #f2b01e;
+
+  font-size: 20px;
+
+  font-weight: 900;
+
+  line-height: 1;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  transform: translateY(0) scale(0.7);
+
+  text-shadow:
+    0 0 5px rgba(255,190,0,0.35);
+
+  z-index: 20;
+}
+
+#time-bonus.show {
+  animation:
+    timeBonusPop
+    0.75s
+    ease-out
+    forwards;
+}
+
+@keyframes timeBonusPop {
+
+  0% {
+    opacity: 0;
+    transform:
+      translateY(8px)
+      scale(0.65);
+  }
+
+  25% {
+    opacity: 1;
+    transform:
+      translateY(0)
+      scale(1.25);
+  }
+
+  55% {
+    opacity: 1;
+    transform:
+      translateY(-2px)
+      scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translateY(-20px)
+      scale(0.9);
+  }
+}
+
+
+/* ══════════════════════════════
+   점수
+══════════════════════════════ */
+
+#score-wrap {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  background: var(--bg2);
+
+  border-radius: var(--radius-sm);
+
+  padding: 10px 16px;
+
+  margin-bottom: 1rem;
+}
+
+#score-wrap .s-label {
+  font-size: 13px;
+  color: var(--text2);
+}
+
+
+/* 점수와 연속 정답 */
+
+.score-line {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-top: 2px;
+}
+
+#score-wrap .s-val {
+  font-size: 22px;
+
+  font-weight: 700;
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* ══════════════════════════════
+   연속 정답
+══════════════════════════════ */
+
+#streak-box {
+
+  display: none;
+
+  position: relative;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 3px;
+
+  min-width: 82px;
+
+  height: 34px;
+
+  padding: 0 9px;
+
+  border-radius: 10px;
+
+  color: #ff7a00;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,244,214,0.95),
+      rgba(255,226,170,0.95)
+    );
+
+  border: 2px solid #ff9d00;
+
+  box-shadow:
+    0 0 5px rgba(255,126,0,0.55),
+    0 0 12px rgba(255,170,0,0.35),
+    inset 0 0 8px rgba(255,190,0,0.18);
+
+  overflow: hidden;
+}
+
+#streak-box.hot {
+
+  display: flex;
+
+  animation:
+    flameBorder
+    0.8s
+    ease-in-out
+    infinite alternate;
+}
+
+#streak-box::before {
+
+  content: '';
+
+  position: absolute;
+
+  inset: -3px;
+
+  border-radius: 12px;
+
+  background:
+    conic-gradient(
+      from 0deg,
+      #ff3b30,
+      #ff9500,
+      #ffcc00,
+      #ff5e00,
+      #ff3b30
+    );
+
+  z-index: 0;
+
+  opacity: 0.9;
+
+  animation:
+    fireRotate
+    1.2s
+    linear
+    infinite;
+}
+
+#streak-box::after {
+
+  content: '';
+
+  position: absolute;
+
+  inset: 2px;
+
+  border-radius: 8px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fff7df,
+      #ffe8b0
+    );
+
+  z-index: 1;
+}
+
+#streak-fire,
+#streak-disp,
+#streak-label {
+
+  position: relative;
+
+  z-index: 2;
+}
+
+#streak-fire {
+
+  font-size: 17px;
+
+  line-height: 1;
+}
+
+#streak-disp {
+
+  font-size: 18px;
+
+  font-weight: 900;
+
+  font-variant-numeric: tabular-nums;
+
+  color: #e85d04;
+}
+
+#streak-label {
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  color: #d94801;
+}
+
+@keyframes flameBorder {
+
+  0% {
+
+    transform: scale(1);
+
+    box-shadow:
+      0 0 5px rgba(255,126,0,0.5),
+      0 0 12px rgba(255,170,0,0.3),
+      inset 0 0 8px rgba(255,190,0,0.18);
+  }
+
+  100% {
+
+    transform: scale(1.04);
+
+    box-shadow:
+      0 0 8px rgba(255,70,0,0.8),
+      0 0 20px rgba(255,150,0,0.55),
+      0 0 30px rgba(255,210,0,0.25),
+      inset 0 0 10px rgba(255,120,0,0.25);
+  }
+}
+
+@keyframes fireRotate {
+
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* 다음 숫자 */
+
+#next-hint {
+  font-size: 13px;
+
+  color: var(--text2);
+}
+
+#next-hint span {
+  color: var(--active-text);
+
+  font-weight: 700;
+
+  font-size: 16px;
+}
+
+
+/* 시작 버튼 */
+
+#start-btn {
+  display: block;
+
+  width: 100%;
+
+  padding: 14px;
+
+  font-size: 16px;
+
+  font-weight: 600;
+
+  border-radius: var(--radius-sm);
+
+  border: none;
+
+  background: var(--text);
+
+  color: var(--bg);
+
+  cursor: pointer;
+
+  touch-action: manipulation;
+
+  margin-bottom: 1rem;
+}
+
+#start-btn:active {
+  opacity: 0.75;
+}
+
+#start-btn:disabled {
+  opacity: 0.35;
+}
+
+
+/* 카운트다운 */
+
+#countdown {
+  height: 72px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 58px;
+
+  font-weight: 700;
+}
+
+
+/* ══════════════════════════════
+   숫자 그리드
+══════════════════════════════ */
+
+#grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 10px;
+
+  margin-bottom: 10px;
+}
+
+.card {
+  position: relative;
+
+  aspect-ratio: 1;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 28px;
+
+  font-weight: 700;
+
+  border-radius: var(--radius);
+
+  border: 0.5px solid var(--border2);
+
+  background: var(--bg);
+
+  color: var(--text);
+
+  user-select: none;
+
+  -webkit-user-select: none;
+
+  touch-action: manipulation;
+
+  cursor: default;
+
+  transition:
+    transform 0.08s,
+    background 0.08s,
+    border-color 0.08s;
+
+  overflow: visible;
+}
+
+
+/* 활성 숫자 */
+
+.card.active {
+  background: var(--bg);
+
+  border: 0.5px solid var(--border2);
+
+  color: var(--text);
+
+  cursor: pointer;
+}
+
+.card.active:active {
+  transform: scale(0.91);
+}
+
+
+/* 완료 숫자 */
+
+.card.done {
+  background: var(--done-bg);
+
+  border-color: var(--done-border);
+
+  color: var(--done-text);
+
+  font-size: 24px;
+}
+
+
+/* ══════════════════════════════
+   오답 흔들림
+══════════════════════════════ */
+
+.card.wrong {
+  animation: shake 0.35s;
+
+  border-color: #ef4444;
+}
+
+@keyframes shake {
+
+  0%, 100% {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(-8px);
+  }
+
+  40% {
+    transform: translateX(8px);
+  }
+
+  60% {
+    transform: translateX(-5px);
+  }
+
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+
+/* ══════════════════════════════
+   오답 빨간 X
+══════════════════════════════ */
+
+.wrong-mark {
+
+  position: absolute;
+
+  inset: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: #ef4444;
+
+  font-size: 58px;
+
+  font-weight: 900;
+
+  line-height: 1;
+
+  pointer-events: none;
+
+  z-index: 10;
+
+  text-shadow:
+    0 2px 5px rgba(0,0,0,0.18);
+
+  animation:
+    wrongX
+    0.45s
+    ease-out
+    forwards;
+}
+
+@keyframes wrongX {
+
+  0% {
+    transform:
+      scale(0.2)
+      rotate(-20deg);
+
+    opacity: 0;
+  }
+
+  40% {
+    transform:
+      scale(1.25)
+      rotate(8deg);
+
+    opacity: 1;
+  }
+
+  70% {
+    transform:
+      scale(0.95)
+      rotate(-3deg);
+
+    opacity: 1;
+  }
+
+  100% {
+    transform:
+      scale(1)
+      rotate(0deg);
+
+    opacity: 1;
+  }
+}
+
+
+/* ══════════════════════════════
+   정답 카드 임팩트
+══════════════════════════════ */
+
+.card.correct-hit {
+
+  animation:
+    correctHit
+    0.22s
+    ease-out;
+}
+
+@keyframes correctHit {
+
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.14);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+
+/* ══════════════════════════════
+   폭죽 전체 레이어
+══════════════════════════════ */
+
+.firework-container {
+
+  position: fixed;
+
+  left: 0;
+  top: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  pointer-events: none;
+
+  z-index: 9999;
+
+  overflow: hidden;
+}
+
+
+/* 폭죽 중심 */
+
+.firework-burst {
+
+  position: absolute;
+
+  width: 20px;
+  height: 20px;
+
+  border-radius: 50%;
+
+  border:
+    3px solid
+    rgba(255,255,255,0.95);
+
+  transform:
+    translate(-50%, -50%)
+    scale(0);
+
+  animation:
+    burstFlash
+    0.35s
+    ease-out
+    forwards;
+
+  pointer-events: none;
+
+  box-shadow:
+    0 0 12px
+    rgba(255,255,255,0.9);
+}
+
+@keyframes burstFlash {
+
+  0% {
+
+    transform:
+      translate(-50%, -50%)
+      scale(0);
+
+    opacity: 1;
+  }
+
+  50% {
+
+    transform:
+      translate(-50%, -50%)
+      scale(3);
+
+    opacity: 0.8;
+  }
+
+  100% {
+
+    transform:
+      translate(-50%, -50%)
+      scale(5);
+
+    opacity: 0;
+  }
+}
+
+
+/* ══════════════════════════════
+   폭죽 파편
+══════════════════════════════ */
+
+.firework-particle {
+
+  position: absolute;
+
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  animation:
+    fireworkParticle
+    650ms
+    cubic-bezier(.15,.75,.35,1)
+    forwards;
+
+  box-shadow:
+    0 0 4px
+    currentColor;
+}
+
+@keyframes fireworkParticle {
+
+  0% {
+
+    transform:
+      translate(-50%, -50%)
+      translate(0, 0)
+      scale(1);
+
+    opacity: 1;
+  }
+
+  35% {
+
+    opacity: 1;
+  }
+
+  100% {
+
+    transform:
+      translate(-50%, -50%)
+      translate(var(--dx), var(--dy))
+      scale(0);
+
+    opacity: 0;
+  }
+}
+
+
+/* ══════════════════════════════
+   화면 3: 결과 팝업
+══════════════════════════════ */
+
+#screen-result {
+
+  display: none;
+
+  position: fixed;
+
+  inset: 0;
+
+  background:
+    rgba(0,0,0,0.6);
+
+  z-index: 200;
+
+  align-items: flex-end;
+
+  justify-content: center;
+}
+
+#screen-result.show {
+  display: flex;
+}
+
+#result-sheet {
+
+  background: var(--bg);
+
+  width: 100%;
+
+  max-width: 480px;
+
+  border-radius:
+    20px 20px 0 0;
+
+  padding:
+    1.5rem 1.25rem 2.5rem;
+
+  max-height: 92vh;
+
+  overflow-y: auto;
+
+  -webkit-overflow-scrolling: touch;
+
+  animation:
+    slideUp
+    0.25s
+    ease;
+}
+
+@keyframes slideUp {
+
+  from {
+
+    transform:
+      translateY(60px);
+
+    opacity: 0;
+  }
+
+  to {
+
+    transform:
+      translateY(0);
+
+    opacity: 1;
+  }
+}
+
+
+/* 결과 */
+
+.result-my {
+
+  text-align: center;
+
+  padding-bottom: 1.25rem;
+
+  border-bottom:
+    0.5px solid
+    var(--border);
+
+  margin-bottom: 1.25rem;
+}
+
+.result-my .r-lbl {
+
+  font-size: 12px;
+
+  color: var(--text2);
+
+  margin-bottom: 4px;
+}
+
+.result-my .r-name {
+
+  font-size: 16px;
+
+  font-weight: 600;
+
+  margin-bottom: 6px;
+}
+
+.result-my .r-score {
+
+  font-size: 52px;
+
+  font-weight: 700;
+
+  line-height: 1;
+
+  margin-bottom: 4px;
+}
+
+.result-my .r-score-label {
+
+  font-size: 13px;
+
+  color: var(--text2);
+
+  margin-bottom: 8px;
+}
+
+.result-my .r-rank {
+
+  font-size: 14px;
+
+  color: var(--text2);
+}
+
+.result-my .r-rank strong {
+
+  color: var(--info);
+
+  font-size: 20px;
+}
+
+
+/* 랭킹 */
+
+.lb-header {
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  color: var(--text2);
+
+  text-align: center;
+
+  margin-bottom: 0.75rem;
+}
+
+.lb-row {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 8px 4px;
+
+  border-bottom:
+    0.5px solid
+    var(--border);
+
+  font-size: 15px;
+}
+
+.lb-row:last-child {
+  border-bottom: none;
+}
+
+.lb-rank {
+
+  width: 28px;
+
+  text-align: center;
+
+  font-weight: 700;
+
+  color: var(--text2);
+
+  flex-shrink: 0;
+
+  font-size: 14px;
+}
+
+.lb-rank.gold,
+.lb-rank.silver,
+.lb-rank.bronze {
+
+  font-size: 20px;
+}
+
+.lb-name {
+
+  flex: 1;
+
+  color: var(--text);
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+.lb-score {
+
+  font-weight: 700;
+
+  color: var(--text);
+
+  min-width: 48px;
+
+  text-align: right;
+}
+
+.lb-row.me {
+
+  background:
+    rgba(24,95,165,0.07);
+
+  border-radius: 8px;
+
+  margin: 2px -4px;
+
+  padding: 8px 8px;
+}
+
+.lb-row.me .lb-name,
+.lb-row.me .lb-score {
+
+  color: var(--info);
+}
+
+.lb-row.me .lb-rank {
+
+  color: var(--info);
+}
+
+
+#lb-loading {
+
+  text-align: center;
+
+  padding: 1.5rem 0;
+
+  font-size: 14px;
+
+  color: var(--text2);
+}
+
+.result-actions {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+
+  margin-top: 1.5rem;
+}
+
+
+/* 제작자 */
+
+#credit {
+
+  position: fixed;
+
+  bottom: 14px;
+
+  right: 16px;
+
+  font-size: 11px;
+
+  color: var(--text2);
+
+  opacity: 0.6;
+
+  pointer-events: none;
+
+  z-index: 10;
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div id="app">
+
+
+  <!-- ══════════════════════
+       화면 1: 닉네임
+  ══════════════════════ -->
+
+  <div id="screen-nick">
+
+    <div class="game-title">
+      숫자 탭 게임
+    </div>
+
+    <div class="game-sub">
+      15초 안에 최대한 많은 숫자를<br>
+      순서대로 눌러보세요
+    </div>
+
+    <input
+      id="nick-input"
+      type="text"
+      maxlength="12"
+      placeholder="닉네임 입력 (최대 12자)"
+      autocomplete="off"
+      autocorrect="off"
+      spellcheck="false"
+    />
+
+    <button
+      id="nick-ok"
+      class="btn-primary">
+      시작하기
+    </button>
+
+  </div>
+
+
+  <!-- ══════════════════════
+       화면 2: 게임
+  ══════════════════════ -->
+
+  <div id="screen-game">
+
+    <div id="header">
+
+      <span id="nick-badge"></span>
+
+      <div id="timer-wrap">
+
+        <div id="timer">
+          15
+        </div>
+
+        <!-- +1초 표시 -->
+        <div id="time-bonus">
+          +1
+        </div>
+
+        <div id="timer-label">
+          남은 시간
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div id="score-wrap">
+
+      <div>
+
+        <div class="s-label">
+          현재 점수
+        </div>
+
+        <div class="score-line">
+
+          <div
+            class="s-val"
+            id="score-disp">
+            0
+          </div>
+
+          <!-- 연속 정답 -->
+          <div id="streak-box">
+
+            <span id="streak-fire">
+              🔥
+            </span>
+
+            <span id="streak-disp">
+              0
+            </span>
+
+            <span id="streak-label">
+              연속
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div id="next-hint">
+
+        다음 숫자
+        <span id="next-num">
+          1
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <button
+      id="start-btn">
+      시작
+    </button>
+
+
+    <div id="countdown"></div>
+
+
+    <div id="grid"></div>
+
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════
+     화면 3: 결과 팝업
+══════════════════════ -->
+
+<div id="screen-result">
+
+  <div id="result-sheet">
+
+    <div class="result-my">
+
+      <div class="r-lbl">
+        최종 점수
+      </div>
+
+      <div
+        class="r-name"
+        id="r-name">
+      </div>
+
+      <div
+        class="r-score"
+        id="r-score">
+        0
+      </div>
+
+      <div class="r-score-label">
+        개
+      </div>
+
+      <div
+        class="r-rank"
+        id="r-rank">
+      </div>
+
+    </div>
+
+
+    <div class="lb-header">
+      랭킹 TOP 10
+    </div>
+
+
+    <div id="lb-loading">
+      불러오는 중...
+    </div>
+
+
+    <div id="lb-rows"></div>
+
+
+    <div class="result-actions">
+
+      <button
+        id="btn-again"
+        class="btn-primary">
+        같은 닉네임으로 다시 도전
+      </button>
+
+      <button
+        id="btn-new"
+        class="btn-secondary">
+        닉네임 변경 후 다시 시작
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════
+     Firebase
+══════════════════════ -->
+
+<script type="module">
+
+import {
+  initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+import {
+  getDatabase,
+  ref,
+  push,
+  get
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+const firebaseConfig = {
+
+  apiKey:
+    "AIzaSyDVrf8vbtBHJYD93EhXosITNmgym80GOMw",
+
+  authDomain:
+    "numberupgame.firebaseapp.com",
+
+  databaseURL:
+    "https://numberupgame-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+  projectId:
+    "numberupgame",
+
+  storageBucket:
+    "numberupgame.firebasestorage.app",
+
+  messagingSenderId:
+    "209419310847",
+
+  appId:
+    "1:209419310847:web:916c8f6fc0a730b8191eca"
+};
+
+
+const app =
+  initializeApp(firebaseConfig);
+
+const db =
+  getDatabase(app);
+
+
+/* 점수 저장 */
+
+window.fbSave =
+async (name, score) => {
+
+  await push(
+    ref(db, 'scores'),
+    {
+      name,
+      score,
+      t: Date.now()
+    }
+  );
+
+};
+
+
+/* TOP 10 */
+
+window.fbLoadTop10 =
+async () => {
+
+  const snap =
+    await get(
+      ref(db, 'scores')
+    );
+
+
+  if (!snap.exists()) {
+    return [];
+  }
+
+
+  const rows =
+    Object.values(
+      snap.val()
+    );
+
+
+  /* 닉네임당 최고 기록 */
+
+  const best = {};
+
+
+  rows.forEach(r => {
+
+    if (
+      !best[r.name] ||
+      r.score > best[r.name].score
+    ) {
+
+      best[r.name] = r;
+
+    }
+
+  });
+
+
+  return Object.values(best)
+
+    .sort(
+      (a,b) =>
+        b.score - a.score
+    )
+
+    .slice(0,10);
+
+};
+
+</script>
+
+
+<script>
+
+
+/* ══════════════════════════════
+   기본 변수
+══════════════════════════════ */
+
+const $ =
+  id => document.getElementById(id);
+
+
+let nickname = '';
+
+let cells = [];
+
+let nextExp = 1;
+
+let score = 0;
+
+let timeLeft = 15;
+
+let timerInt = null;
+
+let gameActive = false;
+
+
+/* ══════════════════════════════
+   🔥 연속 정답 변수
+══════════════════════════════ */
+
+let streak = 0;
+
+
+/* ══════════════════════════════
+   유틸
+══════════════════════════════ */
+
+function delay(ms) {
+
+  return new Promise(
+    r => setTimeout(r, ms)
+  );
+
+}
+
+
+/* ══════════════════════════════
+   화면 전환
+══════════════════════════════ */
+
+function showNick() {
+
+  $('screen-nick').style.display =
+    'flex';
+
+  $('screen-game').style.display =
+    'none';
+
+  $('screen-result')
+    .classList
+    .remove('show');
+
+  $('nick-input').value = '';
+
+  setTimeout(
+    () =>
+      $('nick-input').focus(),
+    100
+  );
+
+}
+
+
+function showGame() {
+
+  $('screen-nick').style.display =
+    'none';
+
+  $('screen-game').style.display =
+    'block';
+
+  $('screen-result')
+    .classList
+    .remove('show');
+
+}
+
+
+function showResult() {
+
+  $('screen-result')
+    .classList
+    .add('show');
+
+}
+
+
+/* ══════════════════════════════
+   닉네임
+══════════════════════════════ */
+
+$('nick-ok')
+  .addEventListener(
+    'click',
+    () => {
+
+      const v =
+        $('nick-input')
+        .value
+        .trim();
+
+
+      if (!v) {
+
+        $('nick-input').focus();
+
+        return;
+
+      }
+
+
+      nickname = v;
+
+      $('nick-badge')
+        .textContent =
+        nickname;
+
+
+      showGame();
+
+      resetGame();
+
+    }
+  );
+
+
+$('nick-input')
+  .addEventListener(
+    'keydown',
+    e => {
+
+      if (e.key === 'Enter') {
+
+        $('nick-ok').click();
+
+      }
+
+    }
+  );
+
+
+/* ══════════════════════════════
+   그리드 생성
+══════════════════════════════ */
+
+function buildGrid() {
+
+  const grid =
+    $('grid');
+
+
+  grid.innerHTML = '';
+
+  cells = [];
+
+
+  const nums =
+    shuffle(
+      [1,2,3,4,5,6,7,8,9]
+    );
+
+
+  nums.forEach(
+    (n, idx) => {
+
+      const d =
+        document.createElement(
+          'div'
+        );
+
+
+      d.className =
+        'card';
+
+
+      d.textContent =
+        n;
+
+
+      /*
+       * pointerdown 하나만 사용.
+       * 모바일 터치와 마우스를
+       * 하나의 입력 방식으로 처리.
+       */
+
+      const tap =
+        e => {
+
+          e.preventDefault();
+
+          onCard(idx);
+
+        };
+
+
+      d.addEventListener(
+        'pointerdown',
+        tap
+      );
+
+
+      grid.appendChild(d);
+
+
+      cells.push({
+
+        el: d,
+
+        num: n
+
+      });
+
+    }
+  );
+
+
+  updateActiveCard();
+
+}
+
+
+/* ══════════════════════════════
+   배열 섞기
+══════════════════════════════ */
+
+function shuffle(a) {
+
+  const arr =
+    [...a];
+
+
+  for (
+    let i = arr.length - 1;
+    i > 0;
+    i--
+  ) {
+
+    const j =
+      Math.floor(
+        Math.random() *
+        (i + 1)
+      );
+
+
+    [
+      arr[i],
+      arr[j]
+    ] =
+    [
+      arr[j],
+      arr[i]
+    ];
+
+  }
+
+
+  return arr;
+
+}
+
+
+/* ══════════════════════════════
+   활성 카드 표시
+══════════════════════════════ */
+
+function updateActiveCard() {
+
+  cells.forEach(
+    c => {
+
+      c.el.classList.remove(
+        'active',
+        'done'
+      );
+
+
+      if (
+        c.num < nextExp
+      ) {
+
+        c.el.classList.add(
+          'done'
+        );
+
+      }
+
+
+      if (
+        c.num === nextExp
+      ) {
+
+        c.el.classList.add(
+          'active'
+        );
+
+      }
+
+    }
+  );
+
+
+  $('next-num')
+    .textContent =
+    nextExp;
+
+}
+
+
+/* ══════════════════════════════
+   🔥 연속 정답 UI
+══════════════════════════════ */
+
+function updateStreakUI() {
+
+  const box =
+    $('streak-box');
+
+  const disp =
+    $('streak-disp');
+
+
+  disp.textContent =
+    streak;
+
+
+  /*
+   * 3연속 이상부터 표시
+   */
+
+  if (
+    streak >= 3
+  ) {
+
+    box.classList.add(
+      'hot'
+    );
+
+  } else {
+
+    box.classList.remove(
+      'hot'
+    );
+
+  }
+
+}
+
+
+/* ══════════════════════════════
+   🔥 연속 정답 초기화
+══════════════════════════════ */
+
+function resetStreak() {
+
+  streak = 0;
+
+  updateStreakUI();
+
+}
+
+
+/* ══════════════════════════════
+   ⏱️ +1초 표시
+══════════════════════════════ */
+
+function showTimeBonus() {
+
+  const bonus =
+    $('time-bonus');
+
+
+  bonus.classList.remove(
+    'show'
+  );
+
+
+  /*
+   * 같은 애니메이션을
+   * 연속으로 다시 실행하기 위한 처리
+   */
+
+  void bonus.offsetWidth;
+
+
+  bonus.classList.add(
+    'show'
+  );
+
+
+  setTimeout(
+    () => {
+
+      bonus.classList.remove(
+        'show'
+      );
+
+    },
+
+    800
+
+  );
+
+}
+
+
+/* ══════════════════════════════
+   ⏱️ 시간 +1초
+══════════════════════════════ */
+
+function addBonusSecond() {
+
+  /*
+   * 최대 시간 제한은 두지 않음.
+   * 연속 정답 3회 단위마다
+   * 실제 남은 시간이 1초 증가.
+   */
+
+  timeLeft++;
+
+
+  $('timer')
+    .textContent =
+    timeLeft;
+
+
+  /*
+   * 5초 이하일 때 빨간색,
+   * +1초로 6초 이상이 되면
+   * 긴급 표시 제거.
+   */
+
+  if (
+    timeLeft > 5
+  ) {
+
+    $('timer')
+      .classList
+      .remove('urgent');
+
+  }
+
+
+  showTimeBonus();
+
+}
+
+
+/* ══════════════════════════════
+   🎆 폭죽
+══════════════════════════════ */
+
+function createFirework(
+  x,
+  y
+) {
+
+  const container =
+    document.createElement(
+      'div'
+    );
+
+
+  container.className =
+    'firework-container';
+
+
+  document.body.appendChild(
+    container
+  );
+
+
+  /* 중심 폭발 */
+
+  const burst =
+    document.createElement(
+      'div'
+    );
+
+
+  burst.className =
+    'firework-burst';
+
+
+  burst.style.left =
+    x + 'px';
+
+  burst.style.top =
+    y + 'px';
+
+
+  container.appendChild(
+    burst
+  );
+
+
+  const colors = [
+
+    '#ff3b30',
+
+    '#ff9500',
+
+    '#ffcc00',
+
+    '#34c759',
+
+    '#00c7be',
+
+    '#007aff',
+
+    '#5856d6',
+
+    '#ff2d55',
+
+    '#af52de'
+
+  ];
+
+
+  /*
+   * 큰 폭죽
+   */
+
+  const particleCount = 28;
+
+
+  for (
+    let i = 0;
+    i < particleCount;
+    i++
+  ) {
+
+    const particle =
+      document.createElement(
+        'div'
+      );
+
+
+    particle.className =
+      'firework-particle';
+
+
+    const angle =
+      (Math.PI * 2 * i)
+      / particleCount;
+
+
+    const distance =
+      55 +
+      Math.random() * 85;
+
+
+    const dx =
+      Math.cos(angle)
+      * distance;
+
+
+    const dy =
+      Math.sin(angle)
+      * distance;
+
+
+    particle.style.left =
+      x + 'px';
+
+    particle.style.top =
+      y + 'px';
+
+
+    particle.style.setProperty(
+      '--dx',
+      dx + 'px'
+    );
+
+
+    particle.style.setProperty(
+      '--dy',
+      dy + 'px'
+    );
+
+
+    const color =
+      colors[
+        Math.floor(
+          Math.random()
+          * colors.length
+        )
+      ];
+
+
+    particle.style.background =
+      color;
+
+
+    particle.style.color =
+      color;
+
+
+    const size =
+      4 +
+      Math.random() * 5;
+
+
+    particle.style.width =
+      size + 'px';
+
+    particle.style.height =
+      size + 'px';
+
+
+    particle.style.animationDelay =
+      Math.random() * 70 +
+      'ms';
+
+
+    container.appendChild(
+      particle
+    );
+
+  }
+
+
+  /*
+   * 작은 폭죽 하나 추가
+   */
+
+  setTimeout(
+    () => {
+
+      createSmallFirework(
+
+        x +
+          (
+            Math.random() * 70
+            - 35
+          ),
+
+        y +
+          (
+            Math.random() * 70
+            - 35
+          ),
+
+        container
+
+      );
+
+    },
+
+    80
+
+  );
+
+
+  /*
+   * 메모리 정리
+   */
+
+  setTimeout(
+    () => {
+
+      if (
+        container.parentNode
+      ) {
+
+        container.remove();
+
+      }
+
+    },
+
+    1000
+
+  );
+
+}
+
+
+/* ══════════════════════════════
+   작은 폭죽
+══════════════════════════════ */
+
+function createSmallFirework(
+  x,
+  y,
+  container
+) {
+
+  const colors = [
+
+    '#ff3b30',
+
+    '#ff9500',
+
+    '#ffcc00',
+
+    '#34c759',
+
+    '#007aff',
+
+    '#ff2d55',
+
+    '#af52de'
+
+  ];
+
+
+  for (
+    let i = 0;
+    i < 14;
+    i++
+  ) {
+
+    const particle =
+      document.createElement(
+        'div'
+      );
+
+
+    particle.className =
+      'firework-particle';
+
+
+    const angle =
+      (Math.PI * 2 * i)
+      / 14;
+
+
+    const distance =
+      30 +
+      Math.random() * 55;
+
+
+    particle.style.left =
+      x + 'px';
+
+    particle.style.top =
+      y + 'px';
+
+
+    particle.style.setProperty(
+      '--dx',
+      Math.cos(angle)
+      * distance
+      + 'px'
+    );
+
+
+    particle.style.setProperty(
+      '--dy',
+      Math.sin(angle)
+      * distance
+      + 'px'
+    );
+
+
+    const color =
+      colors[
+        Math.floor(
+          Math.random()
+          * colors.length
+        )
+      ];
+
+
+    particle.style.background =
+      color;
+
+    particle.style.color =
+      color;
+
+
+    const size =
+      3 +
+      Math.random() * 4;
+
+
+    particle.style.width =
+      size + 'px';
+
+    particle.style.height =
+      size + 'px';
+
+
+    container.appendChild(
+      particle
+    );
+
+  }
+
+}
+
+
+/* ══════════════════════════════
+   숫자 카드 클릭
+══════════════════════════════ */
+
+function onCard(idx) {
+
+  if (!gameActive) {
+    return;
+  }
+
+
+  const cell =
+    cells[idx];
+
+
+  /* ═══════════════
+     ❌ 오답
+  ═══════════════ */
+
+  if (
+    cell.num !== nextExp
+  ) {
+
+
+    /*
+     * 🔥 연속 정답 초기화
+     */
+
+    resetStreak();
+
+
+    /*
+     * 이전 X 제거
+     */
+
+    const oldMark =
+      cell.el.querySelector(
+        '.wrong-mark'
+      );
+
+
+    if (oldMark) {
+      oldMark.remove();
+    }
+
+
+    /*
+     * 빨간 X 생성
+     */
+
+    const xMark =
+      document.createElement(
+        'div'
+      );
+
+
+    xMark.className =
+      'wrong-mark';
+
+
+    xMark.textContent =
+      '✕';
+
+
+    cell.el.appendChild(
+      xMark
+    );
+
+
+    /*
+     * 흔들림 재생
+     */
+
+    cell.el.classList.remove(
+      'wrong'
+    );
+
+
+    void cell.el.offsetWidth;
+
+
+    cell.el.classList.add(
+      'wrong'
+    );
+
+
+    /*
+     * 0.5초 뒤 X 제거
+     */
+
+    setTimeout(
+      () => {
+
+        if (
+          xMark.parentNode
+        ) {
+
+          xMark.remove();
+
+        }
+
+      },
+
+      500
+
+    );
+
+
+    /*
+     * 흔들림 제거
+     */
+
+    setTimeout(
+      () => {
+
+        cell.el.classList.remove(
+          'wrong'
+        );
+
+      },
+
+      350
+
+    );
+
+
+    return;
+
+  }
+
+
+  /* ═══════════════
+     🎯 정답
+  ═══════════════ */
+
+  score++;
+
+
+  /*
+   * 🔥 연속 정답 증가
+   */
+
+  streak++;
+
+
+  /*
+   * 점수 표시
+   */
+
+  $('score-disp')
+    .textContent =
+    score;
+
+
+  /*
+   * 연속 정답 표시
+   */
+
+  updateStreakUI();
+
+
+  /*
+   * 🎁 3연속마다 +1초
+   *
+   * 3, 6, 9, 12...
+   */
+
+  if (
+    streak >= 3 &&
+    streak % 3 === 0
+  ) {
+
+    addBonusSecond();
+
+  }
+
+
+  /*
+   * 클릭한 카드의
+   * 정확한 화면 좌표 계산
+   */
+
+  const rect =
+    cell.el.getBoundingClientRect();
+
+
+  const centerX =
+    rect.left +
+    rect.width / 2;
+
+
+  const centerY =
+    rect.top +
+    rect.height / 2;
+
+
+  /*
+   * 카드 임팩트
+   */
+
+  cell.el.classList.remove(
+    'correct-hit'
+  );
+
+
+  void cell.el.offsetWidth;
+
+
+  cell.el.classList.add(
+    'correct-hit'
+  );
+
+
+  /*
+   * 🎆 폭죽
+   */
+
+  createFirework(
+    centerX,
+    centerY
+  );
+
+
+  /*
+   * 현재 숫자를
+   * 다음 숫자 + 9로 교체
+   */
+
+  const newNum =
+    nextExp + 9;
+
+
+  cell.num =
+    newNum;
+
+
+  cell.el.textContent =
+    newNum;
+
+
+  nextExp++;
+
+
+  /*
+   * 완료되지 않은 카드들의
+   * 숫자를 무작위로 섞기
+   */
+
+  const activeIndices =
+    cells
+
+      .map(
+        (c, i) => ({
+          c,
+          i
+        })
+      )
+
+      .filter(
+        ({ c }) =>
+          c.num >= nextExp
+      );
+
+
+  const shuffledNums =
+    shuffle(
+      activeIndices.map(
+        ({ c }) =>
+          c.num
+      )
+    );
+
+
+  activeIndices.forEach(
+    ({ i }, j) => {
+
+      cells[i].num =
+        shuffledNums[j];
+
+
+      cells[i].el.textContent =
+        shuffledNums[j];
+
+    }
+  );
+
+
+  updateActiveCard();
+
+}
+
+
+/* ══════════════════════════════
+   타이머
+══════════════════════════════ */
+
+function startTimer() {
+
+  timeLeft = 15;
+
+
+  $('timer')
+    .textContent =
+    timeLeft;
+
+
+  $('timer')
+    .classList
+    .remove('urgent');
+
+
+  timerInt =
+    setInterval(
+      () => {
+
+        timeLeft--;
+
+
+        $('timer')
+          .textContent =
+          timeLeft;
+
+
+        if (
+          timeLeft <= 5
+        ) {
+
+          $('timer')
+            .classList
+            .add('urgent');
+
+        }
+
+
+        if (
+          timeLeft <= 0
+        ) {
+
+          endGame();
+
+        }
+
+      },
+
+      1000
+
+    );
+
+}
+
+
+function stopTimer() {
+
+  clearInterval(
+    timerInt
+  );
+
+  timerInt = null;
+
+}
+
+
+/* ══════════════════════════════
+   게임 리셋
+══════════════════════════════ */
+
+function resetGame() {
+
+  stopTimer();
+
+
+  nextExp = 1;
+
+  score = 0;
+
+  /*
+   * 🔥 연속 정답 초기화
+   */
+
+  streak = 0;
+
+  gameActive = false;
+
+
+  timeLeft = 15;
+
+
+  $('timer')
+    .textContent =
+    '15';
+
+
+  $('timer')
+    .classList
+    .remove('urgent');
+
+
+  $('score-disp')
+    .textContent =
+    '0';
+
+
+  $('streak-disp')
+    .textContent =
+    '0';
+
+
+  $('streak-box')
+    .classList
+    .remove('hot');
+
+
+  $('time-bonus')
+    .classList
+    .remove('show');
+
+
+  $('next-num')
+    .textContent =
+    '1';
+
+
+  $('countdown')
+    .textContent =
+    '';
+
+
+  $('start-btn')
+    .style
+    .display =
+    'block';
+
+
+  $('start-btn')
+    .disabled =
+    false;
+
+
+  buildGrid();
+
+}
+
+
+/* ══════════════════════════════
+   게임 시작
+══════════════════════════════ */
+
+async function startGame() {
+
+  $('start-btn')
+    .disabled =
+    true;
+
+
+  $('start-btn')
+    .style
+    .display =
+    'none';
+
+
+  nextExp = 1;
+
+  score = 0;
+
+  /*
+   * 🔥 연속 정답 초기화
+   */
+
+  streak = 0;
+
+
+  $('score-disp')
+    .textContent =
+    '0';
+
+
+  updateStreakUI();
+
+
+  $('time-bonus')
+    .classList
+    .remove('show');
+
+
+  buildGrid();
+
+
+  const cd =
+    $('countdown');
+
+
+  for (
+    const s
+    of ['3','2','1','시작!']
+  ) {
+
+    cd.textContent =
+      s;
+
+
+    await delay(
+      s === '시작!'
+        ? 700
+        : 820
+    );
+
+  }
+
+
+  cd.textContent =
+    '';
+
+
+  gameActive = true;
+
+
+  startTimer();
+
+}
+
+
+/* ══════════════════════════════
+   게임 종료
+══════════════════════════════ */
+
+async function endGame() {
+
+  stopTimer();
+
+
+  gameActive = false;
+
+
+  const finalScore =
+    score;
+
+
+  $('r-name')
+    .textContent =
+    nickname;
+
+
+  $('r-score')
+    .textContent =
+    finalScore;
+
+
+  $('r-rank')
+    .textContent =
+    '';
+
+
+  $('lb-rows')
+    .innerHTML =
+    '';
+
+
+  $('lb-loading')
+    .style
+    .display =
+    'block';
+
+
+  $('lb-loading')
+    .textContent =
+    '기록 저장 중...';
+
+
+  showResult();
+
+
+  try {
+
+    await window.fbSave(
+      nickname,
+      finalScore
+    );
+
+
+    $('lb-loading')
+      .textContent =
+      '랭킹 불러오는 중...';
+
+
+    const top10 =
+      await window.fbLoadTop10();
+
+
+    $('lb-loading')
+      .style
+      .display =
+      'none';
+
+
+    renderRanking(
+      top10,
+      nickname,
+      finalScore
+    );
+
+
+  } catch(e) {
+
+    console.error(e);
+
+
+    $('lb-loading')
+      .textContent =
+      '네트워크 오류 — 랭킹을 불러올 수 없습니다';
+
+  }
+
+}
+
+
+/* ══════════════════════════════
+   랭킹
+══════════════════════════════ */
+
+function renderRanking(
+  rows,
+  myName,
+  myScore
+) {
+
+  if (
+    !rows ||
+    rows.length === 0
+  ) {
+
+    $('lb-rows')
+      .innerHTML =
+      `
+      <div
+        style="
+          text-align:center;
+          padding:1rem;
+          color:var(--text2);
+          font-size:14px;
+        "
+      >
+        아직 기록이 없습니다
+      </div>
+      `;
+
+    return;
+
+  }
+
+
+  const medals = [
+    '🥇',
+    '🥈',
+    '🥉'
+  ];
+
+
+  const rankClasses = [
+    'gold',
+    'silver',
+    'bronze'
+  ];
+
+
+  let myRank = -1;
+
+
+  const html =
+    rows.map(
+      (r, i) => {
+
+        const isMe =
+          r.name === myName &&
+          r.score === myScore;
+
+
+        if (
+          isMe &&
+          myRank < 0
+        ) {
+
+          myRank =
+            i + 1;
+
+        }
+
+
+        const rankLabel =
+          i < 3
+            ? medals[i]
+            : i + 1;
+
+
+        const rankCls =
+          i < 3
+            ? rankClasses[i]
+            : '';
+
+
+        return `
+
+          <div
+            class="lb-row${isMe ? ' me' : ''}"
+          >
+
+            <span
+              class="lb-rank ${rankCls}"
+            >
+              ${rankLabel}
+            </span>
+
+            <span
+              class="lb-name"
+            >
+              ${r.name}
+            </span>
+
+            <span
+              class="lb-score"
+            >
+              ${r.score}개
+            </span>
+
+          </div>
+
+        `;
+
+      }
+    )
+    .join('');
+
+
+  $('lb-rows')
+    .innerHTML =
+    html;
+
+
+  if (
+    myRank > 0
+  ) {
+
+    $('r-rank')
+      .innerHTML =
+      `
+      <strong>
+        ${myRank}위
+      </strong>
+      /
+      ${rows.length}명
+      `;
+
+  } else {
+
+    $('r-rank')
+      .innerHTML =
+      '10위권 밖';
+
+  }
+
+}
+
+
+/* ══════════════════════════════
+   버튼 이벤트
+══════════════════════════════ */
+
+$('start-btn')
+  .addEventListener(
+    'click',
+    startGame
+  );
+
+
+$('btn-again')
+  .addEventListener(
+    'click',
+    () => {
+
+      $('screen-result')
+        .classList
+        .remove('show');
+
+
+      showGame();
+
+      resetGame();
+
+    }
+  );
+
+
+$('btn-new')
+  .addEventListener(
+    'click',
+    () => {
+
+      showNick();
+
+    }
+  );
+
+</script>
+
+
+<div id="credit">
+  제작: 2026KISHYONGT
+</div>
+
+</body>
+  </html>
