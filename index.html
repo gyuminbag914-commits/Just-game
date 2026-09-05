@@ -10,546 +10,594 @@
 <title>World Nation</title>
 
 <style>
-*{
-    box-sizing:border-box;
-    -webkit-tap-highlight-color:transparent;
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
-body{
-    margin:0;
+body {
+    margin: 0;
     font-family:
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
         "Noto Sans KR",
         sans-serif;
-    background:#f4f6f8;
-    color:#222;
-    overflow-x:hidden;
+
+    background: #f4f6f8;
+    color: #222;
+    overflow-x: hidden;
 }
 
-button,input,select{
-    font:inherit;
+button,
+input,
+select {
+    font: inherit;
 }
 
-button{
-    border:0;
-    cursor:pointer;
-    user-select:none;
+button {
+    border: 0;
+    cursor: pointer;
+    user-select: none;
 }
 
-button:active{
-    transform:scale(.94);
+button:active {
+    transform: scale(0.94);
 }
 
-.hidden{
-    display:none!important;
+.hidden {
+    display: none !important;
 }
 
-button:disabled{
-    background:#aaa!important;
-    color:#eee!important;
-    cursor:not-allowed;
-}
+
+/* =========================
+   터치 효과
+========================= */
 
 .item button,
 .trade-buttons button,
 .start-button,
 .speed-buttons button,
-.tabs button,
-.finance-buttons button{
+.tabs button {
     transition:
         transform .08s ease,
         box-shadow .08s ease,
         opacity .08s ease;
 }
 
-.touch-ripple{
-    position:fixed;
-    width:35px;
-    height:35px;
-    border-radius:50%;
-    background:rgba(37,99,235,.25);
-    pointer-events:none;
-    transform:translate(-50%,-50%) scale(0);
-    animation:rippleEffect .45s ease-out forwards;
-    z-index:9999;
+.touch-ripple {
+    position: fixed;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: rgba(37,99,235,.25);
+    pointer-events: none;
+    transform: translate(-50%,-50%) scale(0);
+    animation: rippleEffect .45s ease-out forwards;
+    z-index: 9999;
 }
 
-@keyframes rippleEffect{
-    0%{
-        transform:translate(-50%,-50%) scale(0);
-        opacity:.8;
+@keyframes rippleEffect {
+    0% {
+        transform: translate(-50%,-50%) scale(0);
+        opacity: .8;
     }
-    100%{
-        transform:translate(-50%,-50%) scale(3);
-        opacity:0;
+
+    100% {
+        transform: translate(-50%,-50%) scale(3);
+        opacity: 0;
     }
 }
 
-#impactContainer{
-    position:fixed;
-    top:75px;
-    left:50%;
-    transform:translateX(-50%);
-    z-index:10000;
-    width:calc(100% - 30px);
-    max-width:420px;
-    pointer-events:none;
+
+/* =========================
+   알림
+========================= */
+
+#impactContainer {
+    position: fixed;
+    top: 75px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    width: calc(100% - 30px);
+    max-width: 420px;
+    pointer-events: none;
 }
 
-.impact{
-    padding:13px 16px;
-    margin-bottom:8px;
-    border-radius:13px;
-    background:white;
-    box-shadow:0 8px 25px rgba(0,0,0,.15);
-    font-weight:bold;
-    text-align:center;
-    white-space:pre-line;
+.impact {
+    padding: 13px 16px;
+    margin-bottom: 8px;
+    border-radius: 13px;
+    background: white;
+    box-shadow: 0 8px 25px rgba(0,0,0,.15);
+    font-weight: bold;
+    text-align: center;
+    white-space: pre-line;
     animation:
         impactIn .25s ease,
         impactOut .35s ease 1.8s forwards;
 }
 
-.impact.success{
-    border-left:5px solid #16a34a;
+.impact.success {
+    border-left: 5px solid #16a34a;
 }
 
-.impact.error{
-    border-left:5px solid #dc2626;
+.impact.error {
+    border-left: 5px solid #dc2626;
 }
 
-.impact.info{
-    border-left:5px solid #2563eb;
+.impact.info {
+    border-left: 5px solid #2563eb;
 }
 
-.impact.warning{
-    border-left:5px solid #f59e0b;
+.impact.warning {
+    border-left: 5px solid #f59e0b;
 }
 
-@keyframes impactIn{
-    from{
-        opacity:0;
-        transform:translateY(-15px) scale(.95);
+@keyframes impactIn {
+    from {
+        opacity: 0;
+        transform: translateY(-15px) scale(.95);
     }
-    to{
-        opacity:1;
-        transform:translateY(0) scale(1);
-    }
-}
 
-@keyframes impactOut{
-    from{
-        opacity:1;
-        transform:translateY(0);
-    }
-    to{
-        opacity:0;
-        transform:translateY(-10px);
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
 
-#startScreen{
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
+@keyframes impactOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
 }
 
-.start-box{
-    width:100%;
-    max-width:420px;
-    background:white;
-    padding:28px;
-    border-radius:20px;
-    box-shadow:0 8px 30px rgba(0,0,0,.08);
-    text-align:center;
+
+/* =========================
+   시작
+========================= */
+
+#startScreen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
 }
 
-.start-box h1{
-    margin-top:0;
-    font-size:32px;
+.start-box {
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    padding: 28px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    text-align: center;
 }
 
-.start-box input{
-    width:100%;
-    padding:14px;
-    border:1px solid #ddd;
-    border-radius:12px;
-    margin:15px 0;
-    outline:none;
+.start-box h1 {
+    margin-top: 0;
+    font-size: 32px;
 }
 
-.start-button{
-    width:100%;
-    padding:14px;
-    border-radius:12px;
-    background:#2563eb;
-    color:white;
-    font-weight:bold;
+.start-box input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    margin: 15px 0;
+    outline: none;
 }
 
-#gameScreen{
-    display:none;
+.start-button {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    background: #2563eb;
+    color: white;
+    font-weight: bold;
 }
 
-.header{
-    position:sticky;
-    top:0;
-    z-index:100;
-    background:white;
-    border-bottom:1px solid #ddd;
-    padding:10px;
+
+/* =========================
+   게임
+========================= */
+
+#gameScreen {
+    display: none;
 }
 
-.header-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
 }
 
-.country-title{
-    font-size:18px;
-    font-weight:bold;
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
 }
 
-.date{
-    font-size:12px;
-    color:#777;
-    margin-top:3px;
+.country-title {
+    font-size: 18px;
+    font-weight: bold;
 }
 
-.speed-buttons{
-    display:flex;
-    gap:4px;
+.date {
+    font-size: 12px;
+    color: #777;
+    margin-top: 3px;
 }
 
-.speed-buttons button{
-    background:#eee;
-    padding:7px 9px;
-    border-radius:8px;
+.speed-buttons {
+    display: flex;
+    gap: 4px;
 }
 
-.speed-buttons button.active{
-    background:#2563eb;
-    color:white;
+.speed-buttons button {
+    background: #eee;
+    padding: 7px 9px;
+    border-radius: 8px;
 }
 
-.tabs{
-    display:flex;
-    overflow-x:auto;
-    gap:5px;
-    margin-top:10px;
+.speed-buttons button.active {
+    background: #2563eb;
+    color: white;
 }
 
-.tabs button{
-    white-space:nowrap;
-    background:#eee;
-    padding:8px 12px;
-    border-radius:8px;
+
+/* =========================
+   탭
+========================= */
+
+.tabs {
+    display: flex;
+    overflow-x: auto;
+    gap: 5px;
+    margin-top: 10px;
 }
 
-.tabs button.active{
-    background:#2563eb;
-    color:white;
+.tabs button {
+    white-space: nowrap;
+    background: #eee;
+    padding: 8px 12px;
+    border-radius: 8px;
 }
 
-main{
-    width:100%;
-    max-width:900px;
-    margin:auto;
-    padding:10px;
+.tabs button.active {
+    background: #2563eb;
+    color: white;
 }
 
-.panel{
-    background:white;
-    border-radius:15px;
-    padding:15px;
-    margin-bottom:10px;
-    box-shadow:0 2px 10px rgba(0,0,0,.04);
+
+/* =========================
+   메인
+========================= */
+
+main {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+    padding: 10px;
 }
 
-.panel h2{
-    margin-top:0;
+.panel {
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.04);
 }
 
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-    gap:8px;
+.panel h2 {
+    margin-top: 0;
 }
 
-.card{
-    background:#f7f8fa;
-    padding:12px;
-    border-radius:12px;
+
+/* =========================
+   카드
+========================= */
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(140px,1fr));
+    gap: 8px;
 }
 
-.card-title{
-    color:#777;
-    font-size:13px;
+.card {
+    background: #f7f8fa;
+    padding: 12px;
+    border-radius: 12px;
 }
 
-.card-value{
-    font-size:19px;
-    font-weight:bold;
-    margin-top:4px;
+.card-title {
+    color: #777;
+    font-size: 13px;
 }
 
-.economy-card{
-    border:1px solid #e5e7eb;
+.card-value {
+    font-size: 19px;
+    font-weight: bold;
+    margin-top: 4px;
 }
 
-.economy-status{
-    padding:12px;
-    border-radius:10px;
-    background:#f7f8fa;
-    margin-bottom:10px;
-    font-weight:bold;
+
+/* =========================
+   경제 상태
+========================= */
+
+.economy-card {
+    border: 1px solid #e5e7eb;
 }
 
-.economy-normal{
-    background:#ecfdf5;
+.economy-status {
+    padding: 12px;
+    border-radius: 10px;
+    background: #f7f8fa;
+    margin-bottom: 10px;
+    font-weight: bold;
 }
 
-.economy-warning{
-    background:#fff7ed;
+.economy-normal {
+    background: #ecfdf5;
 }
 
-.economy-danger{
-    background:#fef2f2;
+.economy-warning {
+    background: #fff7ed;
 }
 
-.economy-crisis{
-    background:#450a0a;
-    color:white;
+.economy-danger {
+    background: #fef2f2;
 }
 
-.stat-good{
-    color:#16803c;
+.economy-crisis {
+    background: #450a0a;
+    color: white;
 }
 
-.stat-bad{
-    color:#d1242f;
+.stat-good {
+    color: #16803c;
 }
 
-.stat-warning{
-    color:#a15c00;
+.stat-bad {
+    color: #d1242f;
 }
 
-.resource-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:9px 3px;
-    border-bottom:1px solid #eee;
+.stat-warning {
+    color: #a15c00;
 }
 
-.resource-row:last-child{
-    border-bottom:0;
+
+/* =========================
+   자원
+========================= */
+
+.resource-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 3px;
+    border-bottom: 1px solid #eee;
 }
 
-.resource-name{
-    display:flex;
-    gap:6px;
-    align-items:center;
+.resource-row:last-child {
+    border-bottom: 0;
 }
 
-.item-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
-    gap:10px;
+.resource-name {
+    display: flex;
+    gap: 6px;
+    align-items: center;
 }
 
-.item{
-    border:1px solid #e5e7eb;
-    border-radius:12px;
-    padding:13px;
-    background:white;
+
+/* =========================
+   건물
+========================= */
+
+.item-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(210px,1fr));
+    gap: 10px;
 }
 
-.item h3{
-    margin-top:0;
+.item {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 13px;
+    background: white;
 }
 
-.item button{
-    width:100%;
-    padding:10px;
-    border-radius:9px;
-    background:#2563eb;
-    color:white;
-    margin-top:8px;
+.item h3 {
+    margin-top: 0;
 }
 
-.item button.upgrade-button{
-    background:#16a34a;
+.item button {
+    width: 100%;
+    padding: 10px;
+    border-radius: 9px;
+    background: #2563eb;
+    color: white;
+    margin-top: 8px;
 }
 
-.level-badge{
-    display:inline-block;
-    padding:3px 7px;
-    border-radius:6px;
-    background:#e8f0ff;
-    color:#2563eb;
-    font-size:12px;
-    font-weight:bold;
+.item button.upgrade-button {
+    background: #16a34a;
 }
 
-.cost-box{
-    background:#f7f8fa;
-    border-radius:8px;
-    padding:8px;
-    font-size:12px;
-    line-height:1.7;
+.item button:disabled {
+    background: #aaa;
 }
 
-.trade-box{
-    border:1px solid #ddd;
-    padding:13px;
-    border-radius:12px;
-    margin-bottom:10px;
+.level-badge {
+    display: inline-block;
+    padding: 3px 7px;
+    border-radius: 6px;
+    background: #e8f0ff;
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.cost-box {
+    background: #f7f8fa;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+
+/* =========================
+   무역
+========================= */
+
+.trade-box {
+    border: 1px solid #ddd;
+    padding: 13px;
+    border-radius: 12px;
+    margin-bottom: 10px;
 }
 
 .trade-box select,
-.trade-box input,
-.finance-box input,
-.finance-box select{
-    width:100%;
-    padding:9px;
-    border:1px solid #ddd;
-    border-radius:8px;
-    margin-top:5px;
+.trade-box input {
+    width: 100%;
+    padding: 9px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-top: 5px;
 }
 
-.trade-buttons,
-.finance-buttons{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:6px;
-    margin-top:8px;
+.trade-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 8px;
 }
 
-.trade-buttons button,
-.finance-buttons button{
-    padding:10px;
-    border-radius:8px;
-    background:#2563eb;
-    color:white;
+.trade-buttons button {
+    padding: 10px;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
 }
 
-.finance-buttons button.green{
-    background:#16a34a;
+
+/* =========================
+   진행도
+========================= */
+
+.progress {
+    width: 100%;
+    height: 10px;
+    background: #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
-.finance-buttons button.orange{
-    background:#ea580c;
+.progress-bar {
+    height: 100%;
+    background: #2563eb;
+    width: 0%;
 }
 
-.finance-buttons button.dark{
-    background:#374151;
+
+/* =========================
+   로그
+========================= */
+
+.log {
+    max-height: 300px;
+    overflow-y: auto;
+    background: #f7f8fa;
+    border-radius: 10px;
+    padding: 8px;
 }
 
-.finance-box{
-    border:1px solid #ddd;
-    border-radius:12px;
-    padding:13px;
-    margin-bottom:10px;
+.log div {
+    padding: 6px;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
 }
 
-.progress{
-    width:100%;
-    height:10px;
-    background:#e5e7eb;
-    border-radius:10px;
-    overflow:hidden;
+
+/* =========================
+   테이블
+========================= */
+
+.table-wrap {
+    overflow-x: auto;
 }
 
-.progress-bar{
-    height:100%;
-    background:#2563eb;
-    width:0%;
+table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.log{
-    max-height:300px;
-    overflow-y:auto;
-    background:#f7f8fa;
-    border-radius:10px;
-    padding:8px;
+th,
+td {
+    padding: 9px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+    white-space: nowrap;
 }
 
-.log div{
-    padding:6px;
-    border-bottom:1px solid #eee;
-    font-size:13px;
+
+/* =========================
+   기타
+========================= */
+
+.small {
+    font-size: 12px;
+    color: #777;
 }
 
-.table-wrap{
-    overflow-x:auto;
+.good {
+    color: #16803c;
 }
 
-table{
-    width:100%;
-    border-collapse:collapse;
+.bad {
+    color: #d1242f;
 }
 
-th,td{
-    padding:9px;
-    border-bottom:1px solid #eee;
-    text-align:left;
-    white-space:nowrap;
+.warning {
+    color: #a15c00;
 }
 
-.small{
-    font-size:12px;
-    color:#777;
-}
+@media (max-width:500px) {
 
-.good{
-    color:#16803c;
-}
-
-.bad{
-    color:#d1242f;
-}
-
-.warning{
-    color:#a15c00;
-}
-
-.debt{
-    color:#7c3aed;
-}
-
-.money{
-    color:#15803d;
-}
-
-.inflation{
-    color:#dc2626;
-}
-
-@media(max-width:500px){
-    .start-box{
-        padding:22px;
+    .start-box {
+        padding: 22px;
     }
 
-    .country-title{
-        font-size:16px;
+    .country-title {
+        font-size: 16px;
     }
 
-    .speed-buttons button{
-        padding:6px;
-        font-size:12px;
+    .speed-buttons button {
+        padding: 6px;
+        font-size: 12px;
     }
 
-    .panel{
-        padding:12px;
+    .panel {
+        padding: 12px;
     }
+
 }
+
 </style>
 </head>
 
@@ -557,8 +605,13 @@ th,td{
 
 <div id="impactContainer"></div>
 
+
+<!-- 시작 화면 -->
+
 <div id="startScreen">
+
     <div class="start-box">
+
         <h1>🌍 World Nation</h1>
 
         <p>
@@ -579,8 +632,13 @@ th,td{
         >
             국가 만들기
         </button>
+
     </div>
+
 </div>
+
+
+<!-- 게임 화면 -->
 
 <div id="gameScreen">
 
@@ -589,6 +647,7 @@ th,td{
     <div class="header-top">
 
         <div>
+
             <div
                 id="headerCountryName"
                 class="country-title"
@@ -598,25 +657,25 @@ th,td{
                 id="dateText"
                 class="date"
             ></div>
+
         </div>
 
         <div class="speed-buttons">
+
             <button onclick="setSpeed(1)" id="speed1">×1</button>
             <button onclick="setSpeed(2)" id="speed2">×2</button>
             <button onclick="setSpeed(3)" id="speed3">×3</button>
             <button onclick="setSpeed(4)" id="speed4">×4</button>
+
         </div>
 
     </div>
+
 
     <div class="tabs">
 
         <button onclick="openTab('overview')" class="active">
             🏛 국가
-        </button>
-
-        <button onclick="openTab('finance')">
-            🏦 금융
         </button>
 
         <button onclick="openTab('resources')">
@@ -651,7 +710,13 @@ th,td{
 
 </header>
 
+
 <main>
+
+
+<!-- =========================
+     국가
+========================= -->
 
 <section id="overview" class="tab">
 
@@ -687,22 +752,16 @@ th,td{
 </div>
 
 <div class="card">
-<div class="card-title">GDP</div>
-<div class="card-value" id="gdpInfo"></div>
-</div>
-
-<div class="card">
-<div class="card-title">부채</div>
-<div class="card-value" id="debtInfo"></div>
-</div>
-
-<div class="card">
 <div class="card-title">전력</div>
 <div class="card-value" id="powerInfo"></div>
 </div>
 
 </div>
+
 </div>
+
+
+<!-- 경제 -->
 
 <div class="panel economy-card">
 
@@ -742,16 +801,6 @@ th,td{
 <div class="card-value" id="consumptionIndexInfo"></div>
 </div>
 
-<div class="card">
-<div class="card-title">🏦 세수</div>
-<div class="card-value" id="taxRevenueInfo"></div>
-</div>
-
-<div class="card">
-<div class="card-title">💸 이자비용</div>
-<div class="card-value" id="interestInfo"></div>
-</div>
-
 </div>
 
 <br>
@@ -759,6 +808,7 @@ th,td{
 <div id="crisisInfo"></div>
 
 </div>
+
 
 <div class="panel">
 
@@ -774,6 +824,7 @@ th,td{
 
 </div>
 
+
 <div class="panel">
 
 <h2>👷 노동력</h2>
@@ -781,6 +832,7 @@ th,td{
 <div id="workerInfo"></div>
 
 </div>
+
 
 <div class="panel">
 
@@ -793,204 +845,7 @@ th,td{
 </section>
 
 
-<section id="finance" class="tab hidden">
-
-<div class="panel">
-
-<h2>🏦 국가 금융</h2>
-
-<div class="grid">
-
-<div class="card">
-<div class="card-title">💰 현재 국고</div>
-<div class="card-value money" id="financeMoney"></div>
-</div>
-
-<div class="card">
-<div class="card-title">📈 GDP</div>
-<div class="card-value" id="financeGDP"></div>
-</div>
-
-<div class="card">
-<div class="card-title">🏦 국가 부채</div>
-<div class="card-value debt" id="financeDebt"></div>
-</div>
-
-<div class="card">
-<div class="card-title">💵 세수</div>
-<div class="card-value" id="financeTax"></div>
-</div>
-
-<div class="card">
-<div class="card-title">💸 이자</div>
-<div class="card-value" id="financeInterest"></div>
-</div>
-
-<div class="card">
-<div class="card-title">🖨️ 누적 화폐 발행</div>
-<div class="card-value" id="financePrinted"></div>
-</div>
-
-</div>
-
-</div>
-
-
-<div class="panel finance-box">
-
-<h2>🏦 국채 발행</h2>
-
-<p class="small">
-국채를 발행하면 즉시 국고가 증가합니다.
-하지만 국가 부채와 이자 부담이 증가합니다.
-</p>
-
-<label>발행 금액</label>
-
-<input
-    id="bondAmount"
-    type="number"
-    min="100"
-    step="100"
-    value="5000"
->
-
-<div class="trade-buttons">
-
-<button onclick="issueBond()">
-🏦 국채 발행
-</button>
-
-<button
-    class="dark"
-    onclick="repayDebt()"
->
-💳 부채 상환
-</button>
-
-</div>
-
-<p id="bondInfo" class="small"></p>
-
-</div>
-
-
-<div class="panel finance-box">
-
-<h2>🖨️ 화폐 발행</h2>
-
-<p class="small">
-중앙은행처럼 새로운 돈을 발행합니다.
-즉시 국고가 증가하지만 통화량 증가로
-인플레이션이 발생할 수 있습니다.
-</p>
-
-<label>발행 금액</label>
-
-<input
-    id="printAmount"
-    type="number"
-    min="100"
-    step="100"
-    value="3000"
->
-
-<div class="trade-buttons">
-
-<button
-    class="orange"
-    onclick="printMoney()"
->
-🖨️ 돈 발행
-</button>
-
-</div>
-
-<p class="small">
-⚠️ 지나친 화폐 발행은 인플레이션과
-초인플레이션을 일으킬 수 있습니다.
-</p>
-
-</div>
-
-
-<div class="panel finance-box">
-
-<h2>🏛️ 경제 정책</h2>
-
-<p class="small">
-세율이 높으면 세수가 증가하지만
-소비와 행복도가 감소합니다.
-</p>
-
-<label>
-현재 세율:
-<strong id="taxRateText"></strong>
-</label>
-
-<input
-    id="taxRate"
-    type="range"
-    min="5"
-    max="40"
-    step="1"
-    value="15"
-    oninput="changeTaxRate(this.value)"
->
-
-<div class="grid">
-
-<div class="card">
-<div class="card-title">낮은 세율</div>
-<div class="small">
-소비 증가<br>
-세수 감소
-</div>
-</div>
-
-<div class="card">
-<div class="card-title">높은 세율</div>
-<div class="small">
-세수 증가<br>
-소비 감소
-</div>
-</div>
-
-</div>
-
-</div>
-
-
-<div class="panel">
-
-<h2>📊 경제 순환</h2>
-
-<div class="small">
-
-인구 증가
-→ 노동력 증가
-→ 생산 증가
-→ GDP 증가
-→ 세수 증가
-→ 국고 증가
-→ 산업 투자
-→ 생산 증가
-
-<br><br>
-
-국채는 미래의 세수로 현재 투자를 앞당길 수 있습니다.
-
-<br><br>
-
-화폐 발행은 부채 없이 돈을 만들지만
-통화량 증가로 인플레이션 위험이 커집니다.
-
-</div>
-
-</div>
-
-</section>
-
+<!-- 자원 -->
 
 <section id="resources" class="tab hidden">
 
@@ -1013,6 +868,8 @@ th,td{
 </section>
 
 
+<!-- 건설 -->
+
 <section id="buildings" class="tab hidden">
 
 <div class="panel">
@@ -1031,6 +888,8 @@ th,td{
 </section>
 
 
+<!-- 공장 -->
+
 <section id="factories" class="tab hidden">
 
 <div class="panel">
@@ -1048,6 +907,8 @@ th,td{
 </section>
 
 
+<!-- 무역 -->
+
 <section id="trade" class="tab hidden">
 
 <div class="panel">
@@ -1057,8 +918,6 @@ th,td{
 <p class="small">
 다른 국가의 자원을 구매하거나
 우리나라의 자원을 판매할 수 있습니다.
-AI 국가도 자체 GDP와 국고를 가지고
-경제활동을 합니다.
 </p>
 
 <div id="tradeList"></div>
@@ -1067,6 +926,8 @@ AI 국가도 자체 GDP와 국고를 가지고
 
 </section>
 
+
+<!-- 시장 -->
 
 <section id="market" class="tab hidden">
 
@@ -1079,11 +940,13 @@ AI 국가도 자체 GDP와 국고를 가지고
 <table>
 
 <thead>
+
 <tr>
 <th>자원</th>
 <th>가격</th>
 <th>시장</th>
 </tr>
+
 </thead>
 
 <tbody id="marketTable"></tbody>
@@ -1096,6 +959,8 @@ AI 국가도 자체 GDP와 국고를 가지고
 
 </section>
 
+
+<!-- 세계 -->
 
 <section id="world" class="tab hidden">
 
@@ -1110,6 +975,8 @@ AI 국가도 자체 GDP와 국고를 가지고
 </section>
 
 
+<!-- 기록 -->
+
 <section id="logs" class="tab hidden">
 
 <div class="panel">
@@ -1123,10 +990,12 @@ AI 국가도 자체 GDP와 국고를 가지고
 </section>
 
 </main>
+
 </div>
 
 
 <script>
+
 
 /* =====================================================
    기본 상태
@@ -1144,7 +1013,7 @@ let gameDay = 0;
 
 const ENVIRONMENTS = {
 
-    grassland:{
+    grassland: {
         name:"초원",
         emoji:"🌾",
         food:1.50,
@@ -1160,7 +1029,7 @@ const ENVIRONMENTS = {
         description:"식량과 물이 풍부해 농업에 유리합니다."
     },
 
-    jungle:{
+    jungle: {
         name:"정글",
         emoji:"🌴",
         food:1.10,
@@ -1176,7 +1045,7 @@ const ENVIRONMENTS = {
         description:"목재와 물이 풍부하지만 산업 건설이 어렵습니다."
     },
 
-    desert:{
+    desert: {
         name:"사막",
         emoji:"🏜️",
         food:.20,
@@ -1192,7 +1061,7 @@ const ENVIRONMENTS = {
         description:"식량과 물은 부족하지만 에너지와 광물 산업에 유리합니다."
     },
 
-    snow:{
+    snow: {
         name:"설원",
         emoji:"❄️",
         food:.40,
@@ -1208,7 +1077,7 @@ const ENVIRONMENTS = {
         description:"농업에는 불리하지만 광물과 에너지 자원이 풍부합니다."
     },
 
-    mountain:{
+    mountain: {
         name:"산악숲",
         emoji:"⛰️",
         food:.70,
@@ -1439,7 +1308,7 @@ const BUILDINGS = {
             input:{processedWood:2},
             output:{furniture:2}
         },
-        description:"가공목재로 가구를 만듭니다."
+        description:"가공목재로 가구를 생산합니다."
     },
 
     refinery:{
@@ -1597,36 +1466,36 @@ const STARTING_RESOURCES = {
    국가 생성
 ===================================================== */
 
-function createResources(starting){
+function createResources(starting) {
 
-    const resources={};
+    const resources = {};
 
-    Object.keys(RESOURCES).forEach(resource=>{
-        resources[resource]=starting[resource]||0;
+    Object.keys(RESOURCES).forEach(resource => {
+        resources[resource] = starting[resource] || 0;
     });
 
     return resources;
 }
 
 
-function createBuildings(){
+function createBuildings() {
 
-    const buildings={};
+    const buildings = {};
 
-    Object.keys(BUILDINGS).forEach(key=>{
-        buildings[key]=0;
+    Object.keys(BUILDINGS).forEach(key => {
+        buildings[key] = 0;
     });
 
     return buildings;
 }
 
 
-function createBuildingLevels(){
+function createBuildingLevels() {
 
-    const levels={};
+    const levels = {};
 
-    Object.keys(BUILDINGS).forEach(key=>{
-        levels[key]=0;
+    Object.keys(BUILDINGS).forEach(key => {
+        levels[key] = 0;
     });
 
     return levels;
@@ -1634,68 +1503,54 @@ function createBuildingLevels(){
 
 
 /* =====================================================
-   AI 국가
+   AI
 ===================================================== */
 
-function createAI(){
+function createAI() {
 
-    const names=[
+    const names = [
         "알테라",
         "노바",
         "벨로스",
         "아르카디아"
     ];
 
-    const environments=Object.keys(ENVIRONMENTS);
+    const environments =
+        Object.keys(ENVIRONMENTS);
 
-    return names.map((name,index)=>{
+    return names.map((name,index) => {
 
-        const environment=environments[index];
-
-        const population=
-            1500+
-            Math.floor(Math.random()*3500);
-
-        const gdp=
-            population*
-            (80+Math.random()*80);
+        const environment =
+            environments[index];
 
         return {
 
             name,
             environment,
 
-            population,
+            population:
+                300 +
+                Math.floor(Math.random()*1000),
 
             money:
-                20000+
-                Math.floor(gdp*.25),
+                8000 +
+                Math.floor(Math.random()*5000),
 
-            level:2,
+            level:1,
 
-            resources:createResources(
-                STARTING_RESOURCES[environment]
-            ),
+            resources:
+                createResources(
+                    STARTING_RESOURCES[environment]
+                ),
 
             buildings:{
-                farm:2+Math.floor(Math.random()*3),
-                well:2,
-                lumber:1+Math.floor(Math.random()*2),
+                farm:1+Math.floor(Math.random()*3),
+                well:1,
+                lumber:1,
                 quarry:1,
                 ironMine:Math.floor(Math.random()*2),
                 copperMine:Math.floor(Math.random()*2),
                 coalMine:Math.floor(Math.random()*2)
-            },
-
-            economy:{
-                gdp,
-                debt:0,
-                inflation:3+Math.random()*3,
-                taxRate:.15,
-                happiness:70,
-                productionIndex:100,
-                consumptionIndex:100,
-                interestRate:.04
             }
 
         };
@@ -1709,28 +1564,32 @@ function createAI(){
    게임 시작
 ===================================================== */
 
-function startGame(){
+function startGame() {
 
-    let name=
+    let name =
         document
         .getElementById("countryNameInput")
         .value
         .trim();
 
-    if(!name){
-        name="신생국";
+    if (!name) {
+        name = "신생국";
     }
 
-    const environmentKeys=Object.keys(ENVIRONMENTS);
 
-    const environment=
+    const environmentKeys =
+        Object.keys(ENVIRONMENTS);
+
+    const environment =
         environmentKeys[
             Math.floor(
-                Math.random()*environmentKeys.length
+                Math.random() *
+                environmentKeys.length
             )
         ];
 
-    game={
+
+    game = {
 
         countryName:name,
 
@@ -1744,21 +1603,30 @@ function startGame(){
 
         technology:1,
 
-        resources:createResources(
-            STARTING_RESOURCES[environment]
-        ),
+        resources:
+            createResources(
+                STARTING_RESOURCES[environment]
+            ),
 
-        buildings:createBuildings(),
+        buildings:
+            createBuildings(),
 
-        buildingLevels:createBuildingLevels(),
+        buildingLevels:
+            createBuildingLevels(),
 
-        aiCountries:createAI(),
+        aiCountries:
+            createAI(),
 
         market:{},
 
         logs:[],
 
         tradeHistory:[],
+
+
+        /* =====================
+           경제 상태
+        ===================== */
 
         economy:{
 
@@ -1792,39 +1660,34 @@ function startGame(){
 
             waterStress:0,
 
-            debt:0,
-
-            taxRate:.15,
-
-            taxRevenue:0,
-
-            interestExpense:0,
-
-            moneyPrinted:0,
-
-            moneySupply:10000,
-
-            debtInterestRate:.04,
-
-            lastTax:0,
-
-            lastInterest:0
+            debt:0
 
         }
 
     };
 
-    Object.keys(RESOURCES).forEach(resource=>{
-        game.market[resource]=
+
+    Object.keys(RESOURCES).forEach(resource => {
+
+        game.market[resource] =
             RESOURCES[resource].price;
+
     });
 
-    document.getElementById("startScreen").style.display="none";
-    document.getElementById("gameScreen").style.display="block";
 
-    gameDay=0;
+    document
+        .getElementById("startScreen")
+        .style.display = "none";
+
+    document
+        .getElementById("gameScreen")
+        .style.display = "block";
+
+
+    gameDay = 0;
 
     setSpeed(1);
+
 
     addLog(
         `🏛️ ${name} 국가가 ${ENVIRONMENTS[environment].name}에서 시작했습니다.`
@@ -1835,24 +1698,24 @@ function startGame(){
     );
 
     addLog(
-        "📊 현대식 국가 경제 시스템이 활성화되었습니다."
+        "📊 경제 시스템이 활성화되었습니다."
     );
 
-    addLog(
-        "🏦 국채와 화폐 발행을 사용할 수 있습니다."
-    );
-
-    addLog(
-        "🚀 인구 성장 속도가 기존보다 크게 증가했습니다."
-    );
 
     updateUI();
 
-    if(gameTimer){
+
+    if (gameTimer) {
         clearInterval(gameTimer);
     }
 
-    gameTimer=setInterval(gameTick,1000);
+
+    gameTimer =
+        setInterval(
+            gameTick,
+            1000
+        );
+
 }
 
 
@@ -1860,9 +1723,13 @@ function startGame(){
    게임 진행
 ===================================================== */
 
-function gameTick(){
+function gameTick() {
 
-    for(let i=0;i<gameSpeed;i++){
+    for (
+        let i=0;
+        i<gameSpeed;
+        i++
+    ) {
 
         gameDay++;
 
@@ -1873,10 +1740,6 @@ function gameTick(){
         consumptionTick();
 
         populationTick();
-
-        collectTaxes();
-
-        payInterest();
 
         aiTick();
 
@@ -1889,9 +1752,12 @@ function gameTick(){
         levelCheck();
 
         randomEvent();
+
     }
 
+
     updateUI();
+
 }
 
 
@@ -1899,25 +1765,35 @@ function gameTick(){
    건물 레벨
 ===================================================== */
 
-function getBuildingLevel(key){
+function getBuildingLevel(key) {
 
-    if(!game||!game.buildingLevels){
+    if (
+        !game ||
+        !game.buildingLevels
+    ) {
         return 0;
     }
 
-    return game.buildingLevels[key]||0;
+    return game.buildingLevels[key] || 0;
+
 }
 
 
-function getBuildingMultiplier(key){
+function getBuildingMultiplier(key) {
 
-    const level=getBuildingLevel(key);
+    const level =
+        getBuildingLevel(key);
 
-    if(level<=1)return 1;
+    if (level <= 1) {
+        return 1;
+    }
 
-    if(level===2)return 1.5;
+    if (level === 2) {
+        return 1.5;
+    }
 
     return 2;
+
 }
 
 
@@ -1925,27 +1801,34 @@ function getBuildingMultiplier(key){
    업그레이드 비용
 ===================================================== */
 
-function getUpgradeCost(key){
+function getUpgradeCost(key) {
 
-    const building=BUILDINGS[key];
+    const building =
+        BUILDINGS[key];
 
-    const currentLevel=getBuildingLevel(key);
+    const currentLevel =
+        getBuildingLevel(key);
 
-    const multiplier=
-        currentLevel===1
-        ?1.5
-        :2.2;
+    const multiplier =
+        currentLevel === 1
+            ? 1.5
+            : 2.2;
 
-    const cost={};
+    const cost = {};
 
-    Object.entries(building.cost).forEach(
-        ([resource,amount])=>{
-            cost[resource]=
-                Math.ceil(amount*multiplier);
-        }
-    );
+    Object.entries(building.cost)
+        .forEach(([resource,amount]) => {
+
+            cost[resource] =
+                Math.ceil(
+                    amount *
+                    multiplier
+                );
+
+        });
 
     return cost;
+
 }
 
 
@@ -1953,39 +1836,48 @@ function getUpgradeCost(key){
    경제 생산 효과
 ===================================================== */
 
-function getEconomicProductionMultiplier(){
+function getEconomicProductionMultiplier() {
 
-    if(!game||!game.economy){
+    if (!game || !game.economy) {
         return 1;
     }
 
-    let multiplier=1;
+    let multiplier = 1;
 
-    const crisis=game.economy.crisis;
+    const crisis =
+        game.economy.crisis;
 
-    if(crisis==="great_depression")multiplier*=.65;
-    if(crisis==="financial_crisis")multiplier*=.80;
-    if(crisis==="oil_crisis")multiplier*=.85;
-    if(crisis==="energy_crisis")multiplier*=.70;
-    if(crisis==="food_crisis")multiplier*=.90;
 
-    if(game.economy.unemployment>20){
-        multiplier*=.85;
+    if (crisis === "great_depression") {
+        multiplier *= .65;
     }
 
-    if(game.economy.unemployment>35){
-        multiplier*=.70;
+    if (crisis === "financial_crisis") {
+        multiplier *= .80;
     }
 
-    /*
-       높은 세율은 생산과 소비를 약간 억제
-    */
+    if (crisis === "oil_crisis") {
+        multiplier *= .85;
+    }
 
-    if(game.economy.taxRate>.30){
-        multiplier*=.95;
+    if (crisis === "energy_crisis") {
+        multiplier *= .70;
+    }
+
+    if (crisis === "food_crisis") {
+        multiplier *= .90;
+    }
+
+    if (game.economy.unemployment > 20) {
+        multiplier *= .85;
+    }
+
+    if (game.economy.unemployment > 35) {
+        multiplier *= .70;
     }
 
     return multiplier;
+
 }
 
 
@@ -1993,58 +1885,74 @@ function getEconomicProductionMultiplier(){
    생산
 ===================================================== */
 
-function productionTick(){
+function productionTick() {
 
-    const environment=
-        ENVIRONMENTS[game.environment];
+    const environment =
+        ENVIRONMENTS[
+            game.environment
+        ];
 
-    const totalWorkers=
+    const totalWorkers =
         calculateTotalWorkers();
 
-    const laborRatio=
+    const laborRatio =
         Math.min(
             1,
-            calculateAvailableWorkers()/
+            calculateAvailableWorkers() /
             Math.max(1,totalWorkers)
         );
 
-    const economyMultiplier=
+    const economyMultiplier =
         getEconomicProductionMultiplier();
 
-    Object.entries(game.buildings).forEach(
-        ([key,count])=>{
 
-            if(count<=0)return;
+    Object.entries(game.buildings)
+        .forEach(([key,count]) => {
 
-            const building=BUILDINGS[key];
+            if (count <= 0) return;
 
-            if(!building.production)return;
+            const building =
+                BUILDINGS[key];
 
-            const buildingMultiplier=
+            if (!building.production) {
+                return;
+            }
+
+            const buildingMultiplier =
                 getBuildingMultiplier(key);
 
-            Object.entries(building.production).forEach(
-                ([resource,baseProduction])=>{
 
-                    let factor=1;
+            Object.entries(building.production)
+                .forEach(([resource,baseProduction]) => {
 
-                    if(environment[resource]!==undefined){
-                        factor=environment[resource];
+                    let factor = 1;
+
+                    if (
+                        environment[resource] !== undefined
+                    ) {
+                        factor =
+                            environment[resource];
                     }
 
-                    const amount=
-                        baseProduction*
-                        count*
-                        factor*
-                        laborRatio*
-                        buildingMultiplier*
+
+                    const amount =
+                        baseProduction *
+                        count *
+                        factor *
+                        laborRatio *
+                        buildingMultiplier *
                         economyMultiplier;
 
-                    addResource(resource,amount);
-                }
-            );
-        }
-    );
+
+                    addResource(
+                        resource,
+                        amount
+                    );
+
+                });
+
+        });
+
 }
 
 
@@ -2052,81 +1960,93 @@ function productionTick(){
    공장
 ===================================================== */
 
-function factoryTick(){
+function factoryTick() {
 
-    const totalWorkers=
+    const totalWorkers =
         calculateTotalWorkers();
 
-    const availableWorkers=
+    const availableWorkers =
         calculateAvailableWorkers();
 
-    const laborRatio=
+    const laborRatio =
         Math.min(
             1,
-            availableWorkers/
+            availableWorkers /
             Math.max(1,totalWorkers)
         );
 
-    const economyMultiplier=
+    const economyMultiplier =
         getEconomicProductionMultiplier();
 
-    Object.entries(game.buildings).forEach(
-        ([key,count])=>{
 
-            if(count<=0)return;
+    Object.entries(game.buildings)
+        .forEach(([key,count]) => {
 
-            const building=BUILDINGS[key];
+            if (count <= 0) return;
 
-            if(!building.recipe)return;
+            const building =
+                BUILDINGS[key];
 
-            const multiplier=
+            if (!building.recipe) {
+                return;
+            }
+
+
+            const multiplier =
                 getBuildingMultiplier(key);
 
-            let possible=
-                count*
-                multiplier*
-                laborRatio*
+
+            let possible =
+                count *
+                multiplier *
+                laborRatio *
                 economyMultiplier;
 
-            Object.entries(
-                building.recipe.input
-            ).forEach(
-                ([resource,amount])=>{
 
-                    possible=Math.min(
-                        possible,
-                        Math.floor(
-                            (
-                                game.resources[resource]||0
-                            )/amount
-                        )
-                    );
-                }
-            );
+            Object.entries(building.recipe.input)
+                .forEach(([resource,amount]) => {
 
-            if(possible<=0)return;
+                    possible =
+                        Math.min(
+                            possible,
 
-            Object.entries(
-                building.recipe.input
-            ).forEach(
-                ([resource,amount])=>{
-                    game.resources[resource]-=
-                        amount*possible;
-                }
-            );
+                            Math.floor(
+                                (
+                                    game.resources[resource] ||
+                                    0
+                                ) / amount
+                            )
+                        );
 
-            Object.entries(
-                building.recipe.output
-            ).forEach(
-                ([resource,amount])=>{
+                });
+
+
+            if (possible <= 0) {
+                return;
+            }
+
+
+            Object.entries(building.recipe.input)
+                .forEach(([resource,amount]) => {
+
+                    game.resources[resource] -=
+                        amount * possible;
+
+                });
+
+
+            Object.entries(building.recipe.output)
+                .forEach(([resource,amount]) => {
+
                     addResource(
                         resource,
-                        amount*possible
+                        amount * possible
                     );
-                }
-            );
-        }
-    );
+
+                });
+
+        });
+
 }
 
 
@@ -2134,499 +2054,203 @@ function factoryTick(){
    소비
 ===================================================== */
 
-function consumptionTick(){
+function consumptionTick() {
 
-    const population=game.population;
-    const economy=game.economy;
+    const population =
+        game.population;
 
-    let foodNeed=population*.08;
-    let waterNeed=population*.15;
-    let foodProductNeed=population*.03;
-    let clothesNeed=population*.005;
+    const economy =
+        game.economy;
 
-    if(economy.crisis==="great_depression"){
-        foodProductNeed*=.65;
-        clothesNeed*=.65;
+
+    let foodNeed =
+        population * .08;
+
+    let waterNeed =
+        population * .15;
+
+    let foodProductNeed =
+        population * .03;
+
+    let clothesNeed =
+        population * .005;
+
+
+    /*
+       대공황/고인플레이션 때
+       실제 소비가 감소하도록 합니다.
+    */
+
+    if (
+        economy.crisis === "great_depression"
+    ) {
+        foodProductNeed *= .65;
+        clothesNeed *= .65;
     }
 
-    if(economy.inflation>15){
-        foodProductNeed*=.85;
-        clothesNeed*=.85;
+    if (
+        economy.inflation > 15
+    ) {
+        foodProductNeed *= .85;
+        clothesNeed *= .85;
     }
 
-    game.resources.food-=foodNeed;
-    game.resources.water-=waterNeed;
-    game.resources.foodProduct-=foodProductNeed;
-    game.resources.clothes-=clothesNeed;
 
-    let shortage=false;
+    game.resources.food -= foodNeed;
+    game.resources.water -= waterNeed;
+    game.resources.foodProduct -= foodProductNeed;
+    game.resources.clothes -= clothesNeed;
 
-    if(game.resources.food<0){
 
-        game.resources.food=0;
+    let shortage = false;
 
-        shortage=true;
 
-        game.population=
+    if (game.resources.food < 0) {
+
+        game.resources.food = 0;
+
+        shortage = true;
+
+        game.population =
             Math.max(
                 10,
-                game.population*.995
+                game.population * .99
             );
 
         addLog(
-            "⚠️ 식량 부족으로 인구 증가가 크게 둔화되었습니다."
+            "⚠️ 식량 부족으로 인구가 감소했습니다."
         );
+
     }
 
-    if(game.resources.water<0){
 
-        game.resources.water=0;
+    if (game.resources.water < 0) {
 
-        shortage=true;
+        game.resources.water = 0;
 
-        game.population=
+        shortage = true;
+
+        game.population =
             Math.max(
                 10,
-                game.population*.995
+                game.population * .99
             );
 
         addLog(
-            "⚠️ 물 부족으로 인구 증가가 크게 둔화되었습니다."
+            "⚠️ 물 부족으로 인구가 감소했습니다."
         );
+
     }
 
-    Object.keys(game.resources).forEach(resource=>{
 
-        if(game.resources[resource]<0){
-            game.resources[resource]=0;
-        }
+    Object.keys(game.resources)
+        .forEach(resource => {
 
-    });
+            if (
+                game.resources[resource] < 0
+            ) {
+                game.resources[resource] = 0;
+            }
 
-    if(shortage){
-        economy.happiness-=.5;
+        });
+
+
+    if (shortage) {
+        economy.happiness -= .5;
     }
+
 }
 
 
 /* =====================================================
-   🚀 빠른 인구 성장
+   인구
 ===================================================== */
 
-function populationTick(){
+function populationTick() {
 
-    const food=game.resources.food;
-    const water=game.resources.water;
-    const economy=game.economy;
+    const food =
+        game.resources.food;
 
-    /*
-       기존 0.08% → 기본 약 0.35%
+    const water =
+        game.resources.water;
 
-       게임에서 인구가 눈에 띄게 빨리 증가하도록 설정
-    */
+    const economy =
+        game.economy;
 
-    let growthRate=.0035;
 
-    /*
-       행복도가 높으면 출산/생활환경 개선
-    */
+    let growthRate =
+        .0008;
 
-    if(economy.happiness>80){
-        growthRate+=.0015;
-    }
-    else if(economy.happiness>70){
-        growthRate+=.0007;
-    }
 
     /*
-       식량과 물이 충분하면 추가 성장
+       기본 생활 조건
     */
 
-    if(food>game.population*5){
-        growthRate+=.0008;
+    if (
+        food <
+        game.population * 2
+    ) {
+        growthRate -= .0005;
     }
 
-    if(water>game.population*5){
-        growthRate+=.0008;
+    if (
+        water <
+        game.population * 2
+    ) {
+        growthRate -= .0005;
     }
+
 
     /*
-       높은 실업률
+       경제 상태
     */
 
-    if(economy.unemployment>20){
-        growthRate-=.0005;
+    if (
+        economy.happiness > 80
+    ) {
+        growthRate += .0003;
     }
 
-    if(economy.unemployment>35){
-        growthRate-=.001;
+    if (
+        economy.happiness < 50
+    ) {
+        growthRate -= .0003;
     }
 
-    /*
-       경제위기
-    */
-
-    if(economy.crisis==="great_depression"){
-        growthRate-=.0015;
+    if (
+        economy.unemployment > 20
+    ) {
+        growthRate -= .0003;
     }
 
-    if(economy.crisis==="food_crisis"){
-        growthRate-=.001;
+
+    if (
+        economy.crisis === "great_depression"
+    ) {
+        growthRate -= .001;
     }
 
-    if(economy.crisis==="water_crisis"){
-        growthRate-=.001;
+    if (
+        economy.crisis === "food_crisis"
+    ) {
+        growthRate -= .0008;
     }
 
-    if(economy.crisis==="financial_crisis"){
-        growthRate-=.0007;
+    if (
+        economy.crisis === "financial_crisis"
+    ) {
+        growthRate -= .0004;
     }
 
-    /*
-       너무 심각한 경우에만 마이너스
-    */
 
-    growthRate=
+    game.population =
         Math.max(
-            -.003,
+            10,
+            game.population +
+            game.population *
             growthRate
         );
 
-    game.population=
-        Math.max(
-            10,
-            game.population+
-            game.population*growthRate
-        );
-}
-
-
-/* =====================================================
-   💰 세금
-===================================================== */
-
-function collectTaxes(){
-
-    const economy=game.economy;
-
-    /*
-       GDP의 일정 비율을 세금으로 징수
-    */
-
-    let revenue=
-        economy.gdp*
-        economy.taxRate*
-        .001;
-
-    /*
-       경제 상황이 나쁘면 실제 세수 감소
-    */
-
-    revenue*=
-        Math.max(
-            .35,
-            economy.productionIndex/100
-        );
-
-    if(economy.crisis==="great_depression"){
-        revenue*=.65;
-    }
-
-    if(economy.crisis==="financial_crisis"){
-        revenue*=.75;
-    }
-
-    revenue=Math.max(0,revenue);
-
-    game.money+=revenue;
-
-    economy.taxRevenue=revenue;
-    economy.lastTax=revenue;
-}
-
-
-/* =====================================================
-   🏦 국채 이자
-===================================================== */
-
-function payInterest(){
-
-    const economy=game.economy;
-
-    if(economy.debt<=0){
-        economy.interestExpense=0;
-        economy.lastInterest=0;
-        return;
-    }
-
-    /*
-       기본 4%.
-       부채가 GDP보다 커질수록 금리 상승.
-    */
-
-    let rate=.04;
-
-    if(economy.gdp>0){
-
-        const debtRatio=
-            economy.debt/
-            economy.gdp;
-
-        if(debtRatio>.5){
-            rate=.05;
-        }
-
-        if(debtRatio>1){
-            rate=.07;
-        }
-
-        if(debtRatio>2){
-            rate=.10;
-        }
-
-        if(debtRatio>3){
-            rate=.15;
-        }
-    }
-
-    economy.debtInterestRate=rate;
-
-    const interest=
-        economy.debt*
-        rate*
-        .001;
-
-    economy.interestExpense=interest;
-    economy.lastInterest=interest;
-
-    game.money-=interest;
-
-    if(game.money<0){
-        game.money=0;
-    }
-
-    /*
-       부채가 지나치게 많으면 신뢰도 하락
-    */
-
-    if(
-        economy.gdp>0 &&
-        economy.debt/economy.gdp>2
-    ){
-        economy.happiness-=.05;
-    }
-}
-
-
-/* =====================================================
-   🏦 국채 발행
-===================================================== */
-
-function issueBond(){
-
-    if(!game)return;
-
-    const input=
-        document.getElementById("bondAmount");
-
-    const amount=
-        Number(input.value);
-
-    if(!Number.isFinite(amount)||amount<=0){
-
-        showImpact(
-            "❌ 발행 금액을 입력해주세요.",
-            "error"
-        );
-
-        return;
-    }
-
-    /*
-       GDP 대비 지나치게 큰 국채는 제한
-    */
-
-    const maxDebt=
-        Math.max(
-            50000,
-            game.economy.gdp*5
-        );
-
-    if(
-        game.economy.debt+amount>
-        maxDebt
-    ){
-
-        showImpact(
-            `❌ 국가 신용 한도 초과\n현재 최대 부채: $${formatNumber(maxDebt)}`,
-            "error"
-        );
-
-        return;
-    }
-
-    game.money+=amount;
-
-    game.economy.debt+=amount;
-
-    addLog(
-        `🏦 국채 $${formatNumber(amount)} 발행`
-    );
-
-    showImpact(
-        `🏦 국채 발행 완료\n국고 +$${formatNumber(amount)}`,
-        "success"
-    );
-
-    updateUI();
-}
-
-
-/* =====================================================
-   💳 부채 상환
-===================================================== */
-
-function repayDebt(){
-
-    if(!game)return;
-
-    const input=
-        document.getElementById("bondAmount");
-
-    let amount=
-        Number(input.value);
-
-    if(!Number.isFinite(amount)||amount<=0){
-        amount=1000;
-    }
-
-    amount=
-        Math.min(
-            amount,
-            game.money,
-            game.economy.debt
-        );
-
-    if(amount<=0){
-
-        showImpact(
-            "❌ 상환할 수 있는 자금이나 부채가 없습니다.",
-            "error"
-        );
-
-        return;
-    }
-
-    game.money-=amount;
-
-    game.economy.debt-=amount;
-
-    addLog(
-        `💳 국가 부채 $${formatNumber(amount)} 상환`
-    );
-
-    showImpact(
-        `💳 부채 상환 완료\n-$${formatNumber(amount)}`,
-        "success"
-    );
-
-    updateUI();
-}
-
-
-/* =====================================================
-   🖨️ 화폐 발행
-===================================================== */
-
-function printMoney(){
-
-    if(!game)return;
-
-    const input=
-        document.getElementById("printAmount");
-
-    const amount=
-        Number(input.value);
-
-    if(!Number.isFinite(amount)||amount<=0){
-
-        showImpact(
-            "❌ 발행 금액을 입력해주세요.",
-            "error"
-        );
-
-        return;
-    }
-
-    /*
-       GDP 대비 화폐 발행량이 클수록
-       인플레이션 충격이 커집니다.
-    */
-
-    const gdp=
-        Math.max(
-            1,
-            game.economy.gdp
-        );
-
-    const monetaryShock=
-        amount/gdp;
-
-    /*
-       직접적인 물가 상승
-    */
-
-    game.economy.inflation+=
-        monetaryShock*
-        120;
-
-    /*
-       통화량 증가
-    */
-
-    game.economy.moneySupply+=amount;
-
-    game.economy.moneyPrinted+=amount;
-
-    game.money+=amount;
-
-    /*
-       과도한 발행 시 행복도 감소
-    */
-
-    if(monetaryShock>.10){
-        game.economy.happiness-=2;
-    }
-
-    if(monetaryShock>.30){
-        game.economy.happiness-=5;
-    }
-
-    addLog(
-        `🖨️ 화폐 $${formatNumber(amount)} 발행`
-    );
-
-    showImpact(
-        `🖨️ 화폐 발행 완료\n국고 +$${formatNumber(amount)}\n물가 상승 압력 증가`,
-        "warning"
-    );
-
-    updateUI();
-}
-
-
-/* =====================================================
-   세율
-===================================================== */
-
-function changeTaxRate(value){
-
-    if(!game)return;
-
-    game.economy.taxRate=
-        Number(value)/100;
-
-    updateFinanceUI();
 }
 
 
@@ -2634,118 +2258,167 @@ function changeTaxRate(value){
    경제 계산
 ===================================================== */
 
-function updateEconomy(){
+function updateEconomy() {
 
-    const economy=game.economy;
+    const economy =
+        game.economy;
 
-    const available=
+
+    const available =
         calculateAvailableWorkers();
 
-    const required=
+    const required =
         calculateTotalWorkers();
 
-    if(available>0){
 
-        economy.unemployment=
+    /*
+       실업률
+
+       노동 가능 인구가 일자리보다 많으면
+       그 차이를 실업으로 계산합니다.
+    */
+
+    if (available > 0) {
+
+        economy.unemployment =
             Math.max(
                 0,
                 Math.min(
                     80,
                     (
                         (
-                            available-
-                            Math.min(
-                                available,
-                                required
-                            )
-                        )/
+                            available -
+                            Math.min(available,required)
+                        ) /
                         available
-                    )*100
+                    ) * 100
                 )
             );
 
     }
 
-    const foodNeed=
-        game.population*.08;
 
-    economy.foodStress=
-        foodNeed>0
-        ?Math.max(
-            0,
-            Math.min(
-                1,
-                1-
-                game.resources.food/
-                (foodNeed*10)
+    /*
+       식량 스트레스
+    */
+
+    const foodNeed =
+        game.population * .08;
+
+    economy.foodStress =
+        foodNeed > 0
+            ? Math.max(
+                0,
+                Math.min(
+                    1,
+                    1 -
+                    (
+                        game.resources.food /
+                        (foodNeed * 10)
+                    )
+                )
             )
-        )
-        :0;
+            : 0;
 
-    const waterNeed=
-        game.population*.15;
 
-    economy.waterStress=
-        waterNeed>0
-        ?Math.max(
-            0,
-            Math.min(
-                1,
-                1-
-                game.resources.water/
-                (waterNeed*10)
+    /*
+       물 스트레스
+    */
+
+    const waterNeed =
+        game.population * .15;
+
+    economy.waterStress =
+        waterNeed > 0
+            ? Math.max(
+                0,
+                Math.min(
+                    1,
+                    1 -
+                    (
+                        game.resources.water /
+                        (waterNeed * 10)
+                    )
+                )
             )
-        )
-        :0;
+            : 0;
 
-    const powerNeed=
+
+    /*
+       에너지 스트레스
+
+       공장이 많을수록 에너지 필요량 증가
+    */
+
+    const powerNeed =
         Object.entries(game.buildings)
-        .reduce(
-            (sum,[key,count])=>{
+            .reduce(
+                (sum,[key,count]) => {
 
-                if(BUILDINGS[key].recipe){
-                    return sum+count*20;
-                }
+                    if (
+                        BUILDINGS[key].recipe
+                    ) {
+                        return sum +
+                            count * 20;
+                    }
 
-                return sum;
-            },
-            0
-        );
+                    return sum;
 
-    economy.energyStress=
-        powerNeed>0
-        ?Math.max(
-            0,
-            Math.min(
-                1,
-                1-
-                calculatePower()/
-                (powerNeed*10)
+                },
+                0
+            );
+
+
+    economy.energyStress =
+        powerNeed > 0
+            ? Math.max(
+                0,
+                Math.min(
+                    1,
+                    1 -
+                    (
+                        calculatePower() /
+                        (powerNeed * 10)
+                    )
+                )
             )
-        )
-        :0;
+            : 0;
 
-    let production=100;
 
-    production-=economy.unemployment*.5;
-    production-=economy.foodStress*20;
-    production-=economy.waterStress*15;
-    production-=economy.energyStress*20;
+    /*
+       생산지수
+    */
 
-    if(economy.crisis==="great_depression"){
-        production-=25;
+    let production =
+        100;
+
+    production -=
+        economy.unemployment * .5;
+
+    production -=
+        economy.foodStress * 20;
+
+    production -=
+        economy.waterStress * 15;
+
+    production -=
+        economy.energyStress * 20;
+
+
+    if (
+        economy.crisis === "great_depression"
+    ) {
+        production -= 25;
     }
 
-    if(economy.crisis==="financial_crisis"){
-        production-=15;
+    if (
+        economy.crisis === "financial_crisis"
+    ) {
+        production -= 15;
     }
 
-    if(economy.inflation>20){
-        production-=
-            (economy.inflation-20)*.25;
-    }
 
-    economy.productionIndex=
+    economy.productionIndex =
         Math.max(
             20,
             Math.min(
@@ -2754,27 +2427,38 @@ function updateEconomy(){
             )
         );
 
-    let consumption=100;
 
-    consumption-=
-        economy.unemployment*.7;
+    /*
+       소비지수
+    */
 
-    consumption-=
+    let consumption =
+        100;
+
+    consumption -=
+        economy.unemployment * .7;
+
+    consumption -=
         Math.max(
             0,
             economy.inflation
-        )*.8;
+        ) * .8;
 
-    if(economy.happiness<50){
-        consumption-=
-            (50-economy.happiness)*.5;
+    if (
+        economy.happiness < 50
+    ) {
+        consumption -=
+            (50 - economy.happiness) * .5;
     }
 
-    if(economy.crisis==="great_depression"){
-        consumption-=25;
+    if (
+        economy.crisis === "great_depression"
+    ) {
+        consumption -= 25;
     }
 
-    economy.consumptionIndex=
+
+    economy.consumptionIndex =
         Math.max(
             20,
             Math.min(
@@ -2783,43 +2467,52 @@ function updateEconomy(){
             )
         );
 
-    let happiness=70;
 
-    happiness-=
-        economy.unemployment*.35;
+    /*
+       행복도
+    */
 
-    happiness-=
+    let happiness = 70;
+
+    happiness -=
+        economy.unemployment * .35;
+
+    happiness -=
         Math.max(
             0,
             economy.inflation
-        )*.4;
+        ) * .4;
 
-    happiness-=
-        economy.foodStress*30;
+    happiness -=
+        economy.foodStress * 30;
 
-    happiness-=
-        economy.waterStress*20;
+    happiness -=
+        economy.waterStress * 20;
 
-    happiness-=
-        economy.energyStress*15;
+    happiness -=
+        economy.energyStress * 15;
 
-    if(economy.taxRate>.30){
-        happiness-=5;
+
+    if (
+        economy.crisis === "great_depression"
+    ) {
+        happiness -= 20;
     }
 
-    if(economy.crisis==="great_depression"){
-        happiness-=20;
+    if (
+        economy.crisis === "financial_crisis"
+    ) {
+        happiness -= 10;
     }
 
-    if(economy.crisis==="financial_crisis"){
-        happiness-=10;
+    if (
+        economy.crisis === "oil_crisis"
+    ) {
+        happiness -= 8;
     }
 
-    if(economy.crisis==="oil_crisis"){
-        happiness-=8;
-    }
 
-    economy.happiness=
+    economy.happiness =
         Math.max(
             0,
             Math.min(
@@ -2828,754 +2521,692 @@ function updateEconomy(){
             )
         );
 
-    /*
-       GDP
 
-       인구 × 생산성 × 소비
-       기술 수준과 산업 규모를 함께 반영
+    /*
+       GDP를 아주 단순화하여 계산
+
+       인구 × 생산성 × 소비능력
     */
 
-    const industrialBonus=
-        1+
+    economy.gdp =
+        game.population *
         (
-            Object.values(game.buildings)
-            .reduce(
-                (sum,value)=>sum+value,
-                0
-            )*.01
+            economy.productionIndex / 100
+        ) *
+        (
+            economy.consumptionIndex / 100
         );
 
-    economy.gdp=
-        game.population*
-        (
-            economy.productionIndex/100
-        )*
-        (
-            economy.consumptionIndex/100
-        )*
-        industrialBonus*
-        100;
 
-    if(economy.previousGDP>0){
+    /*
+       경제 성장률
+    */
 
-        economy.growth=
+    if (
+        economy.previousGDP > 0
+    ) {
+
+        economy.growth =
             (
                 (
-                    economy.gdp-
+                    economy.gdp -
                     economy.previousGDP
-                )/
+                ) /
                 economy.previousGDP
-            )*100;
+            ) * 100;
+
     }
 
-    economy.previousGDP=
+
+    economy.previousGDP =
         economy.gdp;
 
-    let totalRatio=0;
-    let count=0;
 
-    Object.keys(RESOURCES).forEach(resource=>{
+    /*
+       물가상승률 계산
 
-        totalRatio+=
-            game.market[resource]/
-            RESOURCES[resource].price;
+       시장 가격의 평균 변화
+    */
 
-        count++;
+    let totalRatio = 0;
+    let count = 0;
 
-    });
 
-    if(count>0){
+    Object.keys(RESOURCES)
+        .forEach(resource => {
 
-        economy.priceIndex=
+            totalRatio +=
+                game.market[resource] /
+                RESOURCES[resource].price;
+
+            count++;
+
+        });
+
+
+    if (count > 0) {
+
+        economy.priceIndex =
             (
-                totalRatio/count
-            )*100;
+                totalRatio /
+                count
+            ) * 100;
+
     }
 
+
     /*
-       화폐 발행, 시장 가격, 수요를
-       종합하여 물가 계산
+       100이 정상 가격
+
+       105이면 약 5% 물가 상승
     */
 
-    const marketInflation=
+    economy.inflation =
+        economy.inflation * .9 +
         (
-            economy.priceIndex-
-            100
-        )*.1;
+            economy.priceIndex - 100
+        ) * .1;
 
-    economy.inflation=
-        economy.inflation*.92+
-        marketInflation*.08;
-
-    /*
-       인플레이션이 너무 낮아졌을 때
-       자연스럽게 0에 가까워지게 함
-    */
-
-    if(
-        Math.abs(economy.inflation)<.01
-    ){
-        economy.inflation=0;
-    }
 }
 
 
 /* =====================================================
-   경제 위기
+   경제위기 종류
 ===================================================== */
 
-const CRISES={
+const CRISES = {
 
     inflation:{
         name:"인플레이션",
         emoji:"📈",
-        description:"물가가 빠르게 상승하고 있습니다."
+        description:
+            "물가가 빠르게 상승하고 있습니다.",
+        color:"warning"
     },
 
     hyperinflation:{
         name:"초인플레이션",
         emoji:"💥",
-        description:"화폐가치가 급격하게 하락하고 있습니다."
+        description:
+            "화폐가치가 급격하게 하락하고 있습니다.",
+        color:"crisis"
     },
 
     deflation:{
         name:"디플레이션",
         emoji:"📉",
-        description:"물가 하락으로 기업 활동이 위축되고 있습니다."
+        description:
+            "물가가 지나치게 하락하면서 기업 활동이 위축되고 있습니다.",
+        color:"warning"
     },
 
     great_depression:{
         name:"대공황",
         emoji:"💀",
-        description:"생산·소비·고용이 동시에 붕괴하고 있습니다."
+        description:
+            "생산·소비·고용이 동시에 붕괴하고 있습니다.",
+        color:"crisis"
     },
 
     financial_crisis:{
         name:"금융위기",
         emoji:"🏦",
-        description:"금융시장 불안으로 경제활동이 위축되고 있습니다."
+        description:
+            "금융시장 불안으로 경제활동이 급격하게 위축되고 있습니다.",
+        color:"danger"
     },
 
     oil_crisis:{
         name:"석유 파동",
         emoji:"🛢️",
-        description:"석유 공급 충격으로 에너지 가격이 폭등했습니다."
+        description:
+            "석유 공급 충격으로 에너지 가격이 폭등했습니다.",
+        color:"warning"
     },
 
     food_crisis:{
         name:"식량 위기",
         emoji:"🍞",
-        description:"식량 부족으로 국민 생활이 위협받고 있습니다."
+        description:
+            "식량 부족으로 국민 생활이 위협받고 있습니다.",
+        color:"danger"
     },
 
     water_crisis:{
         name:"물 부족 위기",
         emoji:"💧",
-        description:"물 공급 부족으로 생활과 산업이 위축되고 있습니다."
+        description:
+            "물 공급 부족으로 생활과 산업이 위축되고 있습니다.",
+        color:"danger"
     },
 
     energy_crisis:{
         name:"에너지 위기",
         emoji:"⚡",
-        description:"전력과 에너지 부족으로 산업 생산이 감소하고 있습니다."
+        description:
+            "전력과 에너지 부족으로 산업 생산이 감소하고 있습니다.",
+        color:"danger"
     }
 
 };
 
 
-function economyCrisisTick(){
+/* =====================================================
+   경제위기 진행
+===================================================== */
 
-    const economy=game.economy;
+function economyCrisisTick() {
 
-    if(economy.crisis){
+    const economy =
+        game.economy;
+
+
+    /*
+       위기가 진행 중이면
+       지속시간을 증가시킵니다.
+    */
+
+    if (economy.crisis) {
 
         economy.crisisDays++;
+
 
         applyCrisisEffect(
             economy.crisis
         );
 
-        if(
-            economy.crisisCooldown<=0 &&
-            crisisCanEnd(economy.crisis)
-        ){
 
-            const old=
+        /*
+           위기에서 회복될 조건
+        */
+
+        if (
+            economy.crisisCooldown <= 0 &&
+            crisisCanEnd(economy.crisis)
+        ) {
+
+            const old =
                 CRISES[economy.crisis];
+
 
             addLog(
                 `🕊️ ${old.emoji} ${old.name}이 완화되기 시작했습니다.`
             );
+
 
             showImpact(
                 `🕊️ ${old.name} 완화`,
                 "success"
             );
 
-            economy.crisis=null;
-            economy.crisisDays=0;
-            economy.crisisCooldown=10;
+
+            economy.crisis =
+                null;
+
+            economy.crisisDays =
+                0;
+
+            economy.crisisCooldown =
+                10;
+
         }
 
+
         return;
+
     }
 
-    if(economy.crisisCooldown>0){
+
+    if (
+        economy.crisisCooldown > 0
+    ) {
 
         economy.crisisCooldown--;
 
         return;
+
     }
 
-    const possible=
+
+    /*
+       새로운 위기 검사
+    */
+
+    const possible =
         determineCrisis();
 
-    if(possible){
-        startCrisis(possible);
+
+    if (possible) {
+
+        startCrisis(
+            possible
+        );
+
     }
+
 }
 
 
-function determineCrisis(){
+/* =====================================================
+   위기 발생 조건
+===================================================== */
 
-    const economy=game.economy;
+function determineCrisis() {
 
-    if(economy.foodStress>.75){
+    const economy =
+        game.economy;
+
+
+    /*
+       식량위기
+    */
+
+    if (
+        economy.foodStress > .75
+    ) {
+
         return "food_crisis";
+
     }
 
-    if(economy.waterStress>.80){
+
+    /*
+       물 위기
+    */
+
+    if (
+        economy.waterStress > .80
+    ) {
+
         return "water_crisis";
+
     }
 
-    if(economy.energyStress>.75){
+
+    /*
+       에너지 위기
+    */
+
+    if (
+        economy.energyStress > .75
+    ) {
+
         return "energy_crisis";
+
     }
 
-    if(economy.inflation>40){
+
+    /*
+       초인플레이션
+    */
+
+    if (
+        economy.inflation > 40
+    ) {
+
         return "hyperinflation";
+
     }
 
-    if(economy.inflation>15){
+
+    /*
+       일반 인플레이션
+    */
+
+    if (
+        economy.inflation > 15
+    ) {
+
         return "inflation";
+
     }
 
-    if(
-        economy.inflation<-15 &&
-        economy.growth<-1
-    ){
+
+    /*
+       디플레이션
+    */
+
+    if (
+        economy.inflation < -15 &&
+        economy.growth < -1
+    ) {
+
         return "deflation";
+
     }
 
-    if(
-        economy.unemployment>35 &&
-        economy.growth<-3 &&
-        economy.consumptionIndex<70
-    ){
+
+    /*
+       대공황
+
+       실업률 + 경제성장률 + 소비
+    */
+
+    if (
+        economy.unemployment > 35 &&
+        economy.growth < -3 &&
+        economy.consumptionIndex < 70
+    ) {
+
         return "great_depression";
+
     }
 
-    if(
-        game.economy.debt>
-        game.economy.gdp*3 &&
-        economy.growth<0
-    ){
+
+    /*
+       금융위기
+
+       국고가 크게 줄어든 경우
+    */
+
+    if (
+        game.money < 500 &&
+        economy.growth < -1
+    ) {
+
         return "financial_crisis";
+
     }
 
-    if(
-        game.money<500 &&
-        economy.growth<-1
-    ){
-        return "financial_crisis";
-    }
 
-    if(
-        game.market.oil>
-        RESOURCES.oil.price*1.8
-    ){
+    /*
+       석유 파동
+
+       석유 가격이 기준가보다 매우 높은 경우
+    */
+
+    if (
+        game.market.oil >
+        RESOURCES.oil.price * 1.8
+    ) {
+
         return "oil_crisis";
+
     }
+
 
     return null;
+
 }
 
 
-function startCrisis(type){
+/* =====================================================
+   위기 시작
+===================================================== */
 
-    const economy=game.economy;
-    const crisis=CRISES[type];
+function startCrisis(type) {
 
-    economy.crisis=type;
-    economy.crisisDays=0;
+    const economy =
+        game.economy;
 
-    if(type==="great_depression"){
-        economy.happiness-=10;
+    const crisis =
+        CRISES[type];
+
+
+    economy.crisis =
+        type;
+
+    economy.crisisDays =
+        0;
+
+
+    /*
+       위기 시작 효과
+    */
+
+    if (
+        type === "great_depression"
+    ) {
+
+        economy.happiness -= 10;
+
     }
 
-    if(type==="hyperinflation"){
-        economy.happiness-=15;
+
+    if (
+        type === "hyperinflation"
+    ) {
+
+        economy.happiness -= 15;
+
     }
 
-    if(
-        type==="food_crisis"||
-        type==="water_crisis"
-    ){
-        economy.happiness-=8;
+
+    if (
+        type === "food_crisis"
+    ) {
+
+        economy.happiness -= 8;
+
     }
+
+
+    if (
+        type === "water_crisis"
+    ) {
+
+        economy.happiness -= 8;
+
+    }
+
 
     addLog(
         `${crisis.emoji} ${crisis.name}이 발생했습니다! ${crisis.description}`
     );
 
+
     showImpact(
         `${crisis.emoji} ${crisis.name} 발생!\n${crisis.description}`,
         "warning"
     );
-}
 
-
-function applyCrisisEffect(type){
-
-    const economy=game.economy;
-
-    if(type==="inflation"){
-        economy.inflation+=.08;
-        game.money=Math.max(
-            0,
-            game.money-5
-        );
-    }
-
-    if(type==="hyperinflation"){
-        economy.inflation+=.35;
-
-        game.money=
-            Math.max(
-                0,
-                game.money*.995
-            );
-    }
-
-    if(type==="deflation"){
-        economy.growth-=.05;
-    }
-
-    if(type==="great_depression"){
-        economy.happiness-=.15;
-        game.money=
-            Math.max(
-                0,
-                game.money-20
-            );
-    }
-
-    if(type==="financial_crisis"){
-        economy.happiness-=.10;
-
-        game.money=
-            Math.max(
-                0,
-                game.money-30
-            );
-    }
-
-    if(type==="oil_crisis"){
-        economy.happiness-=.08;
-    }
-
-    if(type==="food_crisis"){
-
-        economy.happiness-=.15;
-
-        game.resources.food=
-            Math.max(
-                0,
-                game.resources.food-5
-            );
-    }
-
-    if(type==="water_crisis"){
-
-        economy.happiness-=.15;
-
-        game.resources.water=
-            Math.max(
-                0,
-                game.resources.water-5
-            );
-    }
-
-    if(type==="energy_crisis"){
-        economy.happiness-=.12;
-    }
-
-    economy.happiness=
-        Math.max(
-            0,
-            economy.happiness
-        );
-}
-
-
-function crisisCanEnd(type){
-
-    const economy=game.economy;
-
-    if(economy.crisisDays<10){
-        return false;
-    }
-
-    switch(type){
-
-        case "inflation":
-            return economy.inflation<12;
-
-        case "hyperinflation":
-            return economy.inflation<30;
-
-        case "deflation":
-            return economy.inflation>-10;
-
-        case "great_depression":
-            return(
-                economy.unemployment<25 &&
-                economy.growth>-1
-            );
-
-        case "financial_crisis":
-            return(
-                game.money>1000 &&
-                economy.growth>-1
-            );
-
-        case "oil_crisis":
-            return(
-                game.market.oil<
-                RESOURCES.oil.price*1.4
-            );
-
-        case "food_crisis":
-            return economy.foodStress<.4;
-
-        case "water_crisis":
-            return economy.waterStress<.4;
-
-        case "energy_crisis":
-            return economy.energyStress<.4;
-
-        default:
-            return true;
-    }
 }
 
 
 /* =====================================================
-   🌎 AI 국가 경제
+   위기 효과
 ===================================================== */
 
-function aiTick(){
+function applyCrisisEffect(type) {
 
-    game.aiCountries.forEach(country=>{
+    const economy =
+        game.economy;
 
-        const economy=country.economy;
-        const env=ENVIRONMENTS[country.environment];
+
+    if (
+        type === "inflation"
+    ) {
 
         /*
-           AI 인구도 빠르게 증가
+           물가 추가 상승
         */
 
-        let growth=.0025;
+        economy.inflation += .08;
 
-        if(economy.happiness>80){
-            growth+=.001;
-        }
-
-        if(
-            country.resources.food<
-            country.population*2
-        ){
-            growth-=.001;
-        }
-
-        if(
-            country.resources.water<
-            country.population*2
-        ){
-            growth-=.001;
-        }
-
-        country.population=
+        game.money =
             Math.max(
-                50,
-                country.population+
-                country.population*growth
+                0,
+                game.money - 5
             );
 
+    }
+
+
+    if (
+        type === "hyperinflation"
+    ) {
+
+        economy.inflation += .35;
+
         /*
-           AI 생산
+           국고의 실질가치 감소를 표현
         */
 
-        let workers=
-            country.population*.6;
+        game.money =
+            Math.max(
+                0,
+                game.money * .995
+            );
 
-        let employed=0;
+    }
 
-        Object.entries(country.buildings).forEach(
-            ([key,count])=>{
 
-                const building=BUILDINGS[key];
+    if (
+        type === "deflation"
+    ) {
 
-                if(!building)return;
+        economy.growth -= .05;
 
-                const labor=
-                    Math.min(
-                        workers,
-                        building.workers*count
-                    );
+    }
 
-                employed+=labor;
 
-                if(building.production){
+    if (
+        type === "great_depression"
+    ) {
 
-                    Object.entries(
-                        building.production
-                    ).forEach(
-                        ([resource,amount])=>{
+        economy.happiness -= .15;
 
-                            const factor=
-                                env[resource]||
-                                1;
+        game.money =
+            Math.max(
+                0,
+                game.money - 20
+            );
 
-                            country.resources[resource]=
-                                Math.min(
-                                    10000,
-                                    (
-                                        country.resources[resource]||
-                                        0
-                                    )+
-                                    amount*
-                                    count*
-                                    factor*
-                                    .8
-                                );
-                        }
-                    );
-                }
-            }
+    }
+
+
+    if (
+        type === "financial_crisis"
+    ) {
+
+        economy.happiness -= .10;
+
+        game.money =
+            Math.max(
+                0,
+                game.money - 30
+            );
+
+    }
+
+
+    if (
+        type === "oil_crisis"
+    ) {
+
+        economy.happiness -= .08;
+
+    }
+
+
+    if (
+        type === "food_crisis"
+    ) {
+
+        economy.happiness -= .15;
+
+        game.resources.food =
+            Math.max(
+                0,
+                game.resources.food - 5
+            );
+
+    }
+
+
+    if (
+        type === "water_crisis"
+    ) {
+
+        economy.happiness -= .15;
+
+        game.resources.water =
+            Math.max(
+                0,
+                game.resources.water - 5
+            );
+
+    }
+
+
+    if (
+        type === "energy_crisis"
+    ) {
+
+        economy.happiness -= .12;
+
+    }
+
+
+    economy.happiness =
+        Math.max(
+            0,
+            economy.happiness
         );
 
-        /*
-           AI 소비
-        */
+}
 
-        const foodNeed=
-            country.population*.06;
 
-        const waterNeed=
-            country.population*.10;
+/* =====================================================
+   위기 종료 조건
+===================================================== */
 
-        country.resources.food=
-            Math.max(
-                0,
-                country.resources.food-foodNeed
+function crisisCanEnd(type) {
+
+    const economy =
+        game.economy;
+
+
+    if (
+        economy.crisisDays < 10
+    ) {
+        return false;
+    }
+
+
+    switch(type) {
+
+        case "inflation":
+            return economy.inflation < 12;
+
+        case "hyperinflation":
+            return economy.inflation < 30;
+
+        case "deflation":
+            return economy.inflation > -10;
+
+        case "great_depression":
+            return (
+                economy.unemployment < 25 &&
+                economy.growth > -1
             );
 
-        country.resources.water=
-            Math.max(
-                0,
-                country.resources.water-waterNeed
+        case "financial_crisis":
+            return (
+                game.money > 1000 &&
+                economy.growth > -1
             );
 
-        /*
-           AI GDP
-        */
-
-        economy.productionIndex=
-            Math.max(
-                50,
-                Math.min(
-                    140,
-                    100+
-                    (
-                        employed/
-                        Math.max(
-                            1,
-                            workers
-                        )
-                    )*20
-                )
+        case "oil_crisis":
+            return (
+                game.market.oil <
+                RESOURCES.oil.price * 1.4
             );
 
-        economy.consumptionIndex=
-            Math.max(
-                50,
-                Math.min(
-                    130,
-                    100+
-                    economy.happiness-
-                    70
-                )
-            );
+        case "food_crisis":
+            return economy.foodStress < .4;
 
-        economy.gdp=
-            country.population*
-            (
-                economy.productionIndex/100
-            )*
-            (
-                economy.consumptionIndex/100
-            )*
-            100;
+        case "water_crisis":
+            return economy.waterStress < .4;
 
-        /*
-           AI 세금
+        case "energy_crisis":
+            return economy.energyStress < .4;
 
-           GDP 규모에 따라 실제 돈이 들어오도록 함
-        */
+        default:
+            return true;
 
-        const tax=
-            economy.gdp*
-            economy.taxRate*
-            .001;
+    }
 
-        country.money+=tax;
-
-        /*
-           AI 소비와 정부 지출
-        */
-
-        const spending=
-            economy.gdp*
-            .0005;
-
-        country.money-=spending;
-
-        /*
-           돈이 너무 많으면 일부를 시장에 사용
-        */
-
-        if(country.money>economy.gdp*.8){
-
-            const investment=
-                economy.gdp*.0005;
-
-            country.money-=investment;
-
-            /*
-               투자로 자원 일부 확보
-            */
-
-            if(country.resources.food<500){
-                country.resources.food+=300;
-            }
-
-            if(country.resources.water<500){
-                country.resources.water+=300;
-            }
-        }
-
-        /*
-           AI 부채
-
-           국고가 너무 부족하면 자동으로 차입
-        */
-
-        if(
-            country.money<500 &&
-            country.economy.debt<
-            country.economy.gdp*2
-        ){
-
-            const loan=
-                Math.max(
-                    2000,
-                    country.economy.gdp*.01
-                );
-
-            country.money+=loan;
-            country.economy.debt+=loan;
-        }
-
-        /*
-           AI 이자
-        */
-
-        if(country.economy.debt>0){
-
-            const interest=
-                country.economy.debt*
-                .04*
-                .001;
-
-            country.money-=interest;
-
-            if(country.money<0){
-                country.money=0;
-            }
-        }
-
-        /*
-           AI가 너무 가난해지지 않도록
-           경제 규모에 따라 최소 유동성 확보
-
-           이것은 무제한 돈 생성이 아니라
-           국가 경제가 성장하면서 통화량이
-           함께 증가하는 시뮬레이션용 안전장치
-        */
-
-        const minimumCash=
-            Math.max(
-                3000,
-                country.economy.gdp*.03
-            );
-
-        if(country.money<minimumCash){
-
-            const difference=
-                minimumCash-
-                country.money;
-
-            const borrowingCapacity=
-                country.economy.gdp*2-
-                country.economy.debt;
-
-            if(
-                borrowingCapacity>difference
-            ){
-
-                country.money+=difference;
-                country.economy.debt+=difference;
-            }
-        }
-
-        /*
-           AI 경제 성장에 따라 물가 변화
-        */
-
-        economy.inflation=
-            economy.inflation*.98+
-            (
-                Math.random()*.3
-            );
-
-        /*
-           AI 레벨
-        */
-
-        if(country.population>5000){
-            country.level=3;
-        }
-
-        if(country.population>20000){
-            country.level=4;
-        }
-
-        if(country.population>100000){
-            country.level=5;
-        }
-
-    });
 }
 
 
@@ -3583,83 +3214,112 @@ function aiTick(){
    시장
 ===================================================== */
 
-function marketTick(){
+function marketTick() {
 
-    Object.keys(RESOURCES).forEach(resource=>{
+    Object.keys(RESOURCES)
+        .forEach(resource => {
 
-        const base=
-            RESOURCES[resource].price;
+            const base =
+                RESOURCES[resource].price;
 
-        let change=
-            (
-                Math.random()-.5
-            )*.04;
+            let change =
+                (
+                    Math.random() -
+                    .5
+                ) * .04;
 
-        if(game.economy.crisis==="inflation"){
-            change+=.015;
-        }
 
-        if(game.economy.crisis==="hyperinflation"){
-            change+=.05;
-        }
+            /*
+               경제위기에 따른 가격 변화
+            */
 
-        if(game.economy.crisis==="deflation"){
-            change-=.015;
-        }
+            if (
+                game.economy.crisis ===
+                "inflation"
+            ) {
+                change += .015;
+            }
 
-        if(game.economy.crisis==="great_depression"){
-            change-=.01;
-        }
+            if (
+                game.economy.crisis ===
+                "hyperinflation"
+            ) {
+                change += .05;
+            }
 
-        if(
-            game.economy.crisis==="oil_crisis" &&
-            (
-                resource==="oil"||
-                resource==="fuel"
-            )
-        ){
-            change+=.08;
-        }
+            if (
+                game.economy.crisis ===
+                "deflation"
+            ) {
+                change -= .015;
+            }
 
-        if(
-            game.economy.crisis==="food_crisis" &&
-            (
-                resource==="food"||
-                resource==="foodProduct"
-            )
-        ){
-            change+=.06;
-        }
+            if (
+                game.economy.crisis ===
+                "great_depression"
+            ) {
+                change -= .01;
+            }
 
-        if(
-            game.economy.crisis==="water_crisis" &&
-            resource==="water"
-        ){
-            change+=.06;
-        }
-
-        /*
-           화폐 발행과 인플레이션을 시장 가격에 반영
-        */
-
-        if(game.economy.inflation>10){
-            change+=
-                game.economy.inflation/
-                1000;
-        }
-
-        game.market[resource]*=
-            1+change;
-
-        game.market[resource]=
-            Math.max(
-                base*.2,
-                Math.min(
-                    base*5,
-                    game.market[resource]
+            if (
+                game.economy.crisis ===
+                "oil_crisis" &&
+                (
+                    resource === "oil" ||
+                    resource === "fuel"
                 )
-            );
-    });
+            ) {
+                change += .08;
+            }
+
+            if (
+                game.economy.crisis ===
+                "food_crisis" &&
+                (
+                    resource === "food" ||
+                    resource === "foodProduct"
+                )
+            ) {
+                change += .06;
+            }
+
+            if (
+                game.economy.crisis ===
+                "water_crisis" &&
+                resource === "water"
+            ) {
+                change += .06;
+            }
+
+
+            /*
+               물가 전체를 반영
+            */
+
+            if (
+                game.economy.inflation > 10
+            ) {
+                change +=
+                    game.economy.inflation /
+                    1000;
+            }
+
+
+            game.market[resource] *=
+                1 + change;
+
+
+            game.market[resource] =
+                Math.max(
+                    base * .2,
+                    Math.min(
+                        base * 5,
+                        game.market[resource]
+                    )
+                );
+
+        });
+
 }
 
 
@@ -3667,62 +3327,82 @@ function marketTick(){
    경제 이벤트
 ===================================================== */
 
-function randomEvent(){
+function randomEvent() {
 
-    if(Math.random()>.02){
+    if (
+        Math.random() > .02
+    ) {
         return;
     }
 
-    const events=[
 
-        function(){
+    const events = [
 
-            game.money+=500;
+        function() {
+
+            game.money += 500;
 
             addLog(
                 "📈 경제 호황! 세수 증가로 국고 +500"
             );
+
         },
 
-        function(){
 
-            game.money=
+        function() {
+
+            game.money =
                 Math.max(
                     0,
-                    game.money-300
+                    game.money - 300
                 );
 
             addLog(
                 "📉 경기 침체가 발생했습니다. 국고 -300"
             );
+
         },
 
-        function(){
 
-            addResource("food",300);
+        function() {
+
+            addResource(
+                "food",
+                300
+            );
 
             addLog(
                 "🌾 풍년이 발생했습니다. 식량 +300"
             );
+
         },
 
-        function(){
 
-            game.resources.food=
+        function() {
+
+            game.resources.food =
                 Math.max(
                     0,
-                    game.resources.food-200
+                    game.resources.food - 200
                 );
 
             addLog(
                 "🌪️ 자연재해로 식량 200이 손실되었습니다."
             );
+
         },
 
-        function(){
 
-            game.market.oil*=1.5;
-            game.market.fuel*=1.35;
+        function() {
+
+            /*
+               석유 공급 충격
+
+               시장 가격을 크게 상승시킵니다.
+            */
+
+            game.market.oil *= 1.5;
+            game.market.fuel *= 1.35;
 
             addLog(
                 "🛢️ 국제 석유 공급 충격! 석유 가격이 급등했습니다."
@@ -3732,17 +3412,23 @@ function randomEvent(){
                 "🛢️ 석유 공급 충격!\n석유 가격이 급등했습니다.",
                 "warning"
             );
+
         },
 
-        function(){
 
-            game.money=
+        function() {
+
+            /*
+               금융시장 불안
+            */
+
+            game.money =
                 Math.max(
                     0,
-                    game.money-700
+                    game.money - 700
                 );
 
-            game.economy.growth-=2;
+            game.economy.growth -= 2;
 
             addLog(
                 "🏦 금융시장 불안이 발생했습니다."
@@ -3752,15 +3438,19 @@ function randomEvent(){
                 "🏦 금융시장 불안!",
                 "warning"
             );
+
         }
 
     ];
 
+
     events[
         Math.floor(
-            Math.random()*events.length
+            Math.random() *
+            events.length
         )
     ]();
+
 }
 
 
@@ -3768,37 +3458,49 @@ function randomEvent(){
    발전
 ===================================================== */
 
-function levelCheck(){
+function levelCheck() {
 
-    let newLevel=game.level;
+    let newLevel =
+        game.level;
 
-    for(
+
+    for (
         let i=0;
         i<LEVELS.length;
         i++
-    ){
+    ) {
 
-        if(
-            game.population>=
+        if (
+            game.population >=
             LEVELS[i].population
-        ){
-            newLevel=i+1;
+        ) {
+            newLevel = i+1;
         }
+
     }
 
-    if(newLevel>game.level){
 
-        game.level=newLevel;
+    if (
+        newLevel >
+        game.level
+    ) {
+
+        game.level =
+            newLevel;
+
 
         addLog(
             `🎉 국가가 Lv.${newLevel} ${LEVELS[newLevel-1].name} 단계로 발전했습니다!`
         );
 
+
         showImpact(
             `🎉 국가 발전!\nLv.${newLevel} ${LEVELS[newLevel-1].name}`,
             "success"
         );
+
     }
+
 }
 
 
@@ -3806,13 +3508,21 @@ function levelCheck(){
    건설
 ===================================================== */
 
-function buildBuilding(key){
+function buildBuilding(key) {
 
-    const building=BUILDINGS[key];
+    const building =
+        BUILDINGS[key];
 
-    if(!building)return;
 
-    if(game.level<building.level){
+    if (!building) {
+        return;
+    }
+
+
+    if (
+        game.level <
+        building.level
+    ) {
 
         showImpact(
             `🔒 ${building.name}은(는) Lv.${building.level}부터 건설할 수 있습니다.`,
@@ -3822,39 +3532,58 @@ function buildBuilding(key){
         return;
     }
 
-    const missing=
+
+    const missing =
         getMissingResources(
             building.cost
         );
 
-    if(missing.length>0){
+
+    if (
+        missing.length > 0
+    ) {
 
         showImpact(
-            `❌ ${missing.map(x=>x.name).join(", ")} 자원이 부족합니다.`,
+            `❌ ${missing.map(x => x.name).join(", ")} 자원이 부족합니다.`,
             "error"
+        );
+
+        addLog(
+            `❌ ${building.name} 건설 실패: ${missing.map(x => x.name).join(", ")} 부족`
         );
 
         return;
     }
 
-    payCost(building.cost);
+
+    payCost(
+        building.cost
+    );
+
 
     game.buildings[key]++;
 
-    if(game.buildingLevels[key]===0){
-        game.buildingLevels[key]=1;
+
+    if (
+        game.buildingLevels[key] === 0
+    ) {
+        game.buildingLevels[key] = 1;
     }
+
 
     showImpact(
         `🏗️ ${building.name}이 설치되었습니다.`,
         "success"
     );
 
+
     addLog(
         `🏗️ ${building.name}이(가) 설치되었습니다.`
     );
 
+
     updateUI();
+
 }
 
 
@@ -3862,14 +3591,16 @@ function buildBuilding(key){
    업그레이드
 ===================================================== */
 
-function upgradeBuilding(key){
+function upgradeBuilding(key) {
 
-    const building=BUILDINGS[key];
+    const building =
+        BUILDINGS[key];
 
-    const count=
-        game.buildings[key]||0;
+    const count =
+        game.buildings[key] || 0;
 
-    if(count<=0){
+
+    if (count <= 0) {
 
         showImpact(
             `❌ 먼저 ${building.name}을(를) 설치해주세요.`,
@@ -3879,10 +3610,14 @@ function upgradeBuilding(key){
         return;
     }
 
-    const currentLevel=
+
+    const currentLevel =
         getBuildingLevel(key);
 
-    if(currentLevel>=3){
+
+    if (
+        currentLevel >= 3
+    ) {
 
         showImpact(
             `⭐ ${building.name}은(는) 이미 최고 레벨입니다.`,
@@ -3892,37 +3627,47 @@ function upgradeBuilding(key){
         return;
     }
 
-    const cost=
+
+    const cost =
         getUpgradeCost(key);
 
-    const missing=
+    const missing =
         getMissingResources(cost);
 
-    if(missing.length>0){
+
+    if (
+        missing.length > 0
+    ) {
 
         showImpact(
-            `❌ ${missing.map(x=>x.name).join(", ")} 자원이 부족합니다.`,
+            `❌ ${missing.map(x => x.name).join(", ")} 자원이 부족합니다.`,
             "error"
         );
 
         return;
     }
 
+
     payCost(cost);
 
-    game.buildingLevels[key]=
-        currentLevel+1;
+
+    game.buildingLevels[key] =
+        currentLevel + 1;
+
 
     showImpact(
         `⬆️ ${building.name}이 업그레이드되었습니다.\nLv.${currentLevel+1}`,
         "success"
     );
 
+
     addLog(
         `⬆️ ${building.name}이(가) Lv.${currentLevel+1}로 업그레이드되었습니다.`
     );
 
+
     updateUI();
+
 }
 
 
@@ -3930,64 +3675,82 @@ function upgradeBuilding(key){
    비용
 ===================================================== */
 
-function getMissingResources(cost){
+function getMissingResources(cost) {
 
-    const missing=[];
+    const missing = [];
 
-    Object.entries(cost).forEach(
-        ([resource,amount])=>{
 
-            if(resource==="money"){
+    Object.entries(cost)
+        .forEach(([resource,amount]) => {
 
-                if(game.money<amount){
+            if (
+                resource === "money"
+            ) {
+
+                if (
+                    game.money < amount
+                ) {
 
                     missing.push({
                         name:"국고",
                         amount:
-                            amount-game.money
+                            amount -
+                            game.money
                     });
+
                 }
 
                 return;
             }
 
-            const current=
-                game.resources[resource]||0;
 
-            if(current<amount){
+            const current =
+                game.resources[resource] || 0;
+
+
+            if (
+                current < amount
+            ) {
 
                 missing.push({
                     name:
                         RESOURCES[resource]
-                        ?RESOURCES[resource].name
-                        :resource,
-
+                        ? RESOURCES[resource].name
+                        : resource,
                     amount:
-                        amount-current
+                        amount -
+                        current
                 });
+
             }
-        }
-    );
+
+        });
+
 
     return missing;
+
 }
 
 
-function payCost(cost){
+function payCost(cost) {
 
-    Object.entries(cost).forEach(
-        ([resource,amount])=>{
+    Object.entries(cost)
+        .forEach(([resource,amount]) => {
 
-            if(resource==="money"){
+            if (
+                resource === "money"
+            ) {
 
-                game.money-=amount;
+                game.money -= amount;
 
-            }else{
+            } else {
 
-                game.resources[resource]-=amount;
+                game.resources[resource] -= amount;
+
             }
-        }
-    );
+
+        });
+
 }
 
 
@@ -3995,23 +3758,31 @@ function payCost(cost){
    자원
 ===================================================== */
 
-function addResource(resource,amount){
+function addResource(resource,amount) {
 
-    if(
-        game.resources[resource]===undefined
-    ){
-        game.resources[resource]=0;
+    if (
+        game.resources[resource] === undefined
+    ) {
+        game.resources[resource] = 0;
     }
 
-    game.resources[resource]+=amount;
 
-    if(game.resources[resource]>10000){
-        game.resources[resource]=10000;
+    game.resources[resource] += amount;
+
+
+    if (
+        game.resources[resource] > 10000
+    ) {
+        game.resources[resource] = 10000;
     }
 
-    if(game.resources[resource]<0){
-        game.resources[resource]=0;
+
+    if (
+        game.resources[resource] < 0
+    ) {
+        game.resources[resource] = 0;
     }
+
 }
 
 
@@ -4019,26 +3790,30 @@ function addResource(resource,amount){
    노동력
 ===================================================== */
 
-function calculateTotalWorkers(){
+function calculateTotalWorkers() {
 
-    let workers=0;
+    let workers = 0;
 
-    Object.entries(game.buildings).forEach(
-        ([key,count])=>{
 
-            workers+=
-                BUILDINGS[key].workers*
+    Object.entries(game.buildings)
+        .forEach(([key,count]) => {
+
+            workers +=
+                BUILDINGS[key].workers *
                 count;
-        }
-    );
+
+        });
+
 
     return workers;
+
 }
 
 
-function calculateAvailableWorkers(){
+function calculateAvailableWorkers() {
 
-    return game.population*.6;
+    return game.population * .6;
+
 }
 
 
@@ -4046,29 +3821,35 @@ function calculateAvailableWorkers(){
    전력
 ===================================================== */
 
-function calculatePower(){
+function calculatePower() {
 
-    let power=0;
+    let power = 0;
 
-    Object.entries(game.buildings).forEach(
-        ([key,count])=>{
 
-            const building=BUILDINGS[key];
+    Object.entries(game.buildings)
+        .forEach(([key,count]) => {
 
-            if(
+            const building =
+                BUILDINGS[key];
+
+
+            if (
                 building.recipe &&
-                count>0
-            ){
+                count > 0
+            ) {
 
-                power+=
-                    count*
-                    20*
+                power +=
+                    count *
+                    20 *
                     getBuildingMultiplier(key);
+
             }
-        }
-    );
+
+        });
+
 
     return power;
+
 }
 
 
@@ -4079,29 +3860,39 @@ function calculatePower(){
 function trade(
     countryIndex,
     type
-){
+) {
 
-    const country=
+    const country =
         game.aiCountries[countryIndex];
 
-    const resource=
+
+    const resource =
         document.getElementById(
-            "tradeResource"+countryIndex
+            "tradeResource" +
+            countryIndex
         ).value;
 
-    const amount=
+
+    const amount =
         Number(
             document.getElementById(
-                "tradeAmount"+countryIndex
+                "tradeAmount" +
+                countryIndex
             ).value
         );
 
-    const transport=
+
+    const transport =
         document.getElementById(
-            "tradeTransport"+countryIndex
+            "tradeTransport" +
+            countryIndex
         ).value;
 
-    if(!amount||amount<=0){
+
+    if (
+        !amount ||
+        amount <= 0
+    ) {
 
         showImpact(
             "❌ 거래 수량을 입력해주세요.",
@@ -4111,7 +3902,8 @@ function trade(
         return;
     }
 
-    const transportMultiplier={
+
+    const transportMultiplier = {
 
         land:1.15,
         sea:1.05,
@@ -4119,10 +3911,11 @@ function trade(
 
     }[transport];
 
-    if(
-        transport==="sea" &&
-        game.level<3
-    ){
+
+    if (
+        transport === "sea" &&
+        game.level < 3
+    ) {
 
         showImpact(
             "🔒 해상무역은 Lv.3부터 가능합니다.",
@@ -4132,10 +3925,11 @@ function trade(
         return;
     }
 
-    if(
-        transport==="air" &&
-        game.level<5
-    ){
+
+    if (
+        transport === "air" &&
+        game.level < 5
+    ) {
 
         showImpact(
             "🔒 항공무역은 Lv.5부터 가능합니다.",
@@ -4145,27 +3939,37 @@ function trade(
         return;
     }
 
-    let price=
+
+    let price =
         game.market[resource];
 
-    price*=
-        1+
+
+    /*
+       인플레이션은 무역가격에도 반영
+    */
+
+    price *=
+        1 +
         Math.max(
             0,
             game.economy.inflation
-        )/100;
+        ) / 100;
 
-    const total=
-        price*
-        amount*
+
+    const total =
+        price *
+        amount *
         transportMultiplier;
 
-    if(type==="buy"){
 
-        if(
-            country.resources[resource]<
+    if (
+        type === "buy"
+    ) {
+
+        if (
+            country.resources[resource] <
             amount
-        ){
+        ) {
 
             showImpact(
                 `❌ ${country.name}의 ${RESOURCES[resource].name} 재고가 부족합니다.`,
@@ -4175,7 +3979,11 @@ function trade(
             return;
         }
 
-        if(game.money<total){
+
+        if (
+            game.money <
+            total
+        ) {
 
             showImpact(
                 "❌ 국고가 부족합니다.",
@@ -4185,32 +3993,38 @@ function trade(
             return;
         }
 
-        country.resources[resource]-=amount;
-        country.money+=total;
 
-        game.money-=total;
+        country.resources[resource] -= amount;
+        country.money += total;
+
+        game.money -= total;
 
         addResource(
             resource,
             amount
         );
 
+
         showImpact(
             `🚢 ${RESOURCES[resource].name} ${formatNumber(amount)}${RESOURCES[resource].unit} 구매 완료`,
             "success"
         );
 
+
         addLog(
             `🚢 ${country.name}에서 ${RESOURCES[resource].name} ${formatNumber(amount)}${RESOURCES[resource].unit} 구매`
         );
 
-    }else{
+    }
 
-        if(
+    else {
+
+        if (
             (
-                game.resources[resource]||0
-            )<amount
-        ){
+                game.resources[resource] ||
+                0
+            ) < amount
+        ) {
 
             showImpact(
                 "❌ 판매할 자원이 부족합니다.",
@@ -4220,60 +4034,40 @@ function trade(
             return;
         }
 
-        /*
-           AI 국가가 실제 경제 규모에 따라
-           지불할 수 있는지 확인
-        */
 
-        if(country.money<total){
+        if (
+            country.money <
+            total
+        ) {
 
-            /*
-               AI가 신용한도 내에서
-               긴급 차입하도록 함
-            */
+            showImpact(
+                `❌ ${country.name}의 국고가 부족합니다.`,
+                "error"
+            );
 
-            const maxDebt=
-                country.economy.gdp*3;
-
-            if(
-                country.economy.debt+
-                total<=
-                maxDebt
-            ){
-
-                country.economy.debt+=total;
-                country.money+=total;
-
-                addLog(
-                    `🏦 ${country.name}이(가) 무역대금을 위해 긴급 차입했습니다.`
-                );
-
-            }else{
-
-                showImpact(
-                    `❌ ${country.name}의 구매력이 부족합니다.`,
-                    "error"
-                );
-
-                return;
-            }
+            return;
         }
 
-        game.resources[resource]-=amount;
-        country.resources[resource]+=amount;
 
-        game.money+=total;
-        country.money-=total;
+        game.resources[resource] -= amount;
+        country.resources[resource] += amount;
+
+        game.money += total;
+        country.money -= total;
+
 
         showImpact(
             `💰 ${RESOURCES[resource].name} ${formatNumber(amount)}${RESOURCES[resource].unit} 판매 완료`,
             "success"
         );
 
+
         addLog(
             `💰 ${country.name}에 ${RESOURCES[resource].name} ${formatNumber(amount)}${RESOURCES[resource].unit} 판매`
         );
+
     }
+
 
     game.tradeHistory.push({
 
@@ -4286,7 +4080,9 @@ function trade(
 
     });
 
+
     updateUI();
+
 }
 
 
@@ -4294,35 +4090,52 @@ function trade(
    로그
 ===================================================== */
 
-function addLog(message){
+function addLog(message) {
 
-    if(!game)return;
+    if (!game) return;
+
 
     game.logs.unshift(
         `[${gameDay}일] ${message}`
     );
 
-    if(game.logs.length>100){
+
+    if (
+        game.logs.length > 100
+    ) {
         game.logs.pop();
     }
 
+
     updateLog();
+
 }
 
 
-function updateLog(){
+function updateLog() {
 
-    const element=
-        document.getElementById("logList");
+    const element =
+        document.getElementById(
+            "logList"
+        );
 
-    if(!element||!game)return;
 
-    element.innerHTML=
+    if (
+        !element ||
+        !game
+    ) {
+        return;
+    }
+
+
+    element.innerHTML =
         game.logs
-        .map(
-            log=>`<div>${log}</div>`
-        )
-        .join("");
+            .map(
+                log =>
+                    `<div>${log}</div>`
+            )
+            .join("");
+
 }
 
 
@@ -4330,13 +4143,12 @@ function updateLog(){
    UI
 ===================================================== */
 
-function updateUI(){
+function updateUI() {
 
-    if(!game)return;
+    if (!game) return;
 
     updateHeader();
     updateOverview();
-    updateFinanceUI();
     updateResources();
     updateBuildings();
     updateFactories();
@@ -4344,6 +4156,7 @@ function updateUI(){
     updateMarket();
     updateWorld();
     updateLog();
+
 }
 
 
@@ -4351,22 +4164,25 @@ function updateUI(){
    헤더
 ===================================================== */
 
-function updateHeader(){
+function updateHeader() {
 
-    const env=
+    const env =
         ENVIRONMENTS[
             game.environment
         ];
 
+
     document.getElementById(
         "headerCountryName"
-    ).textContent=
+    ).textContent =
         `${env.emoji} ${game.countryName}`;
+
 
     document.getElementById(
         "dateText"
-    ).textContent=
+    ).textContent =
         `게임 ${gameDay}일째 · ×${gameSpeed}`;
+
 }
 
 
@@ -4374,150 +4190,161 @@ function updateHeader(){
    국가
 ===================================================== */
 
-function updateOverview(){
+function updateOverview() {
 
-    const env=
+    const env =
         ENVIRONMENTS[
             game.environment
         ];
 
+
     document.getElementById(
         "countryInfoName"
-    ).textContent=
+    ).textContent =
         game.countryName;
+
 
     document.getElementById(
         "environmentInfo"
-    ).textContent=
+    ).textContent =
         `${env.emoji} ${env.name}`;
+
 
     document.getElementById(
         "levelInfo"
-    ).textContent=
+    ).textContent =
         `Lv.${game.level} ${LEVELS[game.level-1].name}`;
+
 
     document.getElementById(
         "populationInfo"
-    ).textContent=
+    ).textContent =
         `${formatNumber(game.population)}명`;
+
 
     document.getElementById(
         "moneyInfo"
-    ).textContent=
+    ).textContent =
         `$${formatNumber(game.money)}`;
 
-    document.getElementById(
-        "gdpInfo"
-    ).textContent=
-        `$${formatNumber(game.economy.gdp)}`;
-
-    document.getElementById(
-        "debtInfo"
-    ).textContent=
-        `$${formatNumber(game.economy.debt)}`;
 
     document.getElementById(
         "powerInfo"
-    ).textContent=
+    ).textContent =
         `${formatNumber(calculatePower())} ⚡`;
 
-    const economy=
+
+    /*
+       경제 카드
+    */
+
+    const economy =
         game.economy;
 
-    let economyStatus=
+
+    let economyStatus =
         "🟢 안정적인 경제";
 
-    let economyClass=
+    let economyClass =
         "economy-normal";
 
-    if(economy.crisis){
 
-        const crisis=
+    if (
+        economy.crisis
+    ) {
+
+        const crisis =
             CRISES[economy.crisis];
 
-        economyStatus=
+        economyStatus =
             `${crisis.emoji} ${crisis.name}`;
 
-        economyClass=
-            economy.crisis==="great_depression"||
-            economy.crisis==="hyperinflation"
-            ?"economy-crisis"
-            :"economy-danger";
+        economyClass =
+            economy.crisis === "great_depression" ||
+            economy.crisis === "hyperinflation"
+                ? "economy-crisis"
+                : "economy-danger";
 
-    }else if(
-        economy.inflation>10||
-        economy.unemployment>15
-    ){
+    }
+    else if (
+        economy.inflation > 10 ||
+        economy.unemployment > 15
+    ) {
 
-        economyStatus=
+        economyStatus =
             "🟡 경제 불안";
 
-        economyClass=
+        economyClass =
             "economy-warning";
+
     }
 
-    const statusElement=
+
+    const statusElement =
         document.getElementById(
             "economyStatus"
         );
 
-    statusElement.className=
+
+    statusElement.className =
         `economy-status ${economyClass}`;
 
-    statusElement.textContent=
+
+    statusElement.textContent =
         economyStatus;
+
 
     document.getElementById(
         "inflationInfo"
-    ).textContent=
-        `${economy.inflation>=0?"+":""}${economy.inflation.toFixed(1)}%`;
+    ).textContent =
+        `${economy.inflation >= 0 ? "+" : ""}${economy.inflation.toFixed(1)}%`;
+
 
     document.getElementById(
         "unemploymentInfo"
-    ).textContent=
+    ).textContent =
         `${economy.unemployment.toFixed(1)}%`;
+
 
     document.getElementById(
         "happinessInfo"
-    ).textContent=
+    ).textContent =
         `${economy.happiness.toFixed(0)} / 100`;
+
 
     document.getElementById(
         "growthInfo"
-    ).textContent=
-        `${economy.growth>=0?"+":""}${economy.growth.toFixed(2)}%`;
+    ).textContent =
+        `${economy.growth >= 0 ? "+" : ""}${economy.growth.toFixed(2)}%`;
+
 
     document.getElementById(
         "productionInfo"
-    ).textContent=
+    ).textContent =
         `${economy.productionIndex.toFixed(0)}`;
+
 
     document.getElementById(
         "consumptionIndexInfo"
-    ).textContent=
+    ).textContent =
         `${economy.consumptionIndex.toFixed(0)}`;
 
-    document.getElementById(
-        "taxRevenueInfo"
-    ).textContent=
-        `$${formatNumber(economy.taxRevenue)}`;
 
-    document.getElementById(
-        "interestInfo"
-    ).textContent=
-        `$${formatNumber(economy.interestExpense)}`;
-
-    const crisisElement=
+    const crisisElement =
         document.getElementById(
             "crisisInfo"
         );
 
-    if(economy.crisis){
 
-        const crisis=
+    if (
+        economy.crisis
+    ) {
+
+        const crisis =
             CRISES[economy.crisis];
 
-        crisisElement.innerHTML=`
+
+        crisisElement.innerHTML = `
 
             <div class="card">
 
@@ -4541,9 +4368,10 @@ function updateOverview(){
 
         `;
 
-    }else{
+    }
+    else {
 
-        crisisElement.innerHTML=`
+        crisisElement.innerHTML = `
 
             <div class="small">
 
@@ -4551,56 +4379,69 @@ function updateOverview(){
 
                 <br>
 
-                세수·산업·무역을 통해
-                국가 경제를 성장시키세요.
+                물가가 안정되고
+                고용과 생산이 유지되면
+                경제가 성장합니다.
 
             </div>
 
         `;
+
     }
 
-    const next=
+
+    /*
+       발전
+    */
+
+    const next =
         LEVELS[game.level];
 
-    if(!next){
+
+    if (!next) {
 
         document.getElementById(
             "levelDescription"
-        ).innerHTML=
+        ).innerHTML =
             "<b>🏆 최고 발전 단계입니다.</b>";
 
         document.getElementById(
             "levelProgress"
-        ).style.width=
+        ).style.width =
             "100%";
 
-    }else{
+    }
+    else {
 
-        const current=
+        const current =
             LEVELS[game.level-1].population;
 
-        const target=
+        const target =
             next.population;
 
-        const progress=
+
+        const progress =
             Math.max(
                 0,
                 Math.min(
                     100,
                     (
                         (
-                            game.population-current
-                        )/
+                            game.population -
+                            current
+                        ) /
                         (
-                            target-current
+                            target -
+                            current
                         )
-                    )*100
+                    ) * 100
                 )
             );
 
+
         document.getElementById(
             "levelDescription"
-        ).innerHTML=`
+        ).innerHTML = `
 
             다음 단계:
             <b>
@@ -4620,21 +4461,29 @@ function updateOverview(){
 
         `;
 
+
         document.getElementById(
             "levelProgress"
-        ).style.width=
-            progress+"%";
+        ).style.width =
+            progress + "%";
+
     }
 
-    const available=
+
+    /*
+       노동력
+    */
+
+    const available =
         calculateAvailableWorkers();
 
-    const required=
+    const required =
         calculateTotalWorkers();
+
 
     document.getElementById(
         "workerInfo"
-    ).innerHTML=`
+    ).innerHTML = `
 
         👥 노동 가능 인구:
         <b>${formatNumber(available)}명</b>
@@ -4652,27 +4501,37 @@ function updateOverview(){
         <br><br>
 
         ${
-            available>=required
-            ?`<span class="good">노동력 충분</span>`
-            :`<span class="bad">노동력 부족</span>`
+            available >= required
+
+            ? `<span class="good">노동력 충분</span>`
+
+            : `<span class="bad">노동력 부족</span>`
         }
 
     `;
 
-    let html="";
 
-    Object.entries(game.buildings).forEach(
-        ([key,count])=>{
+    /*
+       건물 요약
+    */
 
-            if(count<=0)return;
+    let html = "";
 
-            const building=
+
+    Object.entries(game.buildings)
+        .forEach(([key,count]) => {
+
+            if (count <= 0) return;
+
+
+            const building =
                 BUILDINGS[key];
 
-            const level=
+            const level =
                 getBuildingLevel(key);
 
-            html+=`
+
+            html += `
 
                 <div class="card">
 
@@ -4692,107 +4551,16 @@ function updateOverview(){
                 </div>
 
             `;
-        }
-    );
+
+        });
+
 
     document.getElementById(
         "buildingSummary"
-    ).innerHTML=
-        html||
+    ).innerHTML =
+        html ||
         "<p>아직 건물이 없습니다.</p>";
-}
 
-
-/* =====================================================
-   금융 UI
-===================================================== */
-
-function updateFinanceUI(){
-
-    if(!game)return;
-
-    const economy=
-        game.economy;
-
-    document.getElementById(
-        "financeMoney"
-    ).textContent=
-        `$${formatNumber(game.money)}`;
-
-    document.getElementById(
-        "financeGDP"
-    ).textContent=
-        `$${formatNumber(economy.gdp)}`;
-
-    document.getElementById(
-        "financeDebt"
-    ).textContent=
-        `$${formatNumber(economy.debt)}`;
-
-    document.getElementById(
-        "financeTax"
-    ).textContent=
-        `$${formatNumber(economy.taxRevenue)}`;
-
-    document.getElementById(
-        "financeInterest"
-    ).textContent=
-        `$${formatNumber(economy.interestExpense)}`;
-
-    document.getElementById(
-        "financePrinted"
-    ).textContent=
-        `$${formatNumber(economy.moneyPrinted)}`;
-
-    document.getElementById(
-        "taxRateText"
-    ).textContent=
-        `${Math.round(economy.taxRate*100)}%`;
-
-    const bondInfo=
-        document.getElementById("bondInfo");
-
-    bondInfo.innerHTML=`
-
-        현재 부채:
-        <b>$${formatNumber(economy.debt)}</b>
-
-        <br>
-
-        GDP 대비 부채:
-        <b>
-            ${
-                economy.gdp>0
-                ?(
-                    economy.debt/
-                    economy.gdp*
-                    100
-                ).toFixed(1)
-                :0
-            }%
-        </b>
-
-        <br>
-
-        현재 예상 이자율:
-        <b>
-            ${(economy.debtInterestRate*100).toFixed(1)}%
-        </b>
-
-    `;
-
-    const slider=
-        document.getElementById("taxRate");
-
-    if(
-        slider &&
-        document.activeElement!==slider
-    ){
-        slider.value=
-            Math.round(
-                economy.taxRate*100
-            );
-    }
 }
 
 
@@ -4800,17 +4568,19 @@ function updateFinanceUI(){
    자원 UI
 ===================================================== */
 
-function updateResources(){
+function updateResources() {
 
-    let html="";
+    let html = "";
 
-    Object.entries(RESOURCES).forEach(
-        ([resource,info])=>{
 
-            const amount=
-                game.resources[resource]||0;
+    Object.entries(RESOURCES)
+        .forEach(([resource,info]) => {
 
-            html+=`
+            const amount =
+                game.resources[resource] || 0;
+
+
+            html += `
 
                 <div class="resource-row">
 
@@ -4831,17 +4601,19 @@ function updateResources(){
                 </div>
 
             `;
-        }
-    );
+
+        });
+
 
     document.getElementById(
         "resourceList"
-    ).innerHTML=
+    ).innerHTML =
         html;
+
 
     document.getElementById(
         "consumptionInfo"
-    ).innerHTML=`
+    ).innerHTML = `
 
         🌾 식량:
         ${formatNumber(game.population*.08)}
@@ -4866,6 +4638,7 @@ function updateResources(){
         개/일
 
     `;
+
 }
 
 
@@ -4873,27 +4646,31 @@ function updateResources(){
    비용
 ===================================================== */
 
-function costText(cost){
+function costText(cost) {
 
     return Object.entries(cost)
-        .map(
-            ([resource,amount])=>{
+        .map(([resource,amount]) => {
 
-                if(resource==="money"){
-                    return `💰 ${formatNumber(amount)}`;
-                }
-
-                const info=
-                    RESOURCES[resource];
-
-                return`
-                    ${info?info.emoji:"📦"}
-                    ${info?info.name:resource}
-                    ${formatNumber(amount)}
-                `;
+            if (
+                resource === "money"
+            ) {
+                return `💰 ${formatNumber(amount)}`;
             }
-        )
+
+
+            const info =
+                RESOURCES[resource];
+
+
+            return `
+                ${info ? info.emoji : "📦"}
+                ${info ? info.name : resource}
+                ${formatNumber(amount)}
+            `;
+
+        })
         .join("<br>");
+
 }
 
 
@@ -4901,57 +4678,66 @@ function costText(cost){
    건물 UI
 ===================================================== */
 
-function updateBuildings(){
+function updateBuildings() {
 
-    let html="";
+    let html = "";
 
-    Object.entries(BUILDINGS).forEach(
-        ([key,building])=>{
 
-            if(building.recipe)return;
+    Object.entries(BUILDINGS)
+        .forEach(([key,building]) => {
 
-            const unlocked=
-                game.level>=building.level;
+            if (building.recipe) {
+                return;
+            }
 
-            const count=
-                game.buildings[key]||0;
 
-            const currentLevel=
+            const unlocked =
+                game.level >= building.level;
+
+            const count =
+                game.buildings[key] || 0;
+
+            const currentLevel =
                 getBuildingLevel(key);
 
-            const multiplier=
+            const multiplier =
                 getBuildingMultiplier(key);
 
-            let productionText="";
 
-            if(building.production){
+            let productionText = "";
 
-                productionText=
+
+            if (building.production) {
+
+                productionText =
                     Object.entries(
                         building.production
                     )
-                    .map(
-                        ([resource,amount])=>{
+                    .map(([resource,amount]) => {
 
-                            return`
-                                ${RESOURCES[resource].emoji}
-                                ${formatNumber(
-                                    amount*multiplier
-                                )}
-                                ${RESOURCES[resource].unit}/일
-                            `;
-                        }
-                    )
+                        return `
+                            ${RESOURCES[resource].emoji}
+                            ${formatNumber(
+                                amount *
+                                multiplier
+                            )}
+                            ${RESOURCES[resource].unit}/일
+                        `;
+
+                    })
                     .join("<br>");
+
             }
 
-            const upgradeCost=
-                currentLevel>0&&
-                currentLevel<3
-                ?getUpgradeCost(key)
-                :null;
 
-            html+=`
+            const upgradeCost =
+                currentLevel > 0 &&
+                currentLevel < 3
+                    ? getUpgradeCost(key)
+                    : null;
+
+
+            html += `
 
                 <div class="item">
 
@@ -4966,9 +4752,9 @@ function updateBuildings(){
 
                     <span class="level-badge">
                         ${
-                            currentLevel>0
-                            ?`Lv.${currentLevel}`
-                            :"미설치"
+                            currentLevel > 0
+                            ? `Lv.${currentLevel}`
+                            : "미설치"
                         }
                     </span>
 
@@ -4996,24 +4782,26 @@ function updateBuildings(){
 
                     </div>
 
+
                     <button
                         onclick="buildBuilding('${key}')"
-                        ${unlocked?"":"disabled"}
+                        ${unlocked ? "" : "disabled"}
                     >
 
                         ${
                             unlocked
-                            ?"🏗️ 설치하기"
-                            :"🔒 잠김"
+                            ? "🏗️ 설치하기"
+                            : "🔒 잠김"
                         }
 
                     </button>
 
-                    ${
-                        currentLevel>0&&
-                        currentLevel<3
 
-                        ?`
+                    ${
+                        currentLevel > 0 &&
+                        currentLevel < 3
+
+                        ? `
 
                         <div
                             class="cost-box"
@@ -5036,32 +4824,33 @@ function updateBuildings(){
 
                         `
 
-                        :currentLevel>=3
+                        : currentLevel >= 3
 
-                        ?`
-
+                        ? `
                             <button
                                 class="upgrade-button"
                                 disabled
                             >
                                 ⭐ 최고 레벨
                             </button>
-
                         `
 
-                        :""
+                        : ""
+
                     }
 
                 </div>
 
             `;
-        }
-    );
+
+        });
+
 
     document.getElementById(
         "buildingList"
-    ).innerHTML=
+    ).innerHTML =
         html;
+
 }
 
 
@@ -5069,41 +4858,46 @@ function updateBuildings(){
    공장 UI
 ===================================================== */
 
-function updateFactories(){
+function updateFactories() {
 
-    let html="";
+    let html = "";
 
-    Object.entries(BUILDINGS).forEach(
-        ([key,building])=>{
 
-            if(!building.recipe)return;
+    Object.entries(BUILDINGS)
+        .forEach(([key,building]) => {
 
-            const count=
-                game.buildings[key]||0;
+            if (!building.recipe) return;
 
-            const currentLevel=
+
+            const count =
+                game.buildings[key] || 0;
+
+            const currentLevel =
                 getBuildingLevel(key);
 
-            const multiplier=
+            const multiplier =
                 getBuildingMultiplier(key);
 
-            const input=
+
+            const input =
                 recipeText(
                     building.recipe.input
                 );
 
-            const output=
+            const output =
                 recipeText(
                     building.recipe.output
                 );
 
-            const upgradeCost=
-                currentLevel>0&&
-                currentLevel<3
-                ?getUpgradeCost(key)
-                :null;
 
-            html+=`
+            const upgradeCost =
+                currentLevel > 0 &&
+                currentLevel < 3
+                    ? getUpgradeCost(key)
+                    : null;
+
+
+            html += `
 
                 <div class="item">
 
@@ -5119,9 +4913,9 @@ function updateFactories(){
 
                     <span class="level-badge">
                         ${
-                            currentLevel>0
-                            ?`Lv.${currentLevel}`
-                            :"미설치"
+                            currentLevel > 0
+                            ? `Lv.${currentLevel}`
+                            : "미설치"
                         }
                     </span>
 
@@ -5156,28 +4950,30 @@ function updateFactories(){
 
                     </div>
 
+
                     <button
                         onclick="buildBuilding('${key}')"
                         ${
-                            game.level>=building.level
-                            ?""
-                            :"disabled"
+                            game.level >= building.level
+                            ? ""
+                            : "disabled"
                         }
                     >
 
                         ${
-                            game.level>=building.level
-                            ?"🏗️ 설치하기"
-                            :"🔒 잠김"
+                            game.level >= building.level
+                            ? "🏗️ 설치하기"
+                            : "🔒 잠김"
                         }
 
                     </button>
 
-                    ${
-                        currentLevel>0&&
-                        currentLevel<3
 
-                        ?`
+                    ${
+                        currentLevel > 0 &&
+                        currentLevel < 3
+
+                        ? `
 
                         <div
                             class="cost-box"
@@ -5202,49 +4998,50 @@ function updateFactories(){
 
                         `
 
-                        :currentLevel>=3
+                        : currentLevel >= 3
 
-                        ?`
-
+                        ? `
                             <button
                                 class="upgrade-button"
                                 disabled
                             >
                                 ⭐ 최고 레벨
                             </button>
-
                         `
 
-                        :""
+                        : ""
+
                     }
 
                 </div>
 
             `;
-        }
-    );
+
+        });
+
 
     document.getElementById(
         "factoryList"
-    ).innerHTML=
+    ).innerHTML =
         html;
+
 }
 
 
-function recipeText(recipe){
+function recipeText(recipe) {
 
     return Object.entries(recipe)
-        .map(
-            ([resource,amount])=>{
+        .map(([resource,amount]) => {
 
-                return`
-                    ${RESOURCES[resource].emoji}
-                    ${RESOURCES[resource].name}
-                    ×${amount}
-                `;
-            }
-        )
+            return `
+                ${RESOURCES[resource].emoji}
+                ${RESOURCES[resource].name}
+                ×${amount}
+            `;
+
+        })
         .join(" + ");
+
 }
 
 
@@ -5252,19 +5049,21 @@ function recipeText(recipe){
    무역 UI
 ===================================================== */
 
-function updateTrade(){
+function updateTrade() {
 
-    let html="";
+    let html = "";
+
 
     game.aiCountries.forEach(
-        (country,index)=>{
+        (country,index) => {
 
-            let resourceOptions="";
+            let resourceOptions = "";
 
-            Object.entries(RESOURCES).forEach(
-                ([resource,info])=>{
 
-                    resourceOptions+=`
+            Object.entries(RESOURCES)
+                .forEach(([resource,info]) => {
+
+                    resourceOptions += `
 
                         <option value="${resource}">
                             ${info.emoji}
@@ -5272,19 +5071,11 @@ function updateTrade(){
                         </option>
 
                     `;
-                }
-            );
 
-            const debtRatio=
-                country.economy.gdp>0
-                ?(
-                    country.economy.debt/
-                    country.economy.gdp*
-                    100
-                ).toFixed(1)
-                :0;
+                });
 
-            html+=`
+
+            html += `
 
                 <div class="trade-box">
 
@@ -5314,22 +5105,11 @@ function updateTrade(){
 
                         <br>
 
-                        GDP:
-                        $${formatNumber(country.economy.gdp)}
-
-                        <br>
-
                         국고:
                         $${formatNumber(country.money)}
 
-                        <br>
-
-                        부채:
-                        $${formatNumber(country.economy.debt)}
-
-                        (${debtRatio}% of GDP)
-
                     </p>
+
 
                     <label>
                         거래 자원
@@ -5338,8 +5118,11 @@ function updateTrade(){
                     <select
                         id="tradeResource${index}"
                     >
+
                         ${resourceOptions}
+
                     </select>
+
 
                     <label>
                         수량
@@ -5351,6 +5134,7 @@ function updateTrade(){
                         min="1"
                         value="10"
                     >
+
 
                     <label>
                         운송수단
@@ -5365,14 +5149,381 @@ function updateTrade(){
                         </option>
 
                         ${
-                            game.level>=3
-                            ?`
+                            game.level >= 3
+                            ? `
                             <option value="sea">
                                 🚢 해상
                             </option>
                             `
-                            :""
+                            : ""
                         }
 
                         ${
-                            game.level>=
+                            game.level >= 5
+                            ? `
+                            <option value="air">
+                                ✈️ 항공
+                            </option>
+                            `
+                            : ""
+                        }
+
+                    </select>
+
+
+                    <div class="trade-buttons">
+
+                        <button
+                            onclick="trade(${index},'buy')"
+                        >
+                            구매
+                        </button>
+
+                        <button
+                            onclick="trade(${index},'sell')"
+                        >
+                            판매
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    document.getElementById(
+        "tradeList"
+    ).innerHTML =
+        html;
+
+}
+
+
+/* =====================================================
+   시장 UI
+===================================================== */
+
+function updateMarket() {
+
+    let html = "";
+
+
+    Object.entries(RESOURCES)
+        .forEach(([resource,info]) => {
+
+            const price =
+                game.market[resource];
+
+            const base =
+                info.price;
+
+
+            let state =
+                "⚖️ 균형";
+
+
+            if (
+                price >
+                base * 1.2
+            ) {
+                state = "🔴 부족";
+            }
+
+
+            if (
+                price <
+                base * .8
+            ) {
+                state = "🔵 공급과잉";
+            }
+
+
+            html += `
+
+                <tr>
+
+                    <td>
+                        ${info.emoji}
+                        ${info.name}
+                    </td>
+
+                    <td>
+                        $${price.toFixed(2)}
+                    </td>
+
+                    <td>
+                        ${state}
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
+
+
+    document.getElementById(
+        "marketTable"
+    ).innerHTML =
+        html;
+
+}
+
+
+/* =====================================================
+   세계
+===================================================== */
+
+function updateWorld() {
+
+    let html = "";
+
+
+    game.aiCountries.forEach(country => {
+
+        const env =
+            ENVIRONMENTS[
+                country.environment
+            ];
+
+
+        html += `
+
+            <div class="card">
+
+                <div class="card-title">
+
+                    ${env.emoji}
+                    ${country.name}
+
+                </div>
+
+                <div class="small">
+                    ${env.name}
+                </div>
+
+                <div class="card-value">
+
+                    ${formatNumber(country.population)}
+                    명
+
+                </div>
+
+                <div class="small">
+
+                    💰
+                    $${formatNumber(country.money)}
+
+                </div>
+
+            </div>
+
+        `;
+
+    });
+
+
+    document.getElementById(
+        "worldList"
+    ).innerHTML =
+        html;
+
+}
+
+
+/* =====================================================
+   탭
+===================================================== */
+
+function openTab(tabId) {
+
+    document
+        .querySelectorAll(".tab")
+        .forEach(tab => {
+
+            tab.classList.add("hidden");
+
+        });
+
+
+    document
+        .getElementById(tabId)
+        .classList.remove("hidden");
+
+
+    const buttons =
+        document.querySelectorAll(
+            ".tabs button"
+        );
+
+
+    const ids = [
+        "overview",
+        "resources",
+        "buildings",
+        "factories",
+        "trade",
+        "market",
+        "world",
+        "logs"
+    ];
+
+
+    buttons.forEach((button,index) => {
+
+        button.classList.toggle(
+            "active",
+            ids[index] === tabId
+        );
+
+    });
+
+}
+
+
+/* =====================================================
+   속도
+===================================================== */
+
+function setSpeed(value) {
+
+    gameSpeed =
+        value;
+
+
+    [1,2,3,4].forEach(speed => {
+
+        document
+            .getElementById(
+                "speed" + speed
+            )
+            .classList.toggle(
+                "active",
+                speed === value
+            );
+
+    });
+
+}
+
+
+/* =====================================================
+   터치
+===================================================== */
+
+document.addEventListener(
+    "pointerdown",
+    function(event) {
+
+        const target =
+            event.target.closest("button");
+
+
+        if (!target) {
+            return;
+        }
+
+
+        if (
+            navigator.vibrate
+        ) {
+            navigator.vibrate(10);
+        }
+
+
+        const ripple =
+            document.createElement("div");
+
+
+        ripple.className =
+            "touch-ripple";
+
+
+        ripple.style.left =
+            event.clientX + "px";
+
+
+        ripple.style.top =
+            event.clientY + "px";
+
+
+        document.body.appendChild(
+            ripple
+        );
+
+
+        setTimeout(
+            () => ripple.remove(),
+            500
+        );
+
+    }
+);
+
+
+/* =====================================================
+   알림
+===================================================== */
+
+function showImpact(
+    message,
+    type="info"
+) {
+
+    const container =
+        document.getElementById(
+            "impactContainer"
+        );
+
+
+    const impact =
+        document.createElement("div");
+
+
+    impact.className =
+        `impact ${type}`;
+
+
+    impact.textContent =
+        message;
+
+
+    container.appendChild(
+        impact
+    );
+
+
+    setTimeout(
+        () => impact.remove(),
+        2300
+    );
+
+}
+
+
+/* =====================================================
+   숫자
+===================================================== */
+
+function formatNumber(number) {
+
+    if (
+        !Number.isFinite(number)
+    ) {
+        return "0";
+    }
+
+
+    return Math.floor(number)
+        .toLocaleString("ko-KR");
+
+}
+
+</script>
+
+</body>
+    </html>
