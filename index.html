@@ -10,6 +10,7 @@
 <title>World Nation</title>
 
 <style>
+
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
@@ -26,6 +27,8 @@ body {
 
     background: #f4f6f8;
     color: #222;
+
+    overflow-x: hidden;
 }
 
 button,
@@ -37,11 +40,150 @@ select {
 button {
     border: 0;
     cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+button:active {
+    transform: scale(0.94);
 }
 
 .hidden {
     display: none !important;
 }
+
+
+/* =========================
+   터치 임팩트
+========================= */
+
+.item button,
+.trade-buttons button,
+.start-button,
+.speed-buttons button,
+.tabs button {
+    transition:
+        transform 0.08s ease,
+        box-shadow 0.08s ease,
+        opacity 0.08s ease;
+}
+
+.item button:active,
+.trade-buttons button:active,
+.start-button:active {
+    transform: scale(0.94);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.touch-ripple {
+    position: fixed;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: rgba(37,99,235,0.25);
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0);
+    animation: rippleEffect 0.45s ease-out forwards;
+    z-index: 9999;
+}
+
+@keyframes rippleEffect {
+
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(3);
+        opacity: 0;
+    }
+
+}
+
+
+/* =========================
+   알림 임팩트
+========================= */
+
+#impactContainer {
+    position: fixed;
+    top: 75px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+
+    width: calc(100% - 30px);
+    max-width: 420px;
+
+    pointer-events: none;
+}
+
+.impact {
+    padding: 13px 16px;
+    margin-bottom: 8px;
+
+    border-radius: 13px;
+
+    background: white;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,0.15);
+
+    font-weight: bold;
+    text-align: center;
+
+    white-space: pre-line;
+
+    animation:
+        impactIn 0.25s ease,
+        impactOut 0.35s ease 1.8s forwards;
+}
+
+.impact.success {
+    border-left: 5px solid #16a34a;
+}
+
+.impact.error {
+    border-left: 5px solid #dc2626;
+}
+
+.impact.info {
+    border-left: 5px solid #2563eb;
+}
+
+.impact.warning {
+    border-left: 5px solid #f59e0b;
+}
+
+@keyframes impactIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(-15px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+@keyframes impactOut {
+
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+}
+
 
 /* =========================
    시작 화면
@@ -58,10 +200,16 @@ button {
 .start-box {
     width: 100%;
     max-width: 420px;
+
     background: white;
+
     padding: 28px;
+
     border-radius: 20px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,0.08);
+
     text-align: center;
 }
 
@@ -72,21 +220,32 @@ button {
 
 .start-box input {
     width: 100%;
+
     padding: 14px;
+
     border: 1px solid #ddd;
+
     border-radius: 12px;
+
     margin: 15px 0;
+
     outline: none;
 }
 
 .start-button {
     width: 100%;
+
     padding: 14px;
+
     border-radius: 12px;
+
     background: #2563eb;
+
     color: white;
+
     font-weight: bold;
 }
+
 
 /* =========================
    게임 전체
@@ -102,14 +261,19 @@ button {
     z-index: 100;
 
     background: white;
+
     border-bottom: 1px solid #ddd;
+
     padding: 10px;
 }
 
 .header-top {
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
+
     gap: 10px;
 }
 
@@ -131,7 +295,9 @@ button {
 
 .speed-buttons button {
     background: #eee;
+
     padding: 7px 9px;
+
     border-radius: 8px;
 }
 
@@ -140,21 +306,28 @@ button {
     color: white;
 }
 
+
 /* =========================
    탭
 ========================= */
 
 .tabs {
     display: flex;
+
     overflow-x: auto;
+
     gap: 5px;
+
     margin-top: 10px;
 }
 
 .tabs button {
     white-space: nowrap;
+
     background: #eee;
+
     padding: 8px 12px;
+
     border-radius: 8px;
 }
 
@@ -163,6 +336,7 @@ button {
     color: white;
 }
 
+
 /* =========================
    메인
 ========================= */
@@ -170,21 +344,29 @@ button {
 main {
     width: 100%;
     max-width: 900px;
+
     margin: auto;
+
     padding: 10px;
 }
 
 .panel {
     background: white;
+
     border-radius: 15px;
+
     padding: 15px;
+
     margin-bottom: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+
+    box-shadow:
+        0 2px 10px rgba(0,0,0,0.04);
 }
 
 .panel h2 {
     margin-top: 0;
 }
+
 
 /* =========================
    카드
@@ -192,6 +374,7 @@ main {
 
 .grid {
     display: grid;
+
     grid-template-columns:
         repeat(auto-fit, minmax(140px, 1fr));
 
@@ -200,20 +383,26 @@ main {
 
 .card {
     background: #f7f8fa;
+
     padding: 12px;
+
     border-radius: 12px;
 }
 
 .card-title {
     color: #777;
+
     font-size: 13px;
 }
 
 .card-value {
     font-size: 19px;
+
     font-weight: bold;
+
     margin-top: 4px;
 }
+
 
 /* =========================
    자원
@@ -221,9 +410,13 @@ main {
 
 .resource-row {
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
+
     padding: 9px 3px;
+
     border-bottom: 1px solid #eee;
 }
 
@@ -233,9 +426,12 @@ main {
 
 .resource-name {
     display: flex;
+
     gap: 6px;
+
     align-items: center;
 }
+
 
 /* =========================
    건물 / 공장
@@ -243,6 +439,7 @@ main {
 
 .item-grid {
     display: grid;
+
     grid-template-columns:
         repeat(auto-fit, minmax(210px, 1fr));
 
@@ -251,8 +448,12 @@ main {
 
 .item {
     border: 1px solid #e5e7eb;
+
     border-radius: 12px;
+
     padding: 13px;
+
+    background: white;
 }
 
 .item h3 {
@@ -261,16 +462,54 @@ main {
 
 .item button {
     width: 100%;
+
     padding: 10px;
+
     border-radius: 9px;
+
     background: #2563eb;
+
     color: white;
+
     margin-top: 8px;
+}
+
+.item button.upgrade-button {
+    background: #16a34a;
 }
 
 .item button:disabled {
     background: #aaa;
 }
+
+.level-badge {
+    display: inline-block;
+
+    padding: 3px 7px;
+
+    border-radius: 6px;
+
+    background: #e8f0ff;
+
+    color: #2563eb;
+
+    font-size: 12px;
+
+    font-weight: bold;
+}
+
+.cost-box {
+    background: #f7f8fa;
+
+    border-radius: 8px;
+
+    padding: 8px;
+
+    font-size: 12px;
+
+    line-height: 1.7;
+}
+
 
 /* =========================
    무역
@@ -278,33 +517,47 @@ main {
 
 .trade-box {
     border: 1px solid #ddd;
+
     padding: 13px;
+
     border-radius: 12px;
+
     margin-bottom: 10px;
 }
 
 .trade-box select,
 .trade-box input {
     width: 100%;
+
     padding: 9px;
+
     border: 1px solid #ddd;
+
     border-radius: 8px;
+
     margin-top: 5px;
 }
 
 .trade-buttons {
     display: grid;
+
     grid-template-columns: 1fr 1fr;
+
     gap: 6px;
+
     margin-top: 8px;
 }
 
 .trade-buttons button {
     padding: 10px;
+
     border-radius: 8px;
+
     background: #2563eb;
+
     color: white;
 }
+
 
 /* =========================
    진행도
@@ -312,17 +565,24 @@ main {
 
 .progress {
     width: 100%;
+
     height: 10px;
+
     background: #e5e7eb;
+
     border-radius: 10px;
+
     overflow: hidden;
 }
 
 .progress-bar {
     height: 100%;
+
     background: #2563eb;
+
     width: 0%;
 }
+
 
 /* =========================
    로그
@@ -330,17 +590,24 @@ main {
 
 .log {
     max-height: 300px;
+
     overflow-y: auto;
+
     background: #f7f8fa;
+
     border-radius: 10px;
+
     padding: 8px;
 }
 
 .log div {
     padding: 6px;
+
     border-bottom: 1px solid #eee;
+
     font-size: 13px;
 }
+
 
 /* =========================
    테이블
@@ -352,16 +619,21 @@ main {
 
 table {
     width: 100%;
+
     border-collapse: collapse;
 }
 
 th,
 td {
     padding: 9px;
+
     border-bottom: 1px solid #eee;
+
     text-align: left;
+
     white-space: nowrap;
 }
+
 
 /* =========================
    기타
@@ -406,11 +678,21 @@ td {
     .panel {
         padding: 12px;
     }
+
 }
+
 </style>
 </head>
 
 <body>
+
+
+<!-- =====================================================
+     터치 알림
+===================================================== -->
+
+<div id="impactContainer"></div>
+
 
 <!-- =====================================================
      시작 화면
@@ -538,6 +820,7 @@ td {
 
 
 <main>
+
 
 <!-- =====================================================
      국가
@@ -670,7 +953,8 @@ td {
 <h2>🏗 건물 건설</h2>
 
 <p class="small">
-건물마다 생산량과 필요한 노동자가 다릅니다.
+건물을 설치하면 생산을 시작합니다.
+건물은 최대 Lv.3까지 업그레이드할 수 있습니다.
 </p>
 
 <div
@@ -695,6 +979,10 @@ td {
 <div class="panel">
 
 <h2>🏭 공장</h2>
+
+<p class="small">
+공장도 건설 후 Lv.3까지 업그레이드할 수 있습니다.
+</p>
 
 <div
     id="factoryList"
@@ -820,6 +1108,7 @@ td {
 
 
 <script>
+
 
 /* =====================================================
    게임 상태
@@ -1721,6 +2010,20 @@ function createBuildings() {
 }
 
 
+function createBuildingLevels() {
+
+    const levels = {};
+
+    Object.keys(BUILDINGS).forEach(key => {
+
+        levels[key] = 0;
+
+    });
+
+    return levels;
+}
+
+
 /* =====================================================
    AI 국가
 ===================================================== */
@@ -1844,6 +2147,9 @@ function startGame() {
         buildings:
             createBuildings(),
 
+        buildingLevels:
+            createBuildingLevels(),
+
         aiCountries:
             createAI(),
 
@@ -1943,6 +2249,91 @@ function gameTick() {
 
 
 /* =====================================================
+   건물 업그레이드 배율
+===================================================== */
+
+function getBuildingLevel(key) {
+
+    if (
+        !game ||
+        !game.buildingLevels
+    ) {
+        return 0;
+    }
+
+    return game.buildingLevels[key] || 0;
+
+}
+
+
+function getBuildingMultiplier(key) {
+
+    const level =
+        getBuildingLevel(key);
+
+    if (level <= 1) {
+        return 1;
+    }
+
+    if (level === 2) {
+        return 1.5;
+    }
+
+    return 2;
+}
+
+
+/* =====================================================
+   업그레이드 비용
+===================================================== */
+
+function getUpgradeCost(key) {
+
+    const building =
+        BUILDINGS[key];
+
+    const currentLevel =
+        getBuildingLevel(key);
+
+
+    /*
+       현재 Lv.1 → Lv.2
+       현재 Lv.2 → Lv.3
+
+       기존 건설비용을 기준으로
+       업그레이드 비용을 계산합니다.
+    */
+
+    const multiplier =
+        currentLevel === 1
+            ? 1.5
+            : 2.2;
+
+
+    const cost = {};
+
+
+    Object.entries(
+        building.cost
+    ).forEach(
+        ([resource,amount]) => {
+
+            cost[resource] =
+                Math.ceil(
+                    amount *
+                    multiplier
+                );
+
+        }
+    );
+
+
+    return cost;
+
+}
+
+
+/* =====================================================
    생산
 ===================================================== */
 
@@ -1982,6 +2373,10 @@ function productionTick() {
         }
 
 
+        const buildingMultiplier =
+            getBuildingMultiplier(key);
+
+
         Object.entries(
             building.production
         ).forEach(
@@ -1989,10 +2384,6 @@ function productionTick() {
 
                 let factor = 1;
 
-
-                /*
-                   환경 보정
-                */
 
                 if (
                     environment[resource] !== undefined
@@ -2004,15 +2395,12 @@ function productionTick() {
                 }
 
 
-                /*
-                   생산량
-                */
-
                 const amount =
                     baseProduction *
                     count *
                     factor *
-                    laborRatio;
+                    laborRatio *
+                    buildingMultiplier;
 
 
                 addResource(
@@ -2062,8 +2450,19 @@ function factoryTick() {
         }
 
 
+        const multiplier =
+            getBuildingMultiplier(key);
+
+
+        /*
+           업그레이드에 따라
+           한 번에 처리할 수 있는 생산량 증가
+        */
+
         let possible =
-            count;
+            Math.floor(
+                count * multiplier
+            );
 
 
         Object.entries(
@@ -2092,10 +2491,6 @@ function factoryTick() {
         }
 
 
-        /*
-           재료 소비
-        */
-
         Object.entries(
             building.recipe.input
         ).forEach(
@@ -2107,10 +2502,6 @@ function factoryTick() {
             }
         );
 
-
-        /*
-           제품 생산
-        */
 
         Object.entries(
             building.recipe.output
@@ -2140,10 +2531,6 @@ function consumptionTick() {
         game.population;
 
 
-    /*
-       기본 생활 소비
-    */
-
     game.resources.food -=
         population * 0.08;
 
@@ -2152,25 +2539,13 @@ function consumptionTick() {
         population * 0.15;
 
 
-    /*
-       가공식품 소비
-    */
-
     game.resources.foodProduct -=
         population * 0.03;
 
 
-    /*
-       의류 소비
-    */
-
     game.resources.clothes -=
         population * 0.005;
 
-
-    /*
-       부족 처리
-    */
 
     if (game.resources.food < 0) {
 
@@ -2242,10 +2617,6 @@ function populationTick() {
         game.population * 2
     ) {
 
-        /*
-           로그형에 가까운 완만한 성장
-        */
-
         game.population +=
             game.population * 0.0008;
 
@@ -2267,10 +2638,6 @@ function aiTick() {
                 country.environment
             ];
 
-
-        /*
-           생산
-        */
 
         if (country.buildings.farm) {
 
@@ -2302,20 +2669,12 @@ function aiTick() {
         }
 
 
-        /*
-           소비
-        */
-
         country.resources.food -=
             country.population * 0.08;
 
         country.resources.water -=
             country.population * 0.15;
 
-
-        /*
-           부족하면 시장에서 구매
-        */
 
         if (
             country.resources.food < 200 &&
@@ -2341,10 +2700,6 @@ function aiTick() {
         }
 
 
-        /*
-           인구 성장
-        */
-
         if (
             country.resources.food >
             country.population &&
@@ -2357,10 +2712,6 @@ function aiTick() {
 
         }
 
-
-        /*
-           저장 한도
-        */
 
         Object.keys(
             country.resources
@@ -2405,10 +2756,6 @@ function marketTick() {
             game.market[resource] *=
                 1 + change;
 
-
-            /*
-               가격 범위 제한
-            */
 
             game.market[resource] =
                 Math.max(
@@ -2465,6 +2812,11 @@ function levelCheck() {
             `🎉 국가가 Lv.${newLevel} ${LEVELS[newLevel-1].name} 단계로 발전했습니다!`
         );
 
+        showImpact(
+            `🎉 국가 발전!\nLv.${newLevel} ${LEVELS[newLevel-1].name}`,
+            "success"
+        );
+
     }
 
 }
@@ -2490,6 +2842,11 @@ function buildBuilding(key) {
         building.level
     ) {
 
+        showImpact(
+            `🔒 ${building.name}은(는) Lv.${building.level}부터 건설할 수 있습니다.`,
+            "warning"
+        );
+
         addLog(
             `🔒 ${building.name}은(는) Lv.${building.level}부터 건설할 수 있습니다.`
         );
@@ -2498,14 +2855,28 @@ function buildBuilding(key) {
     }
 
 
-    if (
-        !canPayCost(
+    const missing =
+        getMissingResources(
             building.cost
-        )
+        );
+
+
+    if (
+        missing.length > 0
     ) {
 
+        const message =
+            `❌ ${missing.map(item =>
+                item.name
+            ).join(", ")} 자원이 부족합니다.`;
+
+        showImpact(
+            message,
+            "error"
+        );
+
         addLog(
-            `❌ ${building.name} 건설에 필요한 자원이 부족합니다.`
+            `❌ ${building.name} 건설 실패: ${missing.map(item => item.name).join(", ")} 부족`
         );
 
         return;
@@ -2520,12 +2891,214 @@ function buildBuilding(key) {
     game.buildings[key]++;
 
 
+    /*
+       처음 건설한 건물은 Lv.1
+    */
+
+    if (
+        game.buildingLevels[key] === 0
+    ) {
+
+        game.buildingLevels[key] = 1;
+
+    }
+
+
+    showImpact(
+        `🏗️ ${building.name}이 설치되었습니다.`,
+        "success"
+    );
+
+
     addLog(
-        `🏗️ ${building.name}을(를) 건설했습니다.`
+        `🏗️ ${building.name}이(를) 설치했습니다.`
     );
 
 
     updateUI();
+
+}
+
+
+/* =====================================================
+   건물 업그레이드
+===================================================== */
+
+function upgradeBuilding(key) {
+
+    const building =
+        BUILDINGS[key];
+
+
+    if (!building) {
+        return;
+    }
+
+
+    const count =
+        game.buildings[key] || 0;
+
+
+    if (count <= 0) {
+
+        showImpact(
+            `❌ 먼저 ${building.name}을(를) 설치해주세요.`,
+            "error"
+        );
+
+        addLog(
+            `❌ ${building.name} 업그레이드 실패: 설치된 건물이 없습니다.`
+        );
+
+        return;
+    }
+
+
+    const currentLevel =
+        getBuildingLevel(key);
+
+
+    if (currentLevel >= 3) {
+
+        showImpact(
+            `⭐ ${building.name}은(는) 이미 최고 레벨입니다.`,
+            "info"
+        );
+
+        return;
+    }
+
+
+    const upgradeCost =
+        getUpgradeCost(key);
+
+
+    const missing =
+        getMissingResources(
+            upgradeCost
+        );
+
+
+    if (
+        missing.length > 0
+    ) {
+
+        const message =
+            `❌ ${missing.map(item =>
+                item.name
+            ).join(", ")} 자원이 부족합니다.`;
+
+        showImpact(
+            message,
+            "error"
+        );
+
+        addLog(
+            `❌ ${building.name} 업그레이드 실패: ${missing.map(item => item.name).join(", ")} 부족`
+        );
+
+        return;
+    }
+
+
+    payCost(
+        upgradeCost
+    );
+
+
+    game.buildingLevels[key] =
+        currentLevel + 1;
+
+
+    const newLevel =
+        game.buildingLevels[key];
+
+
+    showImpact(
+        `⬆️ ${building.name}이 업그레이드되었습니다.\nLv.${newLevel}`,
+        "success"
+    );
+
+
+    addLog(
+        `⬆️ ${building.name}이(가) Lv.${newLevel}로 업그레이드되었습니다.`
+    );
+
+
+    updateUI();
+
+}
+
+
+/* =====================================================
+   부족한 자원 확인
+===================================================== */
+
+function getMissingResources(cost) {
+
+    const missing = [];
+
+
+    Object.entries(cost)
+        .forEach(
+            ([resource,amount]) => {
+
+                if (
+                    resource === "money"
+                ) {
+
+                    if (
+                        game.money <
+                        amount
+                    ) {
+
+                        missing.push({
+
+                            name:
+                                "국고",
+
+                            amount:
+                                amount -
+                                game.money
+
+                        });
+
+                    }
+
+                    return;
+
+                }
+
+
+                const current =
+                    game.resources[resource] || 0;
+
+
+                if (
+                    current <
+                    amount
+                ) {
+
+                    missing.push({
+
+                        name:
+                            RESOURCES[resource]
+                            ? RESOURCES[resource].name
+                            : resource,
+
+                        amount:
+                            amount -
+                            current
+
+                    });
+
+                }
+
+            }
+        );
+
+
+    return missing;
 
 }
 
@@ -2536,27 +3109,9 @@ function buildBuilding(key) {
 
 function canPayCost(cost) {
 
-    return Object.entries(cost)
-        .every(([resource,amount]) => {
-
-            if (
-                resource === "money"
-            ) {
-
-                return (
-                    game.money >= amount
-                );
-
-            }
-
-            return (
-                (
-                    game.resources[resource] ||
-                    0
-                ) >= amount
-            );
-
-        });
+    return (
+        getMissingResources(cost).length === 0
+    );
 
 }
 
@@ -2608,10 +3163,6 @@ function addResource(
     game.resources[resource] +=
         amount;
 
-
-    /*
-       저장 한도
-    */
 
     if (
         game.resources[resource] >
@@ -2695,7 +3246,9 @@ function calculatePower() {
             ) {
 
                 power +=
-                    count * 20;
+                    count *
+                    20 *
+                    getBuildingMultiplier(key);
 
             }
 
@@ -2713,11 +3266,6 @@ function calculatePower() {
 ===================================================== */
 
 function randomEvent() {
-
-    /*
-       하루마다 발생하면 너무 잦으므로
-       일정 확률로만 발생
-    */
 
     if (
         Math.random() > 0.02
@@ -2833,6 +3381,11 @@ function trade(
         amount <= 0
     ) {
 
+        showImpact(
+            "❌ 거래 수량을 입력해주세요.",
+            "error"
+        );
+
         addLog(
             "❌ 거래 수량을 입력해주세요."
         );
@@ -2841,10 +3394,6 @@ function trade(
 
     }
 
-
-    /*
-       운송비
-    */
 
     const transportMultiplier = {
 
@@ -2857,14 +3406,15 @@ function trade(
     }[transport];
 
 
-    /*
-       운송 해금
-    */
-
     if (
         transport === "sea" &&
         game.level < 3
     ) {
+
+        showImpact(
+            "🔒 해상무역은 Lv.3부터 가능합니다.",
+            "warning"
+        );
 
         addLog(
             "🔒 해상무역은 Lv.3부터 가능합니다."
@@ -2879,6 +3429,11 @@ function trade(
         transport === "air" &&
         game.level < 5
     ) {
+
+        showImpact(
+            "🔒 항공무역은 Lv.5부터 가능합니다.",
+            "warning"
+        );
 
         addLog(
             "🔒 항공무역은 Lv.5부터 가능합니다."
@@ -2899,10 +3454,6 @@ function trade(
         transportMultiplier;
 
 
-    /*
-       구매
-    */
-
     if (
         type === "buy"
     ) {
@@ -2911,6 +3462,11 @@ function trade(
             country.resources[resource] <
             amount
         ) {
+
+            showImpact(
+                `❌ ${country.name}의 ${RESOURCES[resource].name} 재고가 부족합니다.`,
+                "error"
+            );
 
             addLog(
                 `❌ ${country.name}의 ${RESOURCES[resource].name} 재고가 부족합니다.`
@@ -2925,6 +3481,11 @@ function trade(
             game.money <
             total
         ) {
+
+            showImpact(
+                "❌ 국고가 부족합니다.",
+                "error"
+            );
 
             addLog(
                 "❌ 국고가 부족합니다."
@@ -2953,16 +3514,18 @@ function trade(
         );
 
 
+        showImpact(
+            `🚢 ${RESOURCES[resource].name} ${formatNumber(amount)}${RESOURCES[resource].unit} 구매 완료`,
+            "success"
+        );
+
+
         addLog(
             `🚢 ${country.name}에서 ${RESOURCES[resource].name} ${formatNumber(amount)}${RESOURCES[resource].unit} 구매`
         );
 
     }
 
-
-    /*
-       판매
-    */
 
     else {
 
@@ -2972,6 +3535,11 @@ function trade(
                 0
             ) < amount
         ) {
+
+            showImpact(
+                "❌ 판매할 자원이 부족합니다.",
+                "error"
+            );
 
             addLog(
                 "❌ 판매할 자원이 부족합니다."
@@ -2986,6 +3554,11 @@ function trade(
             country.money <
             total
         ) {
+
+            showImpact(
+                `❌ ${country.name}의 국고가 부족합니다.`,
+                "error"
+            );
 
             addLog(
                 `❌ ${country.name}의 국고가 부족합니다.`
@@ -3010,6 +3583,12 @@ function trade(
 
         country.money -=
             total;
+
+
+        showImpact(
+            `💰 ${RESOURCES[resource].name} ${formatNumber(amount)}${RESOURCES[resource].unit} 판매 완료`,
+            "success"
+        );
 
 
         addLog(
@@ -3203,10 +3782,6 @@ function updateOverview() {
         `${formatNumber(calculatePower())} ⚡`;
 
 
-    /*
-       발전
-    */
-
     const next =
         LEVELS[game.level];
 
@@ -3285,10 +3860,6 @@ function updateOverview() {
     }
 
 
-    /*
-       노동력
-    */
-
     const available =
         calculateAvailableWorkers();
 
@@ -3326,10 +3897,6 @@ function updateOverview() {
     `;
 
 
-    /*
-       건물 요약
-    */
-
     let html = "";
 
 
@@ -3347,6 +3914,10 @@ function updateOverview() {
                 BUILDINGS[key];
 
 
+            const level =
+                getBuildingLevel(key);
+
+
             html += `
 
                 <div class="card">
@@ -3358,6 +3929,10 @@ function updateOverview() {
 
                     <div class="card-value">
                         ${count}개
+                    </div>
+
+                    <div class="small">
+                        Lv.${level}
                     </div>
 
                 </div>
@@ -3463,6 +4038,44 @@ function updateResources() {
 
 
 /* =====================================================
+   비용 표시
+===================================================== */
+
+function costText(cost) {
+
+    return Object.entries(cost)
+        .map(
+            ([resource,amount]) => {
+
+                if (
+                    resource === "money"
+                ) {
+
+                    return `
+                        💰 ${formatNumber(amount)}
+                    `;
+
+                }
+
+
+                const info =
+                    RESOURCES[resource];
+
+
+                return `
+                    ${info ? info.emoji : "📦"}
+                    ${info ? info.name : resource}
+                    ${formatNumber(amount)}
+                `;
+
+            }
+        )
+        .join("<br>");
+
+}
+
+
+/* =====================================================
    건물 목록
 ===================================================== */
 
@@ -3488,31 +4101,53 @@ function updateBuildings() {
                 building.level;
 
 
-            let costText = "";
+            const count =
+                game.buildings[key] || 0;
 
 
-            Object.entries(
-                building.cost
-            ).forEach(
-                ([resource,amount]) => {
+            const currentLevel =
+                getBuildingLevel(key);
 
-                    if (
-                        resource === "money"
-                    ) {
 
-                        costText +=
-                            `💰 ${formatNumber(amount)} `;
+            const multiplier =
+                getBuildingMultiplier(key);
 
-                    } else {
 
-                        costText +=
-                            `${RESOURCES[resource].emoji}
-                             ${formatNumber(amount)} `;
+            let productionText = "";
 
-                    }
 
-                }
-            );
+            if (
+                building.production
+            ) {
+
+                productionText =
+                    Object.entries(
+                        building.production
+                    )
+                    .map(
+                        ([resource,amount]) => {
+
+                            return `
+                                ${RESOURCES[resource].emoji}
+                                ${formatNumber(
+                                    amount *
+                                    multiplier
+                                )}
+                                ${RESOURCES[resource].unit}/일
+                            `;
+
+                        }
+                    )
+                    .join("<br>");
+
+            }
+
+
+            const upgradeCost =
+                currentLevel > 0 &&
+                currentLevel < 3
+                    ? getUpgradeCost(key)
+                    : null;
 
 
             html += `
@@ -3528,19 +4163,54 @@ function updateBuildings() {
                         ${building.description}
                     </p>
 
+                    ${
+                        currentLevel > 0
+
+                        ? `
+                        <span class="level-badge">
+                            Lv.${currentLevel}
+                        </span>
+                        `
+
+                        : `
+                        <span class="level-badge">
+                            미설치
+                        </span>
+                        `
+                    }
+
                     <p class="small">
                         👷 노동자:
                         ${building.workers}명
                     </p>
 
-                    <p class="small">
-                        💵 비용:
-                        ${costText}
-                    </p>
+                    ${
+                        productionText
+
+                        ? `
+                        <p class="small">
+                            📦 생산:
+                            <br>
+                            ${productionText}
+                        </p>
+                        `
+
+                        : ""
+                    }
 
                     <p class="small">
-                        🔓 Lv.${building.level}
+                        🔓 건설 조건:
+                        Lv.${building.level}
                     </p>
+
+                    <div class="cost-box">
+
+                        💵 건설 비용<br>
+
+                        ${costText(building.cost)}
+
+                    </div>
+
 
                     <button
                         onclick="buildBuilding('${key}')"
@@ -3549,11 +4219,56 @@ function updateBuildings() {
 
                         ${
                             unlocked
-                            ? "건설하기"
+                            ? "🏗️ 설치하기"
                             : "🔒 잠김"
                         }
 
                     </button>
+
+
+                    ${
+                        currentLevel > 0 &&
+                        currentLevel < 3
+
+                        ? `
+
+                        <div
+                            class="cost-box"
+                            style="margin-top:8px"
+                        >
+
+                            ⬆️ 업그레이드 비용<br>
+
+                            ${costText(upgradeCost)}
+
+                        </div>
+
+                        <button
+                            class="upgrade-button"
+                            onclick="upgradeBuilding('${key}')"
+                        >
+
+                            ⬆️ Lv.${currentLevel + 1}
+                            업그레이드
+
+                        </button>
+
+                        `
+
+                        : currentLevel >= 3
+
+                        ? `
+                            <button
+                                class="upgrade-button"
+                                disabled
+                            >
+                                ⭐ 최고 레벨
+                            </button>
+                        `
+
+                        : ""
+
+                    }
 
                 </div>
 
@@ -3596,6 +4311,14 @@ function updateFactories() {
                 game.buildings[key] || 0;
 
 
+            const currentLevel =
+                getBuildingLevel(key);
+
+
+            const multiplier =
+                getBuildingMultiplier(key);
+
+
             const input =
                 recipeText(
                     building.recipe.input
@@ -3606,6 +4329,13 @@ function updateFactories() {
                 recipeText(
                     building.recipe.output
                 );
+
+
+            const upgradeCost =
+                currentLevel > 0 &&
+                currentLevel < 3
+                    ? getUpgradeCost(key)
+                    : null;
 
 
             html += `
@@ -3622,6 +4352,24 @@ function updateFactories() {
                         <b>${count}개</b>
                     </p>
 
+
+                    ${
+                        currentLevel > 0
+
+                        ? `
+                        <span class="level-badge">
+                            Lv.${currentLevel}
+                        </span>
+                        `
+
+                        : `
+                        <span class="level-badge">
+                            미설치
+                        </span>
+                        `
+                    }
+
+
                     <p class="small">
                         입력:
                         ${input}
@@ -3633,12 +4381,89 @@ function updateFactories() {
                     </p>
 
                     <p class="small">
+                        ⚡ 생산 배율:
+                        ×${multiplier}
+                    </p>
+
+                    <p class="small">
                         👷 ${building.workers}명
                     </p>
 
                     <p class="small">
                         🔓 Lv.${building.level}
                     </p>
+
+
+                    <div class="cost-box">
+
+                        💵 건설 비용<br>
+
+                        ${costText(building.cost)}
+
+                    </div>
+
+
+                    <button
+                        onclick="buildBuilding('${key}')"
+                        ${
+                            game.level >= building.level
+                            ? ""
+                            : "disabled"
+                        }
+                    >
+
+                        ${
+                            game.level >= building.level
+                            ? "🏗️ 설치하기"
+                            : "🔒 잠김"
+                        }
+
+                    </button>
+
+
+                    ${
+                        currentLevel > 0 &&
+                        currentLevel < 3
+
+                        ? `
+
+                        <div
+                            class="cost-box"
+                            style="margin-top:8px"
+                        >
+
+                            ⬆️ 업그레이드 비용<br>
+
+                            ${costText(upgradeCost)}
+
+                        </div>
+
+                        <button
+                            class="upgrade-button"
+                            onclick="upgradeBuilding('${key}')"
+                        >
+
+                            ⬆️ Lv.${currentLevel + 1}
+                            업그레이드
+
+                        </button>
+
+                        `
+
+                        : currentLevel >= 3
+
+                        ? `
+                            <button
+                                class="upgrade-button"
+                                disabled
+                            >
+                                ⭐ 최고 레벨
+                            </button>
+                        `
+
+                        : ""
+
+                    }
 
                 </div>
 
@@ -4070,6 +4895,125 @@ function setSpeed(value) {
 
 
 /* =====================================================
+   터치 임팩트
+===================================================== */
+
+document.addEventListener(
+    "pointerdown",
+    function(event) {
+
+        const target =
+            event.target.closest(
+                "button"
+            );
+
+
+        if (!target) {
+            return;
+        }
+
+
+        /*
+           모바일에서 지원되는 경우
+           짧은 진동
+        */
+
+        if (
+            navigator.vibrate
+        ) {
+
+            navigator.vibrate(10);
+
+        }
+
+
+        /*
+           터치 위치에 물결 효과
+        */
+
+        const ripple =
+            document.createElement(
+                "div"
+            );
+
+
+        ripple.className =
+            "touch-ripple";
+
+
+        ripple.style.left =
+            event.clientX + "px";
+
+
+        ripple.style.top =
+            event.clientY + "px";
+
+
+        document.body.appendChild(
+            ripple
+        );
+
+
+        setTimeout(
+            () => {
+
+                ripple.remove();
+
+            },
+            500
+        );
+
+    }
+);
+
+
+/* =====================================================
+   알림
+===================================================== */
+
+function showImpact(
+    message,
+    type = "info"
+) {
+
+    const container =
+        document.getElementById(
+            "impactContainer"
+        );
+
+
+    const impact =
+        document.createElement(
+            "div"
+        );
+
+
+    impact.className =
+        `impact ${type}`;
+
+
+    impact.textContent =
+        message;
+
+
+    container.appendChild(
+        impact
+    );
+
+
+    setTimeout(
+        () => {
+
+            impact.remove();
+
+        },
+        2300
+    );
+
+}
+
+
+/* =====================================================
    숫자 표시
 ===================================================== */
 
@@ -4092,4 +5036,4 @@ function formatNumber(number) {
 </script>
 
 </body>
-  </html>
+    </html>
